@@ -1,0 +1,179 @@
+doctype html
+html
+  head
+    title=page.name
+  script var page = !{JSON.stringify(page)}
+  script var book = !{JSON.stringify(book)}
+  body
+    div.
+        <b>#{book.start_year}-#{book.end_year}</b> #{book.book}#{book.book_letter}-#{book.book_number_type} <i>#{book.house} house</i>
+        <br>session: #{book.sessiontype}
+
+    div
+        | type: 
+        input(type="radio", name="type_filter", value="0", checked=book.type=="unknown")
+        | unknown 
+        input(type="radio", name="type_filter", value="0", checked=book.type=="grid")
+        | grid 
+        input(type="radio", name="type_filter", value="0", checked=book.type=="handwritten")
+        | handwritten 
+
+    div.
+        <br>page: #{page.page}/#{book.total_pages}
+        <br>status: #{page.status}
+    div.
+        <a href="/!{parseInt(page.id) - 1}">previous</a> <a href="/!{parseInt(page.id) + 1}">next</a>
+
+    div.
+        <div id="imagecontainer" style="max-width: 1000px; max-height: 1000px; position:relative;"></div>
+
+        <script>
+            console.log('page: %o', page);
+            console.log('book: %o', book);
+
+            var selectedHandle = null;
+            var handles = [];
+            var canvas;
+            var context;
+
+            var image = new Image();
+            image.onload = onLoaded;
+            image.src = 'image/' + page.image;
+
+            image.style['position'] = 'absolute';
+            image.style['width'] = '100%'
+            image.style['height'] = 'auto'
+
+            var move = 0;
+            var verticalRatios = [move+=.097, move+=.097, move+=.097, move+=.097, move+=.097, move+=.031, move+=.097, move+=.097, move+=.097, move+=.097];
+            var horizontalRatios = Array(23).fill(1/24 - 0.0003).map(function(item, index){ return item * (index + 1) });
+
+            document.getElementById('imagecontainer').appendChild(image);
+
+            function onLoaded(){
+
+                canvas = document.createElement('canvas');
+                document.getElementById('imagecontainer').appendChild(canvas);
+                canvas.width = image.width;
+                canvas.height = image.height;
+                canvas.style['position'] = 'relative';
+                canvas.style['width'] = '100%'
+                canvas.style['height'] = 'auto'
+
+                context = canvas.getContext('2d');
+                context.strokeStyle = 'rgba(255,0,0,1.0)';
+                context.fillStyle = 'rgba(255,0,0,0.2)';
+
+                handles = page.coordinates.map(function(coordinate, index){
+                    return {radius: 10,
+                            x: coordinate.x * canvas.width,
+                            y: coordinate.y * canvas.height,
+                            index: index};
+                });
+
+                canvas.addEventListener('mousedown', function(event){
+                    var mouse = {x: event.offsetX, y: event.offsetY};
+
+                    selectedHandle = handles
+                        .concat()
+                        //.filter(function(handle){
+                        //    return dist(mouse, handle) < handle.radius;
+                        //})
+                        .sort(function(a,b){
+                            return dist(mouse,b) - dist(mouse, a);
+                        })
+                        .pop();
+                });
+
+                canvas.addEventListener('mouseup', function(){
+                    if (selectedHandle) {
+                        updateHandle(page.id, selectedHandle);
+                    }
+                    selectedHandle = null;
+                });
+
+                canvas.addEventListener('mousemove', function(event){
+                    var mouse = {x: event.offsetX, y: event.offsetY};
+                    if (selectedHandle) {
+                        selectedHandle.x = mouse.x;
+                        selectedHandle.y = mouse.y;
+                    }
+                });
+
+                window.requestAnimationFrame(step);
+            }
+
+
+            function step(timestamp){
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                handles.forEach(function(handle){
+                    context.beginPath();
+                    context.arc(handle.x, handle.y, handle.radius, 0, 2 * Math.PI);
+                    context.fill();
+                });
+
+                var upperDist = dist(handles[0], handles[1]);
+                var upperDir = {x: (handles[1].x - handles[0].x) / upperDist, y: (handles[1].y - handles[0].y) / upperDist};
+
+                var lowerDist = dist(handles[3], handles[2]);
+                var lowerDir = {x: (handles[2].x - handles[3].x) / lowerDist, y: (handles[2].y - handles[3].y) / lowerDist};
+
+                var leftDist = dist(handles[0], handles[3]);
+                var leftDir = {x: (handles[3].x - handles[0].x) / leftDist, y: (handles[3].y - handles[0].y) / leftDist};
+
+                var rightDist = dist(handles[1], handles[2]);
+                var rightDir = {x: (handles[2].x - handles[1].x) / rightDist, y: (handles[2].y - handles[1].y) / rightDist};
+
+                // draw the horizontal grid lines
+                verticalRatios.forEach(function (percentage){
+                    var fromX = handles[0].x + upperDir.x * upperDist * percentage;
+                    var fromY = handles[0].y + upperDir.y * upperDist * percentage;
+                    var toX = handles[3].x + lowerDir.x * lowerDist * percentage;
+                    var toY = handles[3].y + lowerDir.y * lowerDist * percentage;
+                    context.beginPath();
+                    context.moveTo(fromX, fromY);
+                    context.lineTo(toX, toY);
+                    context.stroke();
+                });
+
+                horizontalRatios.forEach(function(percentage){
+                    var fromX = handles[0].x + leftDir.x * leftDist * percentage;
+                    var fromY = handles[0].y + leftDir.y * leftDist * percentage;
+                    var toX = handles[1].x + rightDir.x * rightDist * percentage;
+                    var toY = handles[1].y + rightDir.y * rightDist * percentage;
+                    context.beginPath();
+                    context.moveTo(fromX, fromY);
+                    context.lineTo(toX, toY);
+                    context.stroke();
+                });
+
+                // draw outer box
+                context.beginPath();
+                context.moveTo(handles[handles.length-1].x, handles[handles.length-1].y);
+                handles.forEach(function(handle){
+                    context.lineTo(handle.x, handle.y);
+                });
+                context.stroke();
+
+                window.requestAnimationFrame(step);
+            }
+
+            function dist(a ,b) {
+                return Math.sqrt( (a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y) );
+            }
+
+            function updateHandle(id, handle) {
+                var xhr = new XMLHttpRequest();
+                var path = 'doc/' + id  + '/coordinates/' + handle.index;
+                xhr.open('PATCH', path, true);
+                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                xhr.onload = function(e) {
+                    console.log(this.response);
+                };
+                var body = {x: handle.x / canvas.width,
+                            y: handle.y / canvas.height};
+                var json = JSON.stringify(body)
+                console.log('saving %s %s', path, json);
+                xhr.send(json);
+            }
+        </script>
