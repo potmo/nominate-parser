@@ -10,7 +10,7 @@ html
         <br>session: #{book.sessiontype}
 
     div
-        | type: 
+        | book type: 
         input(type="radio", name="type_filter", value="0", checked=book.type=="unknown")
         | unknown 
         input(type="radio", name="type_filter", value="0", checked=book.type=="grid")
@@ -25,7 +25,7 @@ html
         <a href="/!{parseInt(page.id) - 1}">previous</a> <a href="/!{parseInt(page.id) + 1}">next</a>
 
     div.
-        <div id="imagecontainer" style="max-width: 1000px; max-height: 1000px; position:relative;"></div>
+        <div id="imagecontainer" style="max-width: 1000px; max-height: 1000px; position: relative;"></div>
 
         <script>
             console.log('page: %o', page);

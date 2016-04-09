@@ -10,6 +10,7 @@
 
   function main() {
       var imageData = loadImage();
+      var descriptor = loadDescriptor();
 
       var n = null;
       var closingKernel = [];
@@ -22,19 +23,36 @@
       printOutputImage(imageData, 'original.png');
 
       imageData = scaleImage(imageData, 0.8);
-
       printOutputImage(imageData, 'scaled.png');
 
-      var croppedImageData = crop(imageData, 0.15, 0, 0.25, 0);
-      printOutputImage(croppedImageData, 'cropped.png');
+      imageData = warpImage(imageData, descriptor);
+      printOutputImage(imageData, 'warped.png');
 
-      var closedImage = closing(croppedImageData, closingKernel);
+      var gridImage = addGridToImage(imageData, 'second');
+      printOutputImage(gridImage, 'grid.png');
+
+      var closedImage = closing(imageData, closingKernel);
       printOutputImage(closedImage, 'closed.png');
 
-      var erodedImage = erode(croppedImageData, closingKernel);
+      var histogram = getHistogram(closedImage);
+      var threshold = otsu(histogram, closedImage.width * closedImage.height);
+
+      var binarizedImage = binarize(closedImage, threshold);
+      printOutputImage(binarizedImage, 'binarized.png');
+
+      return;
+
+      //var imageData = crop(imageData, 0.15, 0, 0.25, 0);
+      //printOutputImage(imageData, 'cropped.png');
+
+      var highThreshold = Math.min(0xFF, Math.floor(threshold * 1.2));
+      var morphologicalBinarizedImage = morphologicalBinarize(closedImage, threshold, highThreshold);
+      printOutputImage(morphologicalBinarizedImage, 'morphbinarized.png');
+
+      var erodedImage = erode(imageData, closingKernel);
       printOutputImage(erodedImage, 'eroded.png');
 
-      var dilatedImage = dilate(croppedImageData, closingKernel);
+      var dilatedImage = dilate(imageData, closingKernel);
       printOutputImage(dilatedImage, 'dilated.png');
 
       var dilatedThreshold = otsu(getHistogram(dilatedImage), dilatedImage.width * dilatedImage.height);
@@ -57,20 +75,8 @@
       printOutputImage(closedBinarizedImage, 'closed-binarized.png');
       // OLD
 
-      var dividedImage = divide(croppedImageData, closedImage);
+      var dividedImage = divide(imageData, closedImage);
       printOutputImage(dividedImage, 'divided.png');
-
-      var histogram = getHistogram(dividedImage);
-      var threshold = otsu(histogram, dividedImage.width * dividedImage.height);
-      var highThreshold = Math.min(0xFF, Math.floor(threshold * 1.2));
-
-      console.log('threshold %j, %j', threshold, highThreshold)
-
-      var morphologicalBinarizedImage = morphologicalBinarize(dividedImage, threshold, highThreshold);
-      printOutputImage(morphologicalBinarizedImage, 'morphbinarized.png');
-
-      var binarizedImage = binarize(dividedImage, threshold);
-      printOutputImage(binarizedImage, 'binarized.png');
 
       var labeledGroups = labelConnectedComponents(morphologicalBinarizedImage);
 
@@ -1352,7 +1358,7 @@
       var canvas,
           context,
           img,
-          fileBuffer = fs.readFileSync(__dirname + '/proto2.png');
+          fileBuffer = fs.readFileSync(__dirname + '/proto5.png');
 
       img = new Image;
 
@@ -1364,6 +1370,11 @@
       context.drawImage(img, 0, 0, img.width, img.height);
 
       return context.getImageData(0, 0, canvas.width, canvas.height);
+  }
+
+  function loadDescriptor() {
+      var fileBuffer = fs.readFileSync(__dirname + '/proto5.json');
+      return JSON.parse(fileBuffer);
   }
 
   function printOutputImage(imageData, filename) {
@@ -1443,20 +1454,200 @@
     var newWidth = Math.floor(image.width * scale);
     var newHeight = Math.floor(image.height * scale);
 
-    console.log('incoming', image.width, image.height);
-    console.log('from', fromImg.width, fromImg.height);
-    console.log('new', newWidth, newHeight);
-
     var canvas = new Canvas(newWidth, newHeight);
     var context = canvas.getContext('2d');
     //context.putImageData(image, 0, 0, 0, 0, newWidth, newHeight);
     context.drawImage(fromImg, 0, 0, newWidth, newHeight);
     var resultImageData = context.getImageData(0, 0, newWidth, newHeight);
 
-    console.log('result', resultImageData.width, resultImageData.height);
-
     return resultImageData;
   }
+
+  function addGridToImage(imageData) {
+    var image = new Image;
+    var canvas = new Canvas(imageData.width, imageData.height);
+    var context = canvas.getContext('2d');
+    context.putImageData(imageData, 0, 0);
+
+    var font = new Canvas.Font('Roboto', __dirname + '/Roboto-Light.ttf')
+    font.addFace(__dirname + '/Roboto-Light.ttf', 'light')
+    context.addFont(font)
+    context.font = '12px Roboto'
+
+    var squares = getGridSquares(imageData.width, imageData.height);
+
+    context.strokeStyle = 'rgba(255,0,0,1.0)';
+    context.fillStyle = 'rgba(255,0,0,1.0)';
+
+    squares.forEach((square) => {
+        context.beginPath();
+        context.moveTo(square.upperLeft.x + 2, square.upperLeft.y + 2);
+        context.lineTo(square.upperRight.x - 2, square.upperRight.y + 2);
+        context.lineTo(square.lowerRight.x - 2, square.lowerRight.y - 2);
+        context.lineTo(square.lowerLeft.x + 2, square.lowerLeft.y - 2);
+        context.lineTo(square.upperLeft.x + 2, square.upperLeft.y + 2);
+        context.fillText(square.id, square.lowerLeft.x + 5, square.lowerLeft.y - 5);
+        context.stroke();
+    });
+
+    return context.getImageData(0, 0, imageData.width, imageData.height);
+  }
+
+  function getGridSquares(gridWidth, gridHeight){
+    //TODO: this only applies to the second chamber
+    var rows = 24;
+    var horizontalLines = rows + 2;
+    var columns = 10;
+    var verticalLines = columns + 2 + 2;
+
+    var middleColumnRatio = 1.0 / 30.0;
+    var columnRatios = new Array(columns).fillUsing(0.0);
+    columnRatios = columnRatios.map((_) => {
+      return 1.0 / columns - middleColumnRatio / columns;
+    });
+    columnRatios[columns / 2] = middleColumnRatio;
+    columnRatios = columnRatios.map((ratio)=>{
+      return ratio * gridWidth;
+    });
+
+    var columnPositions = [0];
+    columnRatios.reduce( (position, width)=> {
+      var newPosition = position + width;
+      columnPositions.push(newPosition);
+      return newPosition;
+    }, 0);
+    columnPositions.push(gridWidth);
+
+    var lastRowExtraRatio = 1/100;
+    var rowRatios = new Array(rows).fillUsing(0);
+    rowRatios = rowRatios.map( ()=> {
+      return 1/24 - lastRowExtraRatio / 24;
+    });
+    rowRatios[rowRatios.length-1] += lastRowExtraRatio / 24 + lastRowExtraRatio;
+    rowRatios = rowRatios.map((ratio)=>{
+      return ratio * gridHeight;
+    });
+
+    var rowPositions = [0];
+    rowRatios.reduce( (position, height)=> {
+      var newPosition = position + height;
+      rowPositions.push(newPosition);
+      return newPosition;
+    }, 0);
+
+    var positions = columnPositions.map( (column) => {
+      return rowPositions.map( (row) => {
+        return new Coordinate(column, row);
+      });
+    });
+
+    var squares = [];
+    for (var i = 0; i < positions.length - 1; i++) {
+      for (var j = 0; j < positions[i].length - 1; j++) {
+        var square = {
+          upperLeft: positions[i][j],
+          upperRight: positions[i+1][j],
+          lowerRight: positions[i+1][j+1],
+          lowerLeft: positions[i][j+1],
+          width: positions[i+1][j].x - positions[i][j].x,
+          height: positions[i][j+1].y - positions[i][j].y,
+          id: i + positions.length * j
+        }
+        squares.push(square);
+      }
+    }
+
+    // remove the ones that no person is in
+    squares = squares.filter((square)=> {
+      if ((square.id - 5) % 12 === 0) return false;
+      return true;
+      //return [5,17,29,41,53,65,77,89,101,113].indexOf(square.id) === -1;
+    });
+
+    return squares;
+  }
+
+  function warpImage(imageData, descriptor) {
+
+    var screenCoordinates = descriptor.coordinates.map( (coordinate)=> {
+      return new Coordinate(coordinate.x * imageData.width, coordinate.y * imageData.height);
+    });
+
+    var topLeft = screenCoordinates[0];
+    var topRight = screenCoordinates[1];
+    var bottomRight = screenCoordinates[2];
+    var bottomLeft = screenCoordinates[3];
+
+    var topDist = topLeft.distTo(topRight);
+    var bottomDist = bottomLeft.distTo(bottomRight);
+    var leftDist = topLeft.distTo(bottomLeft);
+    var rightDist = topRight.distTo(bottomRight);
+
+    var outWidth = Math.floor((topDist + bottomDist) / 2);
+    var outHeight = Math.floor((leftDist + rightDist) / 2);
+
+    var outputImageData = getEmptyImage(outWidth, outHeight, 0xFFFFFFFF);
+
+    var topVector = topRight.minus(topLeft).divide(topDist);
+    var bottomVector = bottomRight.minus(bottomLeft).divide(bottomDist);
+
+    for( var x = 0; x < outWidth; x++) {
+      for( var y = 0; y < outHeight; y++) {
+
+        var xScale = x / outWidth;
+        var yScale = y / outHeight;
+
+        var topSamplePos = topLeft.plus(topVector.scale(xScale).scale(topDist));
+        var bottomSamplePos = bottomLeft.plus(bottomVector.scale(xScale).scale(bottomDist));
+        var verticalDist = topSamplePos.distTo(bottomSamplePos);
+        var verticalVector = bottomSamplePos.minus(topSamplePos).divide(verticalDist);
+        var samplePos = topSamplePos.plus(verticalVector.scale(yScale).scale(verticalDist)).floor();
+
+        //TODO: biqubic sampling
+        var color = getPixel(imageData, samplePos.x, samplePos.y);
+        setPixel(outputImageData, x, y, color);
+
+      }
+    }
+
+    return outputImageData;
+  }
+
+  class Coordinate {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+    }
+
+    distTo(b){
+      return Math.sqrt(Math.pow(b.x - this.x, 2) + Math.pow(b.y - this.y, 2));
+    }
+
+    minus(b) {
+      return new Coordinate(this.x - b.x, this.y - b.y);
+    }
+
+    plus(b) {
+      return new Coordinate(this.x + b.x, this.y + b.y);
+    }
+
+    scale(scale) {
+      return new Coordinate(this.x * scale, this.y * scale);
+    }
+
+    divide(denominator) {
+      return new Coordinate(this.x / denominator, this.y / denominator);
+    }
+
+    floor() {
+     return new Coordinate(Math.floor(this.x), Math.floor(this.y));
+    }
+  }
+
+  function coord(x,y){
+    return new Coordinate(x,y);
+  }
+
 
   function applyConvolutionFilter(imageData, weights) {
 
