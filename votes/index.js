@@ -28,9 +28,6 @@
       imageData = warpImage(imageData, descriptor);
       printOutputImage(imageData, 'warped.png');
 
-      var gridImage = addGridToImage(imageData, 'second');
-      printOutputImage(gridImage, 'grid.png');
-
       var closedImage = closing(imageData, closingKernel);
       printOutputImage(closedImage, 'closed.png');
 
@@ -39,6 +36,13 @@
 
       var binarizedImage = binarize(closedImage, threshold);
       printOutputImage(binarizedImage, 'binarized.png');
+
+      var squares = getGridSquares(imageData.width, imageData.height);
+      var voteSquares = findVotes(binarizedImage, squares)
+      var gridBinarizedImage = drawGridSquares(binarizedImage, voteSquares);
+      printOutputImage(gridBinarizedImage, 'grid-binarized.png');
+      var gridImage = drawGridSquares(imageData, voteSquares);
+      printOutputImage(gridImage, 'grid.png');
 
       return;
 
@@ -1463,7 +1467,7 @@
     return resultImageData;
   }
 
-  function addGridToImage(imageData) {
+  function drawGridSquares(imageData, squares) {
     var image = new Image;
     var canvas = new Canvas(imageData.width, imageData.height);
     var context = canvas.getContext('2d');
@@ -1472,25 +1476,69 @@
     var font = new Canvas.Font('Roboto', __dirname + '/Roboto-Light.ttf')
     font.addFace(__dirname + '/Roboto-Light.ttf', 'light')
     context.addFont(font)
-    context.font = '12px Roboto'
-
-    var squares = getGridSquares(imageData.width, imageData.height);
+    context.font = '8px Roboto'
 
     context.strokeStyle = 'rgba(255,0,0,1.0)';
     context.fillStyle = 'rgba(255,0,0,1.0)';
 
+    var types = ['yes','no','refrain','absent'];
+
     squares.forEach((square) => {
+        var voteOffset = types.indexOf(square.vote);
+        if (voteOffset !== -1){
+
+          var middle = square.upperLeft.plus(coord(square.width/4 * voteOffset, 0)).plus(coord(square.width/8, square.height / 2));
+          context.beginPath();
+          context.arc(middle.x, middle.y, square.height/2, 0, 2 * Math.PI);
+          context.stroke();
+        }else{
+          context.beginPath();
+          context.moveTo(square.upperLeft.x, square.upperLeft.y);
+          context.lineTo(square.lowerRight.x, square.lowerRight.y);
+          context.stroke();
+        }
+
         context.beginPath();
-        context.moveTo(square.upperLeft.x + 2, square.upperLeft.y + 2);
-        context.lineTo(square.upperRight.x - 2, square.upperRight.y + 2);
-        context.lineTo(square.lowerRight.x - 2, square.lowerRight.y - 2);
-        context.lineTo(square.lowerLeft.x + 2, square.lowerLeft.y - 2);
-        context.lineTo(square.upperLeft.x + 2, square.upperLeft.y + 2);
-        context.fillText(square.id, square.lowerLeft.x + 5, square.lowerLeft.y - 5);
+        context.moveTo(square.upperLeft.x, square.upperLeft.y);
+        context.lineTo(square.upperRight.x, square.upperRight.y);
+        context.lineTo(square.lowerRight.x, square.lowerRight.y);
+        context.lineTo(square.lowerLeft.x, square.lowerLeft.y);
+        context.lineTo(square.upperLeft.x, square.upperLeft.y);
+        context.fillText(square.id + ' ' + square.vote, square.lowerLeft.x + 5, square.lowerLeft.y - 5);
         context.stroke();
     });
 
     return context.getImageData(0, 0, imageData.width, imageData.height);
+  }
+
+  function findVotes(imageData, squares) {
+    return squares.map((square)=>{
+      var blackPixels = [0,0,0,0];
+      var totalPixels = 0;
+      for (var i = 0; i < 4; i++) {
+        for (var x = square.upperLeft.x + i * square.width / 4; x < square.upperLeft.x + (i + 1) * square.width / 4; x++){
+          for (var y = square.upperLeft.y; y < square.upperLeft.y + square.height; y++) {
+            if (getBlueChannelPixel(imageData, x, y) == 0){
+              blackPixels[i]++;
+            }
+            totalPixels++;
+          }
+        }
+      }
+
+      var threshold = totalPixels / 4 / 5;
+      if (blackPixels[0] > threshold){
+        square.vote = 'yes';
+      } else if (blackPixels[1] > threshold){
+        square.vote = 'no';
+      } else if (blackPixels[2] > threshold){
+        square.vote = 'refrain';
+      } else if (blackPixels[3] > threshold){
+        square.vote = 'absent';
+      }
+      console.log(square.id, square.vote, blackPixels, threshold);
+      return square;
+    });
   }
 
   function getGridSquares(gridWidth, gridHeight){
@@ -1551,17 +1599,17 @@
           lowerLeft: positions[i][j+1],
           width: positions[i+1][j].x - positions[i][j].x,
           height: positions[i][j+1].y - positions[i][j].y,
-          id: i + positions.length * j
+          id: i + positions.length * j,
+          vote: 'missing'
         }
         squares.push(square);
       }
     }
 
-    // remove the ones that no person is in
+    // remove the squares in the middle line
     squares = squares.filter((square)=> {
       if ((square.id - 5) % 12 === 0) return false;
       return true;
-      //return [5,17,29,41,53,65,77,89,101,113].indexOf(square.id) === -1;
     });
 
     return squares;
