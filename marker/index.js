@@ -3,10 +3,11 @@ var app = express();
 var fs = require('fs');
 var path = require('path');
 var bodyParser = require('body-parser');
+var imageParser = require('../votes/index.js');
 
 var documentIndex = [];
 
-fs.readFile(path.resolve('./db/index.json'), (err, data) => {
+fs.readFile(path.resolve('../voteringar/db/index.json'), (err, data) => {
   if (err) throw err;
   documentIndex = JSON.parse(data);
 });
@@ -41,8 +42,15 @@ app.get('/:id', (req, res) => {
 
 app.get('/image/:filename', (req, res) => {
   var filename = req.params.filename;
-  var relativePath = path.join('../voteringar/png/', filename);
-  var fullPath = path.resolve(relativePath);
+  var fullPath = getLocalImagePath(filename);
+  console.log('GET image', fullPath);
+  res.sendFile(fullPath);
+});
+
+app.get('/image/resolved/:filename', (req, res) => {
+  var filename = req.params.filename;
+  var fullPath = getLocalResolvedImagePath(filename);
+  //TODO: Maybe show a nicer 404 for this
   console.log('GET image', fullPath);
   res.sendFile(fullPath);
 });
@@ -69,19 +77,49 @@ app.patch('/doc/:id/coordinates/:index', (req, res) => {
       res.status(200).send('OK');
     });
   });
+});
 
+app.post('/doc/:id/coordinates', (req, res) => {
+  var id = parseInt(req.params.id);
+  getPage(id, (err, page) => {
+    if (err) return res.status(500).send(err);
+    var imagePath = getLocalImagePath(page.image);
+    var resolvedImagePath = getLocalResolvedImagePath(page.image);
+    var coordinates = req.body;
+    page.coordinates = coordinates;
+    imageParser.getVotes(imagePath, resolvedImagePath, page, (err, votes)=> {
+      if (err) return res.status(500).send(err);
+      page.votes = votes;
+      savePage(page, (err)=>{
+        if (err) return res.status(500).send(err);
+        res.status(200).send('OK');
+      });
+    });
+  });
 });
 
 app.listen(3000, () => {
   console.log('Example app listening on port 3000!');
 });
 
+function getLocalImagePath(filename) {
+  var relativePath = path.join('../voteringar/png/', filename);
+  var fullPath = path.resolve(relativePath);
+  return fullPath;
+}
+
+function getLocalResolvedImagePath(filename) {
+  var relativePath = path.join('../voteringar/resolved/', filename);
+  var fullPath = path.resolve(relativePath);
+  return fullPath;
+}
+
 function getFile(id, callback) {
   if (id < 0 || id >= documentIndex.length) return callback("file not found", null);
   id = parseInt(id);
   var name = documentIndex[id];
   if (!name) return callback('not found in document index: ' + id);
-  var dir = path.resolve('./db/documents/')
+  var dir = path.resolve('../voteringar/db/documents/')
   var fullPath = path.join(dir, name + '.json' );
   callback(null, fullPath);
 }
@@ -127,6 +165,21 @@ function getPage(id, callback) {
       page.page = doc.page;
     }
 
+    //TODO: This is only for the second house
+    if (!doc['votes']){
+      page.votes = {
+        squares: [],
+        total: {
+          yes: 0,
+          no: 0,
+          refrain: 0,
+          absent: 0,
+          missing: 233
+        }
+      };
+    }else{
+      page.votes = doc.votes;
+    }
     callback(null, page);
 
   });
@@ -146,7 +199,7 @@ function getDocument(id, callback) {
 }
 
 function getBook(hashkey, callback) {
-  fs.readFile(path.resolve('./db/books.json'), (err, books) => {
+  fs.readFile(path.resolve('../voteringar/db/books.json'), (err, books) => {
     if (err) return callback(err, null);
     var books = JSON.parse(books);
     var book = books[hashkey];
@@ -154,7 +207,3 @@ function getBook(hashkey, callback) {
     callback(null, book);
   });
 }
-
-
-
-

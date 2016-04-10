@@ -8,17 +8,47 @@
 
   var outputConter = 0;
 
-  function main() {
-      var imageData = loadImage();
-      var descriptor = loadDescriptor();
+  var exports = module.exports = {};
 
-      var n = null;
-      var closingKernel = [];
-      closingKernel.push([n, 1, 1, 1, n]);
-      closingKernel.push([1, 1, 1, 1, 1]);
-      closingKernel.push([1, 1, 1, 1, 1]);
-      closingKernel.push([1, 1, 1, 1, 1]);
-      closingKernel.push([n, 1, 1, 1, n]);
+  exports.getVotes = function(imagePath, outputImagePath, page, callback) {
+
+    var imageData = loadImage(imagePath);
+
+    //printOutputImage(imageData, 'original.png');
+
+    imageData = scaleImage(imageData, 0.8);
+    //printOutputImage(imageData, 'scaled.png');
+
+    imageData = warpImage(imageData, page);
+    //printOutputImage(imageData, 'warped.png');
+
+    var closedImage = closing(imageData);
+    //printOutputImage(closedImage, 'closed.png');
+
+    var histogram = getHistogram(closedImage);
+    var threshold = otsu(histogram, closedImage.width * closedImage.height);
+
+    var binarizedImage = binarize(closedImage, threshold);
+    //printOutputImage(binarizedImage, 'binarized.png');
+
+    var squares = getGridSquares(imageData.width, imageData.height);
+    var voteSquares = findVotes(binarizedImage, squares)
+    var gridBinarizedImage = drawGridSquares(binarizedImage, voteSquares);
+    //printOutputImage(gridBinarizedImage, 'grid-binarized.png');
+    //var gridImage = drawGridSquares(imageData, voteSquares);
+    //printOutputImage(gridImage, 'grid.png');
+
+    var votes = countVotes(squares);
+
+    writeImageDataToFile(gridBinarizedImage, outputImagePath, (err) => {
+      if (err) return callback(err, null);
+      callback(null, votes);
+    });
+  }
+
+  function main() {
+      var imageData = loadImage(__dirname + '/proto5.png');
+      var descriptor = loadDescriptor(__dirname + '/proto5.json');
 
       printOutputImage(imageData, 'original.png');
 
@@ -28,7 +58,7 @@
       imageData = warpImage(imageData, descriptor);
       printOutputImage(imageData, 'warped.png');
 
-      var closedImage = closing(imageData, closingKernel);
+      var closedImage = closing(imageData);
       printOutputImage(closedImage, 'closed.png');
 
       var histogram = getHistogram(closedImage);
@@ -44,7 +74,7 @@
       var gridImage = drawGridSquares(imageData, voteSquares);
       printOutputImage(gridImage, 'grid.png');
 
-      return;
+      var votes = countVotes(squares);
 
       //var imageData = crop(imageData, 0.15, 0, 0.25, 0);
       //printOutputImage(imageData, 'cropped.png');
@@ -53,10 +83,10 @@
       var morphologicalBinarizedImage = morphologicalBinarize(closedImage, threshold, highThreshold);
       printOutputImage(morphologicalBinarizedImage, 'morphbinarized.png');
 
-      var erodedImage = erode(imageData, closingKernel);
+      var erodedImage = erode(imageData);
       printOutputImage(erodedImage, 'eroded.png');
 
-      var dilatedImage = dilate(imageData, closingKernel);
+      var dilatedImage = dilate(imageData);
       printOutputImage(dilatedImage, 'dilated.png');
 
       var dilatedThreshold = otsu(getHistogram(dilatedImage), dilatedImage.width * dilatedImage.height);
@@ -149,6 +179,8 @@
       printOutputImage(binarizedHoughTransformedImage, 'binarized-hough.png');
 
   }
+
+
 
 
   //http://vase.essex.ac.uk/software/HoughTransform/HoughTransform.java.html
@@ -404,88 +436,102 @@
       }
   }
 
-
-  function closing(imageData, kernel) {
-      var dilatedImage = dilate(imageData, kernel);
-      var erodedImage = erode(dilatedImage, kernel);
-      return erodedImage;
+  function getClosingKerner(){
+    var n = null;
+    var closingKernel = [];
+    closingKernel.push([n, 1, 1, 1, n]);
+    closingKernel.push([1, 1, 1, 1, 1]);
+    closingKernel.push([1, 1, 1, 1, 1]);
+    closingKernel.push([1, 1, 1, 1, 1]);
+    closingKernel.push([n, 1, 1, 1, n]);
+    return closingKernel;
   }
 
-  function opening(imageData, kernel) {
-      var erodedImage = erode(imageData, kernel);
-      dilatedImage = dilate(erodedImage, kernel);
-      return dilatedImage;
+  function closing(imageData) {
+    var kernel = getClosingKerner();
+    var dilatedImage = dilate(imageData, kernel);
+    var erodedImage = erode(dilatedImage, kernel);
+    return erodedImage;
+  }
+
+  function opening(imageData) {
+    var kernel = getClosingKerner();
+    var erodedImage = erode(imageData, kernel);
+    dilatedImage = dilate(erodedImage, kernel);
+    return dilatedImage;
   }
 
 
-  function erode(imageData, kernel) {
-      var outputImageData = getEmptyImage(imageData.width, imageData.height, 0xFFFFFFFF);
-      var padding = Math.floor(kernel.length / 2);
+  function erode(imageData) {
+    var kernel = getClosingKerner();
+    var outputImageData = getEmptyImage(imageData.width, imageData.height, 0xFFFFFFFF);
+    var padding = Math.floor(kernel.length / 2);
 
-      for (var x = padding; x < imageData.width - padding; x++) {
-          for (var y = padding; y < imageData.height - padding; y++) {
+    for (var x = padding; x < imageData.width - padding; x++) {
+        for (var y = padding; y < imageData.height - padding; y++) {
 
-              var topColor = 255;
+            var topColor = 255;
 
-              for (var kx = 0; kx < kernel.length; kx++) {
-                  for (var ky = 0; ky < kernel[kx].length; ky++) {
+            for (var kx = 0; kx < kernel.length; kx++) {
+                for (var ky = 0; ky < kernel[kx].length; ky++) {
 
-                      if (kernel[kx][ky] === null) {
-                          continue;
-                      }
+                    if (kernel[kx][ky] === null) {
+                        continue;
+                    }
 
-                      var sampleX = x - padding + kx;
-                      var sampleY = y - padding + ky;
+                    var sampleX = x - padding + kx;
+                    var sampleY = y - padding + ky;
 
-                      var sampledColor = getBlueChannelPixel(imageData, sampleX, sampleY);
+                    var sampledColor = getBlueChannelPixel(imageData, sampleX, sampleY);
 
-                      if (sampledColor < topColor) {
-                          topColor = sampledColor;
-                      }
-                      //TODO: add kernel
-                  }
-              }
+                    if (sampledColor < topColor) {
+                        topColor = sampledColor;
+                    }
+                    //TODO: add kernel
+                }
+            }
 
-              setGrayscale(outputImageData, x, y, topColor);
+            setGrayscale(outputImageData, x, y, topColor);
 
-          }
-      }
-      return outputImageData;
+        }
+    }
+    return outputImageData;
   }
 
-  function dilate(imageData, kernel) {
-      var outputImageData = getEmptyImage(imageData.width, imageData.height, 0xFFFFFFFF);
-      var padding = Math.floor(kernel.length / 2);
+  function dilate(imageData) {
+    var kernel = getClosingKerner();
+    var outputImageData = getEmptyImage(imageData.width, imageData.height, 0xFFFFFFFF);
+    var padding = Math.floor(kernel.length / 2);
 
-      for (var x = padding; x < imageData.width - padding; x++) {
-          for (var y = padding; y < imageData.height - padding; y++) {
+    for (var x = padding; x < imageData.width - padding; x++) {
+        for (var y = padding; y < imageData.height - padding; y++) {
 
-              var topColor = 0;
+            var topColor = 0;
 
-              for (var kx = 0; kx < kernel.length; kx++) {
-                  for (var ky = 0; ky < kernel[kx].length; ky++) {
+            for (var kx = 0; kx < kernel.length; kx++) {
+                for (var ky = 0; ky < kernel[kx].length; ky++) {
 
-                      if (kernel[kx][ky] === null) {
-                          continue;
-                      }
+                    if (kernel[kx][ky] === null) {
+                        continue;
+                    }
 
-                      var sampleX = x - padding + kx;
-                      var sampleY = y - padding + ky;
+                    var sampleX = x - padding + kx;
+                    var sampleY = y - padding + ky;
 
-                      var sampledColor = getBlueChannelPixel(imageData, sampleX, sampleY);
+                    var sampledColor = getBlueChannelPixel(imageData, sampleX, sampleY);
 
-                      if (sampledColor > topColor) {
-                          topColor = sampledColor;
-                      }
-                      //TODO: add kernel
-                  }
-              }
+                    if (sampledColor > topColor) {
+                        topColor = sampledColor;
+                    }
+                    //TODO: add kernel
+                }
+            }
 
-              setGrayscale(outputImageData, x, y, topColor);
+            setGrayscale(outputImageData, x, y, topColor);
 
-          }
-      }
-      return outputImageData;
+        }
+    }
+    return outputImageData;
   }
 
   function crop(imageData, removeOfTop, removeOfRight, removeOfBottom, removeOfLeft) {
@@ -1358,11 +1404,11 @@
 
   }
 
-  function loadImage() {
+  function loadImage(path) {
       var canvas,
           context,
           img,
-          fileBuffer = fs.readFileSync(__dirname + '/proto5.png');
+          fileBuffer = fs.readFileSync(path);
 
       img = new Image;
 
@@ -1376,13 +1422,20 @@
       return context.getImageData(0, 0, canvas.width, canvas.height);
   }
 
-  function loadDescriptor() {
-      var fileBuffer = fs.readFileSync(__dirname + '/proto5.json');
+  function loadDescriptor(path) {
+      var fileBuffer = fs.readFileSync(path);
       return JSON.parse(fileBuffer);
   }
 
   function printOutputImage(imageData, filename) {
+      var fullPath = __dirname + '/output/' + outputConter + "_" + filename;
+      writeImageDataToFile(fullPath, (err)=>{
+        console.log('saved %s', filename);
+      });
+      outputConter = outputConter + 1;
+  }
 
+  function writeImageDataToFile(imageData, fullPath, callback) {
       var canvas,
           context;
 
@@ -1391,19 +1444,17 @@
 
       context.putImageData(imageData, 0, 0);
 
-      var out = fs.createWriteStream(__dirname + '/output/' + outputConter + "_" + filename);
+      var out = fs.createWriteStream(fullPath);
       var stream = canvas.pngStream();
 
-      console.log('printing %s %s', outputConter, filename);
-
-      outputConter = outputConter + 1;
+      console.log('printing %s %s', outputConter, fullPath);
 
       stream.on('data', function(chunk) {
           out.write(chunk);
       });
 
       stream.on('end', function() {
-          console.log('saved %s', filename);
+          callback(null);
       });
   }
 
@@ -1476,14 +1527,14 @@
     var font = new Canvas.Font('Roboto', __dirname + '/Roboto-Light.ttf')
     font.addFace(__dirname + '/Roboto-Light.ttf', 'light')
     context.addFont(font)
-    context.font = '8px Roboto'
+    context.font = '9px Roboto'
 
-    context.strokeStyle = 'rgba(255,0,0,1.0)';
     context.fillStyle = 'rgba(255,0,0,1.0)';
 
     var types = ['yes','no','refrain','absent'];
 
     squares.forEach((square) => {
+        context.strokeStyle = 'rgba(255,0,0,1.0)';
         var voteOffset = types.indexOf(square.vote);
         if (voteOffset !== -1){
 
@@ -1505,6 +1556,16 @@
         context.lineTo(square.lowerLeft.x, square.lowerLeft.y);
         context.lineTo(square.upperLeft.x, square.upperLeft.y);
         context.fillText(square.id + ' ' + square.vote, square.lowerLeft.x + 5, square.lowerLeft.y - 5);
+        context.stroke();
+
+        context.strokeStyle = 'rgba(255,0,0,0.2)';
+        context.beginPath();
+        [0.25, 0.50, 0.75].forEach((percent)=>{
+          var u = square.upperLeft.plus(coord(square.width,0).scale(percent));
+          var d = square.lowerLeft.plus(coord(square.width,0).scale(percent));
+          context.moveTo(u.x, u.y);
+          context.lineTo(d.x, d.y);
+        });
         context.stroke();
     });
 
@@ -1536,9 +1597,21 @@
       } else if (blackPixels[3] > threshold){
         square.vote = 'absent';
       }
-      console.log(square.id, square.vote, blackPixels, threshold);
       return square;
     });
+  }
+
+  function countVotes(squares) {
+    var totalVotes = squares.reduce((votes, square) => {
+      votes[square.vote]++;
+      return votes;
+    }, {yes: 0, no: 0, refrain: 0, absent: 0, missing: 0});
+
+    var squareResults = squares.map((square) => {
+      return {id: square.id, vote: square.vote};
+    });
+
+    return {total: totalVotes, squares: squareResults};
   }
 
   function getGridSquares(gridWidth, gridHeight){
@@ -1590,8 +1663,8 @@
     });
 
     var squares = [];
-    for (var i = 0; i < positions.length - 1; i++) {
-      for (var j = 0; j < positions[i].length - 1; j++) {
+    for (var j = 0; j < positions[0].length - 1; j++) {
+      for (var i = 0; i < positions.length - 1; i++) {
         var square = {
           upperLeft: positions[i][j],
           upperRight: positions[i+1][j],
@@ -1610,6 +1683,11 @@
     squares = squares.filter((square)=> {
       if ((square.id - 5) % 12 === 0) return false;
       return true;
+    });
+
+    squares = squares.map((square, index)=>{
+      square.id = index;
+      return square;
     });
 
     return squares;
@@ -1768,5 +1846,5 @@
   }
 
 
-  main();
+  //main();
 

@@ -19,13 +19,28 @@ html
         | handwritten 
 
     div.
+        <br>Yes: #{page.votes.total.yes}
+        <br>No: #{page.votes.total.no}
+        <br>Refrain: #{page.votes.total.refrain}
+        <br>Absent: #{page.votes.total.absent}
+        <br>Missing: #{page.votes.total.missing}
+
+    div.
         <br>page: #{page.page}/#{book.total_pages}
         <br>status: #{page.status}
     div.
         <a href="/!{parseInt(page.id) - 1}">previous</a> <a href="/!{parseInt(page.id) + 1}">next</a>
+    div.
+        <input type="button" value="read" onclick="readPage()"/>
 
     div.
-        <div id="imagecontainer" style="max-width: 1000px; max-height: 1000px; position: relative;"></div>
+        <div id="imagecontainer" style="max-width: 1000px; max-height: 1000px; position: relative;">
+            <img id="originalimage" src="image/#{page.image}" style="position: absolute; width: 100%; height: auto;" onload="onLoaded()"/>
+            <canvas id="gridcanvas" style="position: relative; width: 100%; height: auto;">
+        </div>
+        <div id="resolvedcontainer" style="max-width: 1000px; max-height: 1000px; position: relative; background-color: rgb(255,0,0)">
+            <img id="resolvedimage" src="image/resolved/#{page.image}" style="width: 100%; height: auto;"/>
+        </div>
 
         <script>
             console.log('page: %o', page);
@@ -36,13 +51,8 @@ html
             var canvas;
             var context;
 
-            var image = new Image();
-            image.onload = onLoaded;
-            image.src = 'image/' + page.image;
-
-            image.style['position'] = 'absolute';
-            image.style['width'] = '100%'
-            image.style['height'] = 'auto'
+            var image = document.getElementById("originalimage");
+            var canvas = document.getElementById("gridcanvas");
 
             var move = 0;
             var verticalRatios = [move+=.097, move+=.097, move+=.097, move+=.097, move+=.097, move+=.031, move+=.097, move+=.097, move+=.097, move+=.097];
@@ -52,13 +62,9 @@ html
 
             function onLoaded(){
 
-                canvas = document.createElement('canvas');
                 document.getElementById('imagecontainer').appendChild(canvas);
                 canvas.width = image.width;
                 canvas.height = image.height;
-                canvas.style['position'] = 'relative';
-                canvas.style['width'] = '100%'
-                canvas.style['height'] = 'auto'
 
                 context = canvas.getContext('2d');
                 context.strokeStyle = 'rgba(255,0,0,1.0)';
@@ -70,6 +76,7 @@ html
                             y: coordinate.y * canvas.height,
                             index: index};
                 });
+
 
                 canvas.addEventListener('mousedown', function(event){
                     var mouse = {x: event.offsetX, y: event.offsetY};
@@ -86,9 +93,6 @@ html
                 });
 
                 canvas.addEventListener('mouseup', function(){
-                    if (selectedHandle) {
-                        updateHandle(page.id, selectedHandle);
-                    }
                     selectedHandle = null;
                 });
 
@@ -162,18 +166,64 @@ html
                 return Math.sqrt( (a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y) );
             }
 
-            function updateHandle(id, handle) {
+            //function updateHandle(id, handle) {
+                //var xhr = new XMLHttpRequest();
+                //var path = 'doc/' + id  + '/coordinates/' + handle.index;
+                //xhr.open('PATCH', path, true);
+                //xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                //xhr.onload = function(e) {
+                //    console.log(this.response);
+                //};
+                //var body = {x: handle.x / canvas.width,
+                //            y: handle.y / canvas.height};
+                //var json = JSON.stringify(body)
+                //console.log('saving %s %s', path, json);
+                //xhr.send(json);
+            //}
+
+            function readPage() {
                 var xhr = new XMLHttpRequest();
-                var path = 'doc/' + id  + '/coordinates/' + handle.index;
-                xhr.open('PATCH', path, true);
+                var path = 'doc/' + page.id + '/coordinates';
+                var coordinates = handles.map((handle)=>{
+                    return {x: handle.x / canvas.width,
+                            y: handle.y / canvas.height};
+                });
+                var json = JSON.stringify(coordinates);
+
+                console.log(json);
+                xhr.open('POST', path, true);
                 xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
                 xhr.onload = function(e) {
-                    console.log(this.response);
+                    location.reload();
                 };
-                var body = {x: handle.x / canvas.width,
-                            y: handle.y / canvas.height};
-                var json = JSON.stringify(body)
-                console.log('saving %s %s', path, json);
                 xhr.send(json);
             }
         </script>
+
+    div
+        style.
+            table {
+                border-spacing: 0px;
+                border-collapse: collapse;
+            }
+        table(border="1")
+            tr
+                td square
+                td Y
+                td N
+                td R
+                td A
+                td M
+            each square in page.votes.squares
+                tr
+                    td #{square.id}
+                    td
+                        input(type="radio", name="vote-#{square.id}", value="0", checked=square.vote=="yes")
+                    td
+                        input(type="radio", name="vote-#{square.id}", value="0", checked=square.vote=="no")
+                    td
+                        input(type="radio", name="vote-#{square.id}", value="0", checked=square.vote=="refrain")
+                    td
+                        input(type="radio", name="vote-#{square.id}", value="0", checked=square.vote=="absent")
+                    td
+                        input(type="radio", name="vote-#{square.id}", value="0", checked=square.vote=="missing")
