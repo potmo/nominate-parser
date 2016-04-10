@@ -1,0 +1,57 @@
+doctype html
+html
+	head
+		title="members of parliament"
+		script(src="http://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js")
+		script(src="http://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js")
+	body
+		div(id="bloodhound" style="display: flex; flex-direction: column; padding: 30px; width:300px")
+			input(id="name" type="text" placeholder="Name" style="width: 100%;" autofocus)
+			input(id="party" class="typeahead" type="text" placeholder="Party" style="width: 100%;")
+			input(id="save" type="button" value="save" style="width: 100%;")
+
+	style.
+		input {
+			margin: 5px;
+		}
+		.tt-menu {
+			background-color: rgb(255, 255, 255);
+			border-style: solid;
+			border-spacing: 1px;
+			border-width: thin;
+		}
+		.tt-selectable {
+			padding: 5px;
+		}
+		.tt-suggestion.tt-cursor {
+			background-color: rgb(200, 200, 200);
+		}
+	script.
+		var parties = new Bloodhound({
+		  datumTokenizer: function(obj){ return obj.name.split(' ').concat([obj.abbrevation])},
+		  queryTokenizer: Bloodhound.tokenizers.whitespace,
+		  identify: function(obj) { return obj.name; },
+		  prefetch: {
+		  	cache: false,
+		  	url: '../parties',
+		  	/*transform: function(data){
+		  		return data.map((party)=>{
+		  			return party.name;
+		  		});
+		  	}*/
+		  }
+		});
+
+		$('#bloodhound .typeahead').typeahead({
+		  hint: true,
+		  highlight: true,
+		  minLength: 1
+		},
+		{
+		  display: function(data){ return data.name; },
+		  templates: {
+		  	suggestion: function(data){ return '<div>' + data.abbrevation + ' - ' + data.name + '</div>'; }
+		  },
+		  name: 'parties',
+		  source: parties
+		});

@@ -29,17 +29,37 @@ html
         <br>page: #{page.page}/#{book.total_pages}
         <br>status: #{page.status}
     div.
-        <a href="/!{parseInt(page.id) - 1}">previous</a> <a href="/!{parseInt(page.id) + 1}">next</a>
+        <a href="/pageeditor/!{page.id - page.page + 1}">first</a>
+        <a href="/pageeditor/!{page.id - 1}">previous</a>
+        <a href="/pageeditor/!{page.id + 1}">next</a>
+        <a href="/pageeditor/!{page.id - page.page + book.total_pages}">last</a>
+    script.
+        document.onkeydown = function(evt) {
+            evt = evt || window.event;
+            switch(evt.keyCode){
+                case 37: // left
+                    window.location.href = "/pageeditor/" + (page.id - 1);
+                    break;
+                case 39: // right
+                    window.location.href = "/pageeditor/" + (page.id + 1);
+                    break;
+                case 13: // enter
+                    readPage();
+                    break;
+            }
+        };
     div.
-        <input type="button" value="read" onclick="readPage()"/>
+        <a href="/pageeditor/!{page.id - page.page}">previous book</a> <a href="/pageeditor/!{page.id + book.total_pages - page.page + 1}">next book</a>
+    div.
+        <input type="button" value="Save" onclick="readPage()"/>
 
     div.
         <div id="imagecontainer" style="max-width: 1000px; max-height: 1000px; position: relative;">
-            <img id="originalimage" src="image/#{page.image}" style="position: absolute; width: 100%; height: auto;" onload="onLoaded()"/>
+            <img id="originalimage" src="../image/#{page.image}" style="position: absolute; width: 100%; height: auto;" onload="onLoaded()"/>
             <canvas id="gridcanvas" style="position: relative; width: 100%; height: auto;">
         </div>
-        <div id="resolvedcontainer" style="max-width: 1000px; max-height: 1000px; position: relative; background-color: rgb(255,0,0)">
-            <img id="resolvedimage" src="image/resolved/#{page.image}" style="width: 100%; height: auto;"/>
+        <div id="resolvedcontainer" style="max-width: 1000px; max-height: 1000px; position: relative;">
+            <img id="resolvedimage" src="../image/resolved/#{page.image}" style="width: 100%; height: auto;"/>
         </div>
 
         <script>
@@ -166,24 +186,9 @@ html
                 return Math.sqrt( (a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y) );
             }
 
-            //function updateHandle(id, handle) {
-                //var xhr = new XMLHttpRequest();
-                //var path = 'doc/' + id  + '/coordinates/' + handle.index;
-                //xhr.open('PATCH', path, true);
-                //xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-                //xhr.onload = function(e) {
-                //    console.log(this.response);
-                //};
-                //var body = {x: handle.x / canvas.width,
-                //            y: handle.y / canvas.height};
-                //var json = JSON.stringify(body)
-                //console.log('saving %s %s', path, json);
-                //xhr.send(json);
-            //}
-
             function readPage() {
                 var xhr = new XMLHttpRequest();
-                var path = 'doc/' + page.id + '/coordinates';
+                var path = '../doc/' + page.id + '/coordinates';
                 var coordinates = handles.map((handle)=>{
                     return {x: handle.x / canvas.width,
                             y: handle.y / canvas.height};

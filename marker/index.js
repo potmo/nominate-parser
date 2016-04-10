@@ -21,7 +21,7 @@ app.use(function(err, req, res, next) {
   res.status(500).send('Something broke!');
 });
 
-app.get('/:id', (req, res) => {
+app.get('/pageeditor/:id', (req, res) => {
   var id = parseInt(req.params.id);
   console.log('get page', id);
 
@@ -37,6 +37,19 @@ app.get('/:id', (req, res) => {
 
       res.render('index', {page: page, book: book});
     });
+  });
+});
+
+app.get('/membereditor', (req, res)=> {
+  res.render('members');
+});
+
+app.get('/parties', (req, res) => {
+  var fullPath = getLocalPartiesPath();
+  fs.readFile(fullPath, (err, data) => {
+    if (err) return res.status(500).send(err);
+    var json = JSON.parse(data);
+    res.json(json);
   });
 });
 
@@ -105,6 +118,11 @@ app.listen(3000, () => {
 function getLocalImagePath(filename) {
   var relativePath = path.join('../voteringar/png/', filename);
   var fullPath = path.resolve(relativePath);
+  return fullPath;
+}
+
+function getLocalPartiesPath() {
+  var fullPath = path.resolve('../voteringar/db/parties.json');
   return fullPath;
 }
 
