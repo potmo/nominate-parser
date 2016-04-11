@@ -25,11 +25,11 @@
   "page": 7,
   "votes": {
     "total": {
-      "yes": 83,
+      "yes": 84,
       "no": 122,
       "refrain": 5,
       "absent": 22,
-      "missing": 8
+      "missing": 7
     },
     "squares": [
       {
@@ -118,7 +118,7 @@
       },
       {
         "id": 21,
-        "vote": "missing"
+        "vote": "yes"
       },
       {
         "id": 22,

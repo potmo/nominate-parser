@@ -33,14 +33,14 @@
 
     var squares = getGridSquares(imageData.width, imageData.height);
     var voteSquares = findVotes(binarizedImage, squares)
-    var gridBinarizedImage = drawGridSquares(binarizedImage, voteSquares);
+    //var gridBinarizedImage = drawGridSquares(binarizedImage, voteSquares);
     //printOutputImage(gridBinarizedImage, 'grid-binarized.png');
-    //var gridImage = drawGridSquares(imageData, voteSquares);
+    var gridImage = drawGridSquares(imageData, voteSquares);
     //printOutputImage(gridImage, 'grid.png');
 
     var votes = countVotes(squares);
 
-    writeImageDataToFile(gridBinarizedImage, outputImagePath, (err) => {
+    writeImageDataToFile(gridImage, outputImagePath, (err) => {
       if (err) return callback(err, null);
       callback(null, votes);
     });
@@ -1527,7 +1527,8 @@
     var font = new Canvas.Font('Roboto', __dirname + '/Roboto-Light.ttf')
     font.addFace(__dirname + '/Roboto-Light.ttf', 'light')
     context.addFont(font)
-    context.font = '9px Roboto'
+    context.font = '10px Roboto'
+    context.textAlign = "right";
 
     context.fillStyle = 'rgba(255,0,0,1.0)';
 
@@ -1537,16 +1538,18 @@
         context.strokeStyle = 'rgba(255,0,0,1.0)';
         var voteOffset = types.indexOf(square.vote);
         if (voteOffset !== -1){
-
           var middle = square.upperLeft.plus(coord(square.width/4 * voteOffset, 0)).plus(coord(square.width/8, square.height / 2));
           context.beginPath();
           context.arc(middle.x, middle.y, square.height/2, 0, 2 * Math.PI);
           context.stroke();
         }else{
+          context.fillStyle = 'rgba(255,0,0,0.3)';
           context.beginPath();
           context.moveTo(square.upperLeft.x, square.upperLeft.y);
+          context.lineTo(square.upperRight.x, square.upperRight.y);
           context.lineTo(square.lowerRight.x, square.lowerRight.y);
-          context.stroke();
+          context.lineTo(square.lowerLeft.x, square.lowerLeft.y);
+          context.fill();
         }
 
         context.beginPath();
@@ -1555,8 +1558,10 @@
         context.lineTo(square.lowerRight.x, square.lowerRight.y);
         context.lineTo(square.lowerLeft.x, square.lowerLeft.y);
         context.lineTo(square.upperLeft.x, square.upperLeft.y);
-        context.fillText(square.id + ' ' + square.vote, square.lowerLeft.x + 5, square.lowerLeft.y - 5);
         context.stroke();
+
+        context.fillStyle = 'rgba(255,0,0,1.0)';
+        context.fillText(square.vote +'\t'+square.id, square.upperRight.x - 5, square.upperRight.y + 10);
 
         context.strokeStyle = 'rgba(255,0,0,0.2)';
         context.beginPath();

@@ -92,6 +92,35 @@ app.patch('/doc/:id/coordinates/:index', (req, res) => {
   });
 });
 
+app.patch('/doc/:id/votes/:square', (req, res) => {
+  var id = parseInt(req.params.id);
+  var square = parseInt(req.params.square);
+  var validTypes = ['yes',
+                    'no',
+                    'refrain',
+                    'absent',
+                    'missing'];
+
+  var value = req.body.value;
+
+  if (validTypes.indexOf(value) == -1){
+    return res.status(500).send('not a valid vote: ' + value);
+  }
+
+  getPage(id, (err, page) => {
+    if (err) return res.status(500).send(err);
+
+    var previousVote = page.votes.squares[square].vote;
+    page.votes.squares[square].vote = value;
+    page.votes.total[previousVote]--;
+    page.votes.total[value]++;
+    savePage(page, (err) => {
+      if (err) return res.status(500).send(err);
+      res.status(200).send('OK');
+    })
+  });
+});
+
 app.post('/doc/:id/coordinates', (req, res) => {
   var id = parseInt(req.params.id);
   getPage(id, (err, page) => {
