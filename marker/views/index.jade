@@ -59,7 +59,7 @@ html
     div.
         <a href="/pageeditor/!{page.id - page.page}">previous book</a> <a href="/pageeditor/!{page.id + book.total_pages - page.page + 1}">next book</a>
     div.
-        <input type="button" value="Save" onclick="readPage()"/>
+        <input type="button" id="savebutton" value="Save" onclick="readPage()"/>
 
     div.
         <div id="imagecontainer" style="max-width: 1000px; max-height: 1000px; position: relative;">
@@ -195,6 +195,7 @@ html
             }
 
             function readPage() {
+                document.getElementById('savebutton').disabled = true;
                 var xhr = new XMLHttpRequest();
                 var path = '../doc/' + page.id + '/coordinates';
                 var coordinates = handles.map((handle)=>{
