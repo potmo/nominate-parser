@@ -18,5 +18,61 @@
 	{
 		"name": "centerpartiet",
 		"abbrevation": "c"
+	},
+	{
+		"name": "allmänna valmansförbundet",
+		"abbrevation": "av"
+	},
+	{
+		"name": "bondeförbundet",
+		"abbrevation": "b"
+	},
+	{
+		"name": "jordbrukarnas riksförbund",
+		"abbrevation": "j"
+	},
+	{
+		"name": "liberala samlingspartiet",
+		"abbrevation": "ls"
+	},
+	{
+		"name": "sveriges socialdemokratiska vänsterparti",
+		"abbrevation": "sv"
+	},
+	{
+		"name": "frisinnade folkpartiet",
+		"abbrevation": "ff"
+	},
+	{
+		"name": "liberala riksdagspartiet",
+		"abbrevation": "lr"
+	},
+	{
+		"name": "sverges kommunistiska parti (icke kominternanslutet)",
+		"abbrevation": "skpik"
+	},
+	{
+		"name": "sveriges kommunistiska parti (kilbomare)",
+		"abbrevation": "skpk"
+	},
+	{
+		"name": "socialistiska partiet",
+		"abbrevation": "sp"
+	},
+	{
+		"name": "högerns riksorganisation",
+		"abbrevation": "hr"
+	},
+	{
+		"name": "landsbygdspartiet bondeförbundet",
+		"abbrevation": "lb"
+	},
+	{
+		"name": "medborgerlig samling",
+		"abbrevation": "mbs"
+	},
+	{
+		"name": "mellanpartierna",
+		"abbrevation": "mlp"
 	}
 ]
