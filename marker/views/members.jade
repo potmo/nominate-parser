@@ -49,7 +49,7 @@ html
 		{
 		  display: function(data){ return data.name; },
 		  templates: {
-		  	suggestion: function(data){ return '<div>' + data.name + ' - ' + data.constituency.join(',') + '</div>'; }
+		  	suggestion: function(data){ return '<div>' + data.name + ' ('+ data.party.join(',') +')'+  ' - ' + data.constituency.join(',') + '</div>'; }
 		  },
 		  name: 'parties',
 		  source: parties
