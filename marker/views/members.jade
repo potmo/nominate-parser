@@ -6,8 +6,7 @@ html
 		script(src="http://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js")
 	body
 		div(id="bloodhound" style="display: flex; flex-direction: column; padding: 30px; width:300px")
-			input(id="name" type="text" placeholder="Name" style="width: 100%;" autofocus)
-			input(id="party" class="typeahead" type="text" placeholder="Party" style="width: 100%;")
+			input(id="name" class="typeahead" type="text" placeholder="Name" style="width: 100%;" autofocus)
 			input(id="save" type="button" value="save" style="width: 100%;")
 
 	style.
@@ -33,7 +32,7 @@ html
 		  identify: function(obj) { return obj.name; },
 		  prefetch: {
 		  	cache: false,
-		  	url: '../parties',
+		  	url: '../members',
 		  	/*transform: function(data){
 		  		return data.map((party)=>{
 		  			return party.name;
@@ -50,7 +49,7 @@ html
 		{
 		  display: function(data){ return data.name; },
 		  templates: {
-		  	suggestion: function(data){ return '<div>' + data.abbrevation + ' - ' + data.name + '</div>'; }
+		  	suggestion: function(data){ return '<div>' + data.name + ' - ' + data.constituency.join(',') + '</div>'; }
 		  },
 		  name: 'parties',
 		  source: parties

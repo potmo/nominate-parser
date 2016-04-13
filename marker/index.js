@@ -53,6 +53,15 @@ app.get('/parties', (req, res) => {
   });
 });
 
+app.get('/members', (req, res) => {
+  var fullPath = getLocalMembersPath();
+  fs.readFile(fullPath, (err, data) => {
+    if (err) return res.status(500).send(err);
+    var json = JSON.parse(data);
+    res.json(json);
+  });
+});
+
 app.get('/image/:filename', (req, res) => {
   var filename = req.params.filename;
   var fullPath = getLocalImagePath(filename);
@@ -149,6 +158,13 @@ function getLocalImagePath(filename) {
   var fullPath = path.resolve(relativePath);
   return fullPath;
 }
+
+function getLocalMembersPath() {
+  var relativePath = path.join('../voteringar/db/members.json');
+  var fullPath = path.resolve(relativePath);
+  return fullPath;
+}
+
 
 function getLocalPartiesPath() {
   var fullPath = path.resolve('../voteringar/db/parties.json');
