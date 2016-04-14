@@ -28,14 +28,15 @@ app.get('/pageeditor/:id', (req, res) => {
   getPage(id, (err, page) => {
     if (err) return res.status(500).send(err);
 
-    console.log('page book', page.book);
-
     getBook(page.book, (err, book)  => {
       if (err) return res.status(500).send(err);
 
-      console.log('got it');
+      console.log(book.house);
 
-      res.render('index', {page: page, book: book});
+      getChamberForPage(page, (err, chamber)=>{
+        if (err) return res.status(500).send(err);
+        res.render('index', {page: page, book: book, chamber: chamber});
+      });
     });
   });
 });
@@ -171,6 +172,11 @@ function getLocalPartiesPath() {
   return fullPath;
 }
 
+function getLocalChambersPath() {
+  var fullPath = path.resolve('../voteringar/db/chambers.json');
+  return fullPath;
+}
+
 function getLocalResolvedImagePath(filename) {
   var relativePath = path.join('../voteringar/resolved/', filename);
   var fullPath = path.resolve(relativePath);
@@ -185,6 +191,39 @@ function getFile(id, callback) {
   var dir = path.resolve('../voteringar/db/documents/')
   var fullPath = path.join(dir, name + '.json' );
   callback(null, fullPath);
+}
+
+function getChamberForPage(page, callback) {
+  var fullPath = getLocalChambersPath();
+  fs.readFile(fullPath, (err, data) => {
+    if (err) return callback(err, null);
+    var chambers = JSON.parse(data);
+
+    getBook(page.book, (err, book)  => {
+      if (err) return callback(err, null);
+
+      if (!chambers.chambers[book.house]) return callback('no chamber for ', null);
+
+      var matchingChambers = chambers.chambers[book.house].filter((chamber)=>{
+        console.log(page.id, chamber.start_page, chamber.end_page);
+
+        if (page.id >= chamber.start_page  &&  page.id <= chamber.end_page) {
+          return true;
+        }else{
+          return false;
+        }
+      });
+
+      if (matchingChambers.length == 1){
+        callback(null, matchingChambers[0]);
+      }else if(matchingChambers.length > 1){
+        callback('more than one chamber maching: ' + matchingChambers.map(JSON.stringify).join(','), null);
+      }else{
+        callback('no chamber found', null);
+      }
+
+    });
+  });
 }
 
 function savePage(page, callback) {

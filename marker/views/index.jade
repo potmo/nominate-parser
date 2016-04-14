@@ -4,6 +4,7 @@ html
     title=page.name
   script var page = !{JSON.stringify(page)}
   script var book = !{JSON.stringify(book)}
+  script var chamber = !{JSON.stringify(chamber)}
   body
     div.
         <b>#{book.start_year}-#{book.end_year}</b> #{book.book}#{book.book_letter}-#{book.book_number_type} <i>#{book.house} house</i>
@@ -20,7 +21,7 @@ html
 
     // TODO: This only works for the second chamber
     - var voteStyle= ''
-    if page.votes.total.yes + page.votes.total.no + page.votes.total.refrain + page.votes.total.absent != 233
+    if page.votes.total.yes + page.votes.total.no + page.votes.total.refrain + page.votes.total.absent != chamber.seats
         -voteStyle= "background-color: rgb(255,0,0)"
     else
         -voteStyle= "background-color: rgb(255,255,255)"
@@ -245,6 +246,8 @@ html
         table(border="1")
             tr
                 td square
+                td seat
+                td party
                 td Y
                 td N
                 td R
@@ -253,6 +256,8 @@ html
             each square in page.votes.squares
                 tr
                     td #{square.id}
+                    td !{chamber.seat_layout[square.id] || 'empty'}
+                    td !{chamber.party_layout[square.id] || 'empty'}
                     td
                         input(type="radio", name="vote-#{square.id}", value="0", checked=square.vote=="yes", onclick="updateSquareVote(this, #{square.id}, 'yes')")
                     td
