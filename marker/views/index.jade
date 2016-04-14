@@ -2,9 +2,11 @@ doctype html
 html
   head
     title=page.name
-  script var page = !{JSON.stringify(page)}
-  script var book = !{JSON.stringify(book)}
-  script var chamber = !{JSON.stringify(chamber)}
+    script(src="http://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js")
+    script(src="http://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js")
+    script var page = !{JSON.stringify(page)}
+    script var book = !{JSON.stringify(book)}
+    script var chamber = !{JSON.stringify(chamber)}
   body
     div.
         <b>#{book.start_year}-#{book.end_year}</b> #{book.book}#{book.book_letter}-#{book.book_number_type} <i>#{book.house} house</i>
@@ -19,7 +21,6 @@ html
         input(type="radio", name="book_type", value="0", checked=book.type=="handwritten")
         | handwritten 
 
-    // TODO: This only works for the second chamber
     - var voteStyle= ''
     if page.votes.total.yes + page.votes.total.no + page.votes.total.refrain + page.votes.total.absent != chamber.seats
         -voteStyle= "background-color: rgb(255,0,0)"
@@ -53,8 +54,8 @@ html
                     window.location.href = "/pageeditor/" + (page.id + 1);
                     break;
                 case 13: // enter
-                    readPage();
-                    break;
+                    //readPage();
+                    //break;
             }
         };
     div.
@@ -63,14 +64,6 @@ html
         <input type="button" id="savebutton" value="Save" onclick="readPage()"/>
 
     div.
-        <div id="imagecontainer" style="max-width: 1000px; max-height: 1000px; position: relative;">
-            <img id="originalimage" src="../image/#{page.image}" style="position: absolute; width: 100%; height: auto;" onload="onLoaded()"/>
-            <canvas id="gridcanvas" style="position: relative; width: 100%; height: auto;">
-        </div>
-        <div id="resolvedcontainer" style="max-width: 1000px; max-height: 1000px; position: relative;">
-            <img id="resolvedimage" src="../image/resolved/#{page.image}" style="width: 100%; height: auto;"/>
-        </div>
-
         <script>
             console.log('page: %o', page);
             console.log('book: %o', book);
@@ -80,16 +73,16 @@ html
             var canvas;
             var context;
 
-            var image = document.getElementById("originalimage");
-            var canvas = document.getElementById("gridcanvas");
-
             var move = 0;
             var verticalRatios = [move+=.097, move+=.097, move+=.097, move+=.097, move+=.097, move+=.031, move+=.097, move+=.097, move+=.097, move+=.097];
             var horizontalRatios = Array(23).fill(1/24 - 0.0003).map(function(item, index){ return item * (index + 1) });
 
-            document.getElementById('imagecontainer').appendChild(image);
 
             function onLoaded(){
+
+                var image = document.getElementById("originalimage");
+                canvas = document.getElementById("gridcanvas");
+                document.getElementById('imagecontainer').appendChild(image);
 
                 document.getElementById('imagecontainer').appendChild(canvas);
                 canvas.width = image.width;
@@ -214,10 +207,8 @@ html
                 xhr.send(json);
             }
 
-            function updateSquareVote(radioButton, square, vote){
+            function updateSquareVote(square, vote){
                 console.log('update %s to %s', square, vote);
-
-                radioButton.disabled = true;
 
                 var xhr = new XMLHttpRequest();
                 var path = '../doc/' + page.id + '/votes/' + square;
@@ -229,15 +220,52 @@ html
                 xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
                 xhr.onload = function(e) {
                     console.log('done');
-                    radioButton.disabled = false;
-                    location.reload();
+                    //location.reload();
                 };
                 xhr.send(json);
+            }
 
+            function saveSquareVote(elementName, id){
+                var elements = Array.prototype.slice.call(document.getElementsByName(elementName));
+                elements
+                    .filter((element)=>{
+                        return element.checked
+                    })
+                    .forEach((element=>{
+                        updateSquareVote(id, element.value);
+                    }));
+            }
+
+            function saveMember(seat, memberid) {
+                console.log('saving %s on seat %s', memberid, seat)
             }
         </script>
+        <div id="imagecontainer" style="max-width: 1000px; max-height: 1000px; position: relative;">
+            <img id="originalimage" src="../image/#{page.image}" style="position: absolute; width: 100%; height: auto;" onload="onLoaded()"/>
+            <canvas id="gridcanvas" style="position: relative; width: 100%; height: auto;">
+        </div>
+        <div id="resolvedcontainer" style="max-width: 1000px; max-height: 1000px; position: relative;">
+            <img id="resolvedimage" src="../image/resolved/#{page.image}" style="width: 100%; height: auto;"/>
+        </div>
 
-    div
+    style.
+        .tt-menu {
+            background-color: rgb(255, 255, 255);
+            border-style: solid;
+            border-spacing: 1px;
+            border-width: thin;
+        }
+        .tt-selectable {
+            padding: 5px;
+        }
+        .tt-suggestion.tt-cursor {
+            background-color: rgb(200, 200, 200);
+        }
+        .twitter-typeahead {
+            width: 394px;
+        }
+
+    div(id= 'votereference')
         style.
             table {
                 border-spacing: 0px;
@@ -253,18 +281,63 @@ html
                 td R
                 td A
                 td M
+                td
+                td name
+                td
             each square in page.votes.squares
                 tr
                     td #{square.id}
                     td !{chamber.seat_layout[square.id] || 'empty'}
                     td !{chamber.party_layout[square.id] || 'empty'}
                     td
-                        input(type="radio", name="vote-#{square.id}", value="0", checked=square.vote=="yes", onclick="updateSquareVote(this, #{square.id}, 'yes')")
+                        input(type="radio", name="vote-#{square.id}", value="yes", checked=square.vote=="yes")
                     td
-                        input(type="radio", name="vote-#{square.id}", value="0", checked=square.vote=="no", onclick="updateSquareVote(this, #{square.id}, 'no')")
+                        input(type="radio", name="vote-#{square.id}", value="no", checked=square.vote=="no")
                     td
-                        input(type="radio", name="vote-#{square.id}", value="0", checked=square.vote=="refrain", onclick="updateSquareVote(this, #{square.id}, 'refrain')")
+                        input(type="radio", name="vote-#{square.id}", value="refrain", checked=square.vote=="refrain")
                     td
-                        input(type="radio", name="vote-#{square.id}", value="0", checked=square.vote=="absent", onclick="updateSquareVote(this, #{square.id}, 'absent')")
+                        input(type="radio", name="vote-#{square.id}", value="absent", checked=square.vote=="absent")
                     td
-                        input(type="radio", name="vote-#{square.id}", value="0", checked=square.vote=="missing", onclick="updateSquareVote(this, #{square.id}, 'missing')")
+                        input(type="radio", name="vote-#{square.id}", value="missing", checked=square.vote=="missing")
+                    td
+                        input(type="button", value="save" onclick="saveSquareVote('vote-#{square.id}', #{square.id})")
+                    td(style='width: 400px;')
+                        input(id="membername-#{square.id}" class="typeahead" type="text" placeholder="Name" style="width: 100%;")
+                    td
+                        input(type="button", value="save" onclick="saveMember(chamber.seat_layout[ #{square.id} ], 'member')")
+
+     script.
+        $(document).ready(()=>{
+            var parties = new Bloodhound({
+              datumTokenizer: function(obj){ return obj.name.split(' ').concat([obj.abbrevation])},
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
+              identify: function(obj) { return obj.name; },
+              prefetch: {
+                cache: false,
+                url: '../members',
+                /*transform: function(data){
+                    return data.map((party)=>{
+                        return party.name;
+                    });
+                }*/
+              }
+            });
+
+            $('#votereference .typeahead').typeahead({
+              hint: true,
+              highlight: true,
+              minLength: 1
+            },
+            {
+              display: function(data){ return data.name; },
+              templates: {
+                suggestion: function(data){ return '<div>' + data.name + ' ('+ data.party.join(',') +')'+  ' - ' + data.constituency.join(',') + '</div>'; }
+              },
+              name: 'parties',
+              source: parties
+            });
+
+            $('#votereference .typeahead').bind('typeahead:select', function(ev, suggestion) {
+              console.log('Selection: ', suggestion);
+            });
+        });

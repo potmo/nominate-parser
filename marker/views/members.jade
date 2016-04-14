@@ -6,9 +6,10 @@ html
 		script(src="http://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js")
 	body
 		div(id="bloodhound" style="display: flex; flex-direction: column; padding: 30px; width:300px")
-			input(id="name" class="typeahead" type="text" placeholder="Name" style="width: 100%;" autofocus)
-			input(id="name2" class="typeahead" type="text" placeholder="Name" style="width: 100%;" autofocus)
-			input(id="save" type="button" value="save" style="width: 100%;")
+			div(id="other")
+				input(id="name" class="typeahead" type="text" placeholder="Name" style="width: 100%;" autofocus)
+				input(id="name2" class="typeahead" type="text" placeholder="Name" style="width: 100%;" autofocus)
+				input(id="save" type="button" value="save" style="width: 100%;")
 
 	style.
 		input {
