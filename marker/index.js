@@ -31,7 +31,7 @@ app.get('/pageeditor/:id', (req, res) => {
     getBook(page.book, (err, book)  => {
       if (err) return res.status(500).send(err);
 
-      console.log(book.house);
+      console.log(book.chamber);
 
       getChamberForPage(page, (err, chamber)=>{
         if (err) return res.status(500).send(err);
@@ -202,9 +202,9 @@ function getChamberForPage(page, callback) {
     getBook(page.book, (err, book)  => {
       if (err) return callback(err, null);
 
-      if (!chambers.chambers[book.house]) return callback('no chamber for ', null);
+      if (!chambers.chambers[book.chamber]) return callback('no chamber for ' + page, null);
 
-      var matchingChambers = chambers.chambers[book.house].filter((chamber)=>{
+      var matchingChambers = chambers.chambers[book.chamber].filter((chamber)=>{
         console.log(page.id, chamber.start_page, chamber.end_page);
 
         if (page.id >= chamber.start_page  &&  page.id <= chamber.end_page) {
@@ -267,7 +267,7 @@ function getPage(id, callback) {
       page.page = doc.page;
     }
 
-    //TODO: This is only for the second house
+    //TODO: This is only for the second chamber
     if (!doc['votes']){
       page.votes = {
         squares: [],

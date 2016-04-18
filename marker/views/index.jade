@@ -9,7 +9,7 @@ html
     script var chamber = !{JSON.stringify(chamber)}
   body
     div.
-        <b>#{book.start_year}-#{book.end_year}</b> #{book.book}#{book.book_letter}-#{book.book_number_type} <i>#{book.house} house</i>
+        <b>#{book.start_year}-#{book.end_year}</b> #{book.book}#{book.book_letter}-#{book.book_number_type} <i>#{book.chamber} chamber</i>
         <br>session: #{book.sessiontype}
 
     div
@@ -237,7 +237,7 @@ html
             }
 
             function saveMember(seat, memberid) {
-                console.log('saving %s on seat %s', memberid, seat)
+                console.log('saving %s on seat %s in chamber %s for page %s ', memberid, seat, book.chamber, page.id);
             }
         </script>
         <div id="imagecontainer" style="max-width: 1000px; max-height: 1000px; position: relative;">
