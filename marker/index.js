@@ -45,7 +45,7 @@ app.get('/pageeditor/:id', (req, res) => {
       getChamberForPage(page, (err, chamber)=>{
         if (err) return res.status(500).send(err);
 
-        getMembersOnSeats(page.page, book.chamber, chamber.seats, (err, seatings)=>{
+        getMembersOnSeats(id, book.chamber, chamber.seats, (err, seatings)=>{
           if (err) return res.status(500).send(err);
 
           res.render('index', {page: page, book: book, chamber: chamber, seatings: seatings});
@@ -262,7 +262,10 @@ function getMemberOnSeat(pageNum, chamberName, seat, callback) {
     var seatedMemberId = null;
     for(var i = 0; i < json[chamberName][seat].length; i++) {
       if (pageNum >= json[chamberName][seat][i].seated_at_page) {
+        console.log("found member %s seated at %s", json[chamberName][seat][i].member_id, json[chamberName][seat][i].seated_at_page, pageNum)
         seatedMemberId = json[chamberName][seat][i].member_id;
+      }else{
+        console.log("found not to member %s seated at %s", json[chamberName][seat][i].member_id, json[chamberName][seat][i].seated_at_page, pageNum)
       }
     }
 
@@ -275,7 +278,7 @@ function getMemberOnSeat(pageNum, chamberName, seat, callback) {
 }
 
 function getMembersOnSeats(pageNum, chamberName, totalSeats, callback) {
-  var seats = fori(1, totalSeats + 1);
+  var seats = fori(0, totalSeats + 1);
   async.map(seats, (seat, cb)=>{
     getMemberOnSeat(pageNum, chamberName, seat, cb);
   }, callback);
