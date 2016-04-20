@@ -4,6 +4,7 @@ var fs = require('fs');
 var path = require('path');
 var bodyParser = require('body-parser');
 var imageParser = require('../votes/index.js');
+var async = require('async');
 
 var documentIndex = [];
 
@@ -25,17 +26,30 @@ app.get('/pageeditor/:id', (req, res) => {
   var id = parseInt(req.params.id);
   console.log('get page', id);
 
+  //fori(0, 130).map((i)=>{
+  //  getMemberOnSeat(i, 'first', 0, (err, member)=> {
+  //      if (err || !member) {
+  //        console.log( pad(i,3) + ' no one on seat ' + 0 + ' on page ' + i, err);
+  //      }else{
+  //        console.log( pad(i,3) + ' ' + member.name + '(' + member.id + ') on seat ' + 0 + ' on page ' + i);
+  //      }
+  //    });
+  //});
+
   getPage(id, (err, page) => {
     if (err) return res.status(500).send(err);
 
     getBook(page.book, (err, book)  => {
       if (err) return res.status(500).send(err);
 
-      console.log(book.chamber);
-
       getChamberForPage(page, (err, chamber)=>{
         if (err) return res.status(500).send(err);
-        res.render('index', {page: page, book: book, chamber: chamber});
+
+        getMembersOnSeats(page.page, book.chamber, chamber.seats, (err, seatings)=>{
+          if (err) return res.status(500).send(err);
+
+          res.render('index', {page: page, book: book, chamber: chamber, seatings: seatings});
+        });
       });
     });
   });
@@ -166,7 +180,6 @@ function getLocalMembersPath() {
   return fullPath;
 }
 
-
 function getLocalPartiesPath() {
   var fullPath = path.resolve('../voteringar/db/parties.json');
   return fullPath;
@@ -174,6 +187,11 @@ function getLocalPartiesPath() {
 
 function getLocalChambersPath() {
   var fullPath = path.resolve('../voteringar/db/chambers.json');
+  return fullPath;
+}
+
+function getLocalSeatingsPath() {
+  var fullPath = path.resolve('../voteringar/db/seatings.json');
   return fullPath;
 }
 
@@ -225,6 +243,67 @@ function getChamberForPage(page, callback) {
     });
   });
 }
+
+function getMemberOnSeat(pageNum, chamberName, seat, callback) {
+  var fileName = getLocalSeatingsPath()
+  fs.readFile(fileName, (err, data)=>{
+    if (err) return callback(err, null);
+
+    var json = JSON.parse(data);
+
+    if (!json[chamberName][seat]){
+      json[chamberName][seat] = [];
+    }
+
+    json[chamberName][seat].sort((a,b) => {
+      return a.seated_at_page - b.seated_at_page;
+    });
+
+    var seatedMemberId = null;
+    for(var i = 0; i < json[chamberName][seat].length; i++) {
+      if (pageNum >= json[chamberName][seat][i].seated_at_page) {
+        seatedMemberId = json[chamberName][seat][i].member_id;
+      }
+    }
+
+    if (seatedMemberId != null){
+      return getMember(seatedMemberId, callback);
+    }else{
+      return callback(null, null);
+    }
+  });
+}
+
+function getMembersOnSeats(pageNum, chamberName, totalSeats, callback) {
+  var seats = fori(1, totalSeats + 1);
+  async.map(seats, (seat, cb)=>{
+    getMemberOnSeat(pageNum, chamberName, seat, cb);
+  }, callback);
+}
+
+
+function getMember(id, callback){
+  var file = getLocalMembersPath();
+  fs.readFile(file, (err, data) => {
+    if (err) return callback(err, null);
+
+    var json = JSON.parse(data);
+
+    var membersWithId = json.filter((member)=>{
+      return member.id === id;
+    });
+
+    if (membersWithId.length == 0) {
+      return callback('No member with id ' + id + ' found', null);
+    }else if (membersWithId.length > 1){
+      return callback('More than one member with id ' + id + ' found', null);
+    }
+
+    callback(null, membersWithId[membersWithId.length - 1]);
+
+  });
+}
+
 
 function savePage(page, callback) {
 
@@ -308,4 +387,21 @@ function getBook(hashkey, callback) {
     if (!book) return callback('No book found with hashkey: ' + hashkey, null);
     callback(null, book);
   });
+}
+
+function fori(from, to){
+  var array = new Array(to - from);
+  for (var i = 0; i < array.length; i++){
+    array[i] = from + i;
+  }
+  return array;
+}
+
+
+function pad(num, zeros){
+  var num = '' + num;
+  while(num.length < zeros){
+    num = '0' + num;
+  }
+  return num;
 }
