@@ -257,7 +257,10 @@ html
                 console.log(json);
                 xhr.open('PUT', path, true);
                 xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                element.disabled = true;
                 xhr.onload = function(e) {
+                    element.disabled = false;
+                    element.style["background-color"] = 'rgb(200,255,200)';
                     console.log('done saving member');
                 };
                 xhr.send(json);
@@ -289,7 +292,7 @@ html
             width: 394px;
         }
 
-    div(id= 'votereference')
+    div(id= 'votereference' style='height: 400px; overflow-y: scroll;')
         style.
             table {
                 border-spacing: 0px;
@@ -326,7 +329,7 @@ html
                     td
                         input(type="button", value="save" onclick="saveSquareVote('vote-#{square.id}', #{square.id})")
                     td(style='width: 400px;')
-                        input(id="membername-#{square.id}" class="typeahead" type="text" placeholder="Name" style="width: 100%;" value="#{seatings[chamber.seat_layout[square.id]] ? seatings[chamber.seat_layout[square.id]].name : ''}")&attributes({'data-seated-member-id': seatings[chamber.seat_layout[square.id]] ? seatings[chamber.seat_layout[square.id]].id : ''})
+                        input(id="membername-#{square.id}" class="typeahead" type="text" placeholder="Name" style="width: 100%;" value="#{seatings[chamber.seat_layout[square.id]] ? seatings[chamber.seat_layout[square.id]].name+' - '+seatings[chamber.seat_layout[square.id]].constituency.join(',') : ''}")&attributes({'data-seated-member-id': seatings[chamber.seat_layout[square.id]] ? seatings[chamber.seat_layout[square.id]].id : ''})
                     td
                         input(type="button", value="save" onclick="saveMember(chamber.seat_layout[ #{square.id} ], 'membername-#{square.id}')")
 
@@ -353,12 +356,13 @@ html
               minLength: 1
             },
             {
-              display: function(data){ return data.name; },
+              display: function(data){ return data.name + ' - ' + data.constituency.join(',') },
               templates: {
                 suggestion: function(data){ return '<div>' + data.name + ' ('+ data.party.join(',') +')'+  ' - ' + data.constituency.join(',') + '</div>'; }
               },
               name: 'parties',
-              source: parties
+              source: parties,
+              limit: 15
             });
 
             $('#votereference .typeahead').bind('typeahead:select', function(ev, suggestion) {
