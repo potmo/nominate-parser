@@ -1,28 +1,4 @@
 {
   "first": [],
-  "second": [
-    [],
-    [
-      {
-        "member_id": 0,
-        "seated_at_page": 20
-      },
-      {
-        "member_id": 3,
-        "seated_at_page": 60
-      },
-      {
-        "member_id": 2,
-        "seated_at_page": 30
-      },
-      {
-        "member_id": 4,
-        "seated_at_page": 40
-      },
-      {
-        "member_id": 5,
-        "seated_at_page": 120
-      }
-    ]
-  ]
+  "second": []
 }
