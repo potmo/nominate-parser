@@ -68,6 +68,42 @@ app.get('/parties', (req, res) => {
   });
 });
 
+app.put('/seatings/:chamber/:seat', (req, res) => {
+  var chamberName = req.params.chamber;
+  var seat = parseInt(req.params.seat);
+  var member = parseInt(req.body.member_id);
+  var page = parseInt(req.body.page);
+
+  if (chamberName == null || seat == null || member == null || page == null){
+    return res.status(500).send('bad input');
+  }
+
+  getSeatings((err, seatings)=>{
+    if (err) return res.status(500).send(err);
+
+    if (!seatings[chamberName][seat]){
+      seatings[chamberName][seat] = [];
+    }
+
+    // remove previously seated at this position
+    seatings[chamberName][seat] = seatings[chamberName][seat].filter((seating)=>{
+      return seating.seated_at_page != page;
+    });
+
+    seatings[chamberName][seat].push({
+      member_id: member,
+      seated_at_page: page
+    });
+
+    saveSeatings(seatings, (err) => {
+      if (err) return res.status(500).send(err);
+      console.log('%j',seatings);
+      res.status(200).send('OK');
+    });
+
+  });
+});
+
 app.get('/members', (req, res) => {
   var fullPath = getLocalMembersPath();
   fs.readFile(fullPath, (err, data) => {
@@ -245,27 +281,24 @@ function getChamberForPage(page, callback) {
 }
 
 function getMemberOnSeat(pageNum, chamberName, seat, callback) {
-  var fileName = getLocalSeatingsPath()
-  fs.readFile(fileName, (err, data)=>{
+  getSeatings((err, seatings)=>{
     if (err) return callback(err, null);
 
-    var json = JSON.parse(data);
-
-    if (!json[chamberName][seat]){
-      json[chamberName][seat] = [];
+    if (!seatings[chamberName][seat]){
+      seatings[chamberName][seat] = [];
     }
 
-    json[chamberName][seat].sort((a,b) => {
+    seatings[chamberName][seat].sort((a,b) => {
       return a.seated_at_page - b.seated_at_page;
     });
 
     var seatedMemberId = null;
-    for(var i = 0; i < json[chamberName][seat].length; i++) {
-      if (pageNum >= json[chamberName][seat][i].seated_at_page) {
-        console.log("found member %s seated at %s", json[chamberName][seat][i].member_id, json[chamberName][seat][i].seated_at_page, pageNum)
-        seatedMemberId = json[chamberName][seat][i].member_id;
+    for(var i = 0; i < seatings[chamberName][seat].length; i++) {
+      if (pageNum >= seatings[chamberName][seat][i].seated_at_page) {
+        console.log("found member %s seated at %s", seatings[chamberName][seat][i].member_id, seatings[chamberName][seat][i].seated_at_page, pageNum)
+        seatedMemberId = seatings[chamberName][seat][i].member_id;
       }else{
-        console.log("found not to member %s seated at %s", json[chamberName][seat][i].member_id, json[chamberName][seat][i].seated_at_page, pageNum)
+        console.log("found not to member %s seated at %s", seatings[chamberName][seat][i].member_id, seatings[chamberName][seat][i].seated_at_page, pageNum)
       }
     }
 
@@ -274,6 +307,25 @@ function getMemberOnSeat(pageNum, chamberName, seat, callback) {
     }else{
       return callback(null, null);
     }
+  });
+}
+
+function getSeatings(callback){
+  var fileName = getLocalSeatingsPath();
+  fs.readFile(fileName, (err, data)=>{
+    if (err) return callback(err, null);
+    var json = JSON.parse(data);
+    callback(null, json);
+  });
+}
+
+function saveSeatings(seatings, callback){
+  var file = getLocalSeatingsPath();
+  var json = JSON.stringify(seatings, null, 2);
+  fs.writeFile(file, json, (err)=>{
+    if (err) return callback(err);
+    console.log('saved seatings');
+    callback(null);
   });
 }
 

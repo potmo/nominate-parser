@@ -49,10 +49,10 @@ html
             evt = evt || window.event;
             switch(evt.keyCode){
                 case 37: // left
-                    window.location.href = "/pageeditor/" + (page.id - 1);
+                    //window.location.href = "/pageeditor/" + (page.id - 1);
                     break;
                 case 39: // right
-                    window.location.href = "/pageeditor/" + (page.id + 1);
+                    //window.location.href = "/pageeditor/" + (page.id + 1);
                     break;
                 case 13: // enter
                     //readPage();
@@ -239,8 +239,29 @@ html
                     }));
             }
 
-            function saveMember(seat, memberid) {
-                console.log('saving %s on seat %s in chamber %s for page %s ', memberid, seat, book.chamber, page.id);
+            function saveMember(seat, fieldId) {
+
+                var element = document.getElementById(fieldId);
+                var memberId = element.getAttribute('data-seated-member-id');
+
+                console.log('saving %s on seat %s in chamber %s for page %s ', memberId, seat, book.chamber, page.id);
+
+                var xhr = new XMLHttpRequest();
+                var path = '../seatings/' + book.chamber + '/' + seat;
+                var body = {
+                    member_id: memberId,
+                    page: page.id
+                };
+                var json = JSON.stringify(body);
+
+                console.log(json);
+                xhr.open('PUT', path, true);
+                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                xhr.onload = function(e) {
+                    console.log('done saving member');
+                };
+                xhr.send(json);
+
             }
         </script>
         <div id="imagecontainer" style="max-width: 1000px; max-height: 1000px; position: relative;">
@@ -307,7 +328,7 @@ html
                     td(style='width: 400px;')
                         input(id="membername-#{square.id}" class="typeahead" type="text" placeholder="Name" style="width: 100%;" value="#{seatings[chamber.seat_layout[square.id]] ? seatings[chamber.seat_layout[square.id]].name : ''}")&attributes({'data-seated-member-id': seatings[chamber.seat_layout[square.id]] ? seatings[chamber.seat_layout[square.id]].id : ''})
                     td
-                        input(type="button", value="save" onclick="saveMember(chamber.seat_layout[ #{square.id} ], 'member')")
+                        input(type="button", value="save" onclick="saveMember(chamber.seat_layout[ #{square.id} ], 'membername-#{square.id}')")
 
      script.
         $(document).ready(()=>{
