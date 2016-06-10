@@ -10,6 +10,48 @@
 
   var exports = module.exports = {};
 
+  exports.prepareImage = function(imagePath, outputImagePath, callback) {
+
+    var imageData = loadImage(imagePath);
+
+    imageData = scaleImage(imageData, 0.8);
+
+    var closedImage = closing(imageData);
+
+    var histogram = getHistogram(closedImage);
+    var threshold = otsu(histogram, closedImage.width * closedImage.height);
+
+    var binarizedImage = binarize(closedImage, threshold);
+
+    writeImageDataToFile(binarizedImage, outputImagePath, (err) => {
+      if (err) return callback(err, null);
+      callback(null);
+    });
+  }
+
+  exports.getVotesFromPreparedImage = function(preparedImagePath, rawImagePath, outputImagePath, page, callback) {
+
+    //var imageData = loadImage(rawImagePath);
+    //imageData = scaleImage(imageData, 0.8);
+    //imageData = warpImage(imageData, page);
+
+    var preparedImageData = loadImage(preparedImagePath);
+    preparedImageData = warpImage(preparedImageData, page);
+
+    var squares = getGridSquares(preparedImageData.width, preparedImageData.height);
+    var voteSquares = findVotes(preparedImageData, squares)
+
+    var gridImage = drawGridSquares(preparedImageData, voteSquares);
+
+    var votes = countVotes(squares);
+
+    writeImageDataToFile(gridImage, outputImagePath, (err) => {
+      if (err) return callback(err, null);
+      callback(null, votes);
+    });
+  }
+
+
   exports.getVotes = function(imagePath, outputImagePath, page, callback) {
 
     var imageData = loadImage(imagePath);

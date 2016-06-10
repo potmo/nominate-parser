@@ -7,6 +7,23 @@ var Image = Canvas.Image;
 var coordinatesData = fs.readFileSync('./coordinates.json');
 var coordinates = JSON.parse(coordinatesData);
 
+//coordinates = coordinates.filter((e, i)=>{
+//	return i % 10 > 0;
+//});
+
+// TODO: make the rectangle wider until it reaches the optimal ratio
+// TODO: slide the voting tempate grid over the dots with 1/4 of the grid width and see which fits best
+// use the best to calculate the votes
+// TODO: get the orientation of the bounding box by using the PCA eigen vectors. That way we can know what is right and up etc.
+
+// Maybe
+// - find the 10 dots closest to the local coordinate system top
+// - find the most probable straight line
+// - repeat for all horizontal lines
+// - use perpendicular to the average horizontal line as vertical line and split that line into 40 subsections
+// - from the left find the dots closest to that line. repeat for all vertical lines
+// - calculate the average distance from optimal fit. (squared euqleadian distance)
+// - could also try to fit all possible options. the most left is in the yes column. no column etc. and find the least error from all points to the grid centres
 
 
 var padding = {
@@ -104,6 +121,7 @@ var bestUnit;
 var bestWidth;
 var bestHeight;
 var bestRegpoint;
+var bestDirection;
 
 
 hull.reduce(function(previous, current) {
@@ -139,8 +157,8 @@ hull.reduce(function(previous, current) {
 
 	var topLeft = add(add(first, left), up);
 	var topRight = add(add(first, right), up);
-	var bottomLeft = add(add(first, down), left);
-	var bottomRight = add(add(first, down), right);
+	var bottomLeft = add(add(first, left), down);
+	var bottomRight = add(add(first, right), down);
 
 	//context.strokeStyle = 'rgba(0,0,0,0.5)';
 	//context.beginPath();
@@ -175,6 +193,7 @@ hull.reduce(function(previous, current) {
 		bestWidth = Math.round(Math.abs(minX - maxX));
 		bestHeight = Math.round(Math.abs(minY - maxY));
 		bestRegpoint = add(add(first, left), up);
+		bestDirection = direction;
 
 	}
 
@@ -186,20 +205,66 @@ hull.reduce(function(previous, current) {
 console.log('now draw the thing: ', minTopLeft, minTopRight, minBottomLeft, minBottomRight);
 
 context.strokeStyle = 'rgba(255,0,0,1.0)';
+context.setLineDash([5, 5]);
 context.beginPath();
 context.moveTo(minTopLeft.x, minTopLeft.y);
 context.lineTo(minTopRight.x, minTopRight.y);
-context.moveTo(minTopRight.x, minTopRight.y);
 context.lineTo(minBottomRight.x, minBottomRight.y);
-context.moveTo(minBottomRight.x, minBottomRight.y);
 context.lineTo(minBottomLeft.x, minBottomLeft.y);
-context.moveTo(minBottomLeft.x, minBottomLeft.y);
 context.lineTo(minTopLeft.x, minTopLeft.y);
+context.stroke();
+context.setLineDash([]);
+
+context.fillText('tl', minTopLeft.x, minTopLeft.y);
+context.fillText('tr', minTopRight.x, minTopRight.y);
+context.fillText('br', minBottomRight.x, minBottomRight.y);
+context.fillText('bl', minBottomLeft.x, minBottomLeft.y);
+
+context.beginPath();
+context.arc(bestRegpoint.x, bestRegpoint.y, 10, 0, 2 * Math.PI);
+context.stroke();
+
+
+context.beginPath();
+context.arc(bestRegpoint.x + bestDirection.x,  bestRegpoint.y + bestDirection.y, 5, 0, 2 * Math.PI);
 context.stroke();
 
 // retio should be 1.76051779935 or 0.56801470588
 
+// 1000x569.562
+
+// optimal is 0.59077
+
+
+//TODO: The width and height are changed here since the coordinates are off
+// use the eigenvectors or something to get the up and down directions
+// (or just squared distance from the corners?)
 console.log('ratio:', bestWidth / bestHeight);
+console.log('bratio:', 569.562/1000);
+console.log('wratio:', bestWidth, bestWidth/569.562);
+console.log('hratio:', bestHeight, bestHeight/1000);
+
+var scaleToOptimal = Math.min(bestWidth/569.562, bestHeight/1000)
+var scaledBestWidth = bestWidth * scaleToOptimal;
+var scaledBestHeight = bestHeight * scaleToOptimal;
+
+var scaledTopLeft = minTopLeft;
+var scaledTopRight = add(minTopLeft, scale( normalize( subtract( minTopRight, minTopLeft) ), scaledBestWidth));
+var scaledBottomLeft = add(minTopLeft, scale( normalize( subtract( minBottomLeft, minTopLeft) ), scaledBestHeight));
+var scaledBottomRight = add(scaledBottomLeft, scale( normalize( subtract( minBottomRight, minBottomLeft) ), scaledBestWidth));
+
+context.strokeStyle = 'rgba(0,255,0,1.0)';
+context.setLineDash([5, 5]);
+context.beginPath();
+context.moveTo(scaledTopLeft.x, scaledTopLeft.y);
+context.lineTo(scaledTopRight.x, scaledTopRight.y);
+context.lineTo(scaledBottomRight.x, scaledBottomRight.y);
+context.lineTo(scaledBottomLeft.x, scaledBottomLeft.y);
+context.lineTo(scaledTopLeft.x, scaledTopLeft.y);
+context.stroke();
+context.setLineDash([]);
+
+
 
 var out = fs.createWriteStream('debug.png');
 var stream = canvas.pngStream();

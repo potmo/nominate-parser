@@ -11,6 +11,10 @@ var documentIndex = [];
 fs.readFile(path.resolve('../voteringar/db/index.json'), (err, data) => {
   if (err) throw err;
   documentIndex = JSON.parse(data);
+
+  //prep(0, 12519, (err)=>{
+  // console.log('all done', err);
+  //});
 });
 
 app.use(bodyParser.json());
@@ -137,6 +141,36 @@ app.get('/docs/:id', (req, res) => {
   });
 });
 
+app.get('/prepared/:id', (req, res) => {
+  var id = parseInt(req.params.id);
+  prep(id,id, (err)=>{
+    if (err) return res.status(500).send(err);
+    res.status(200).send('OK');
+  });
+});
+
+function prep(from, to, callback){
+  var id = from;
+  console.log('start prepping');
+  async.whilst(()=>{ return id >= to }, // 12519
+               (cb)=>{
+                getDocument(id, (err, doc) => {
+                  if (err) return cb('no doc: ' + id + ' '  + err);
+                  console.log('prepping', id);
+                  var imagePath = getLocalImagePath(doc.image);
+                  var preparedImagePath = getLocalPreparedImagePath(doc.image);
+
+                  imageParser.prepareImage(imagePath, preparedImagePath, (err)=>{
+                    id--;
+                    if (err) return cb('can not prepare: ' + id + ' '  + err);
+                    console.log('done with', id);
+                    cb(null);
+                  });
+                });
+               },
+               callback);
+};
+
 app.patch('/doc/:id/coordinates/:index', (req, res) => {
   var id = parseInt(req.params.id);
   var coordinateIndex = parseInt(req.params.index);
@@ -189,7 +223,10 @@ app.post('/doc/:id/coordinates', (req, res) => {
     var resolvedImagePath = getLocalResolvedImagePath(page.image);
     var coordinates = req.body;
     page.coordinates = coordinates;
-    imageParser.getVotes(imagePath, resolvedImagePath, page, (err, votes)=> {
+
+    var preparedImagePath = getLocalPreparedImagePath(page.image);
+
+    imageParser.getVotesFromPreparedImage(preparedImagePath, imagePath, resolvedImagePath, page, (err, votes)=> {
       if (err) return res.status(500).send(err);
       page.votes = votes;
       savePage(page, (err)=>{
@@ -197,6 +234,15 @@ app.post('/doc/:id/coordinates', (req, res) => {
         res.status(200).send('OK');
       });
     });
+
+    //imageParser.getVotes(imagePath, resolvedImagePath, page, (err, votes)=> {
+    //  if (err) return res.status(500).send(err);
+    //  page.votes = votes;
+    //  savePage(page, (err)=>{
+    //    if (err) return res.status(500).send(err);
+    //    res.status(200).send('OK');
+    //  });
+    //});
   });
 });
 
@@ -206,6 +252,12 @@ app.listen(3000, () => {
 
 function getLocalImagePath(filename) {
   var relativePath = path.join('../voteringar/png/', filename);
+  var fullPath = path.resolve(relativePath);
+  return fullPath;
+}
+
+function getLocalPreparedImagePath(filename) {
+  var relativePath = path.join('../voteringar/prepared_png/', filename);
   var fullPath = path.resolve(relativePath);
   return fullPath;
 }
@@ -295,7 +347,7 @@ function getMemberOnSeat(pageNum, chamberName, seat, callback) {
     var seatedMemberId = null;
     for(var i = 0; i < seatings[chamberName][seat].length; i++) {
       if (pageNum >= seatings[chamberName][seat][i].seated_at_page) {
-        console.log("found member %s seated at %s", seatings[chamberName][seat][i].member_id, seatings[chamberName][seat][i].seated_at_page, pageNum)
+        //console.log("found member %s seated at %s", seatings[chamberName][seat][i].member_id, seatings[chamberName][seat][i].seated_at_page, pageNum)
         seatedMemberId = seatings[chamberName][seat][i].member_id;
       }else{
         console.log("found not to member %s seated at %s", seatings[chamberName][seat][i].member_id, seatings[chamberName][seat][i].seated_at_page, pageNum)
