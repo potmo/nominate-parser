@@ -1,58 +1,175 @@
 doctype html
 html
-	head
-		title="members of parliament"
-		script(src="http://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js")
-		script(src="http://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js")
-	body
-		div(id="bloodhound" style="display: flex; flex-direction: column; padding: 30px; width:300px")
-			div(id="other")
-				input(id="name" class="typeahead" type="text" placeholder="Name" style="width: 100%;" autofocus)
-				input(id="name2" class="typeahead" type="text" placeholder="Name" style="width: 100%;" autofocus)
-				input(id="save" type="button" value="save" style="width: 100%;")
+    head
+        title="members of parliament"
+        script(src="http://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js")
+        script(src="http://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js")
 
-	style.
-		input {
-			margin: 5px;
-		}
-		.tt-menu {
-			background-color: rgb(255, 255, 255);
-			border-style: solid;
-			border-spacing: 1px;
-			border-width: thin;
-		}
-		.tt-selectable {
-			padding: 5px;
-		}
-		.tt-suggestion.tt-cursor {
-			background-color: rgb(200, 200, 200);
-		}
-	script.
-		var parties = new Bloodhound({
-		  datumTokenizer: function(obj){ return obj.name.split(' ').concat([obj.abbrevation])},
-		  queryTokenizer: Bloodhound.tokenizers.whitespace,
-		  identify: function(obj) { return obj.name; },
-		  prefetch: {
-		  	cache: false,
-		  	url: '../members',
-		  	/*transform: function(data){
-		  		return data.map((party)=>{
-		  			return party.name;
-		  		});
-		  	}*/
-		  }
-		});
+        script var members = !{JSON.stringify(members)}
+        script var constituencies = !{JSON.stringify(constituencies)}
+        script var parties = !{JSON.stringify(parties)}
 
-		$('#bloodhound .typeahead').typeahead({
-		  hint: true,
-		  highlight: true,
-		  minLength: 1
-		},
-		{
-		  display: function(data){ return data.name; },
-		  templates: {
-		  	suggestion: function(data){ return '<div>' + data.name + ' ('+ data.party.join(',') +')'+  ' - ' + data.constituency.join(',') + '</div>'; }
-		  },
-		  name: 'parties',
-		  source: parties
-		});
+    body
+        div(id="newmember" style="display: flex; flex-direction: column; padding: 30px; width:300px")
+            input(id="name-new" class="" type="text" placeholder="Name" style="width: 100%;" autofocus)
+            input(id="party-new" class="partytypeahead" type="text" placeholder="Party" style="width: 100%;" autofocus)
+            input(id="constituency-new" class="constituencytypeahead" type="text" placeholder="Constituency" style="width: 100%;" autofocus)
+            input(id="save-new" type="button" value="Create" style="width: 100%;" onclick="createMember()")
+
+    style.
+        input {
+            margin: 5px;
+        }
+        .tt-menu {
+            background-color: rgb(255, 255, 255);
+            border-style: solid;
+            border-spacing: 1px;
+            border-width: thin;
+        }
+        .tt-selectable {
+            padding: 5px;
+        }
+        .tt-suggestion.tt-cursor {
+            background-color: rgb(200, 200, 200);
+        }
+
+    style.
+        table {
+            border-spacing: 0px;
+            border-collapse: collapse;
+        }
+    table(border="1")
+        tr
+            td ID
+            td Name
+            td Party
+            td Constituency
+        each constituency in constituencies
+            tr
+                td(colspan=4) #{constituency.display}
+            each member in members.filter(m => m.constituency == constituency.id).sort((a,b) => a.name.localeCompare(b.name, 'sv'))
+                tr
+                    td #{member.id}
+                    td #{member.name}
+                    td
+                        input(id="party-#{member.id}" class="partytypeahead" type="text" placeholder="Party" style="" value="#{member.party.length > 0 ? member.party.join() : ''}")&attributes({'data-party': member.party.length > 0 ? member.party.join() : ''})
+                    td
+                        input(id="constituency-#{member.id}" class="constituencytypeahead" type="text" placeholder="Constituency" style="" value="#{member.constituency.flatMap(c=>constituencies.filter(e=>e.id==member.constituency).map(f=>f.display)).join(',')}")&attributes({'data-constituency': member.constituency.length > 0 ? member.constituency.join() : ''})
+                    td 
+                        input(id="save-#{member.id}" type="button", value="save" onclick="saveMember(#{member.id})")
+
+    script.
+        function saveMember(memberId, element) {
+            console.log(`save member: ${memberId}`);
+            let member = members.filter(member => member.id == memberId)[0];
+            if (!member) { throw Error(`no member found with id ${memberId}`); }
+
+            var newParty = document.getElementById(`party-${member.id}`).value;
+            var newConstituecy = document.getElementById(`constituency-${member.id}`).getAttribute('data-constituency');
+            var saveButton = document.getElementById(`save-${member.id}`)
+            
+            console.log(`Saving ${member.id}, ${member.name}, ${newParty}, ${newConstituecy}`)
+
+            var xhr = new XMLHttpRequest();
+            var path = `../members/${member.id}`;
+            var body = {party: newParty, constituency: newConstituecy};
+            var json = JSON.stringify(body);
+
+            saveButton.disabled = true;
+            xhr.open('PATCH', path, true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onload = function(e) {
+                saveButton.disabled = false;
+                saveButton.parentElement.style["background-color"] = 'rgb(200,255,200)';
+                console.log('done');
+                //location.reload();
+            };
+            xhr.send(json);
+        }
+
+        function createMember() {
+            console.log(`create member`);
+
+
+            var newName = document.getElementById(`name-new`).value;
+            var newParty = document.getElementById(`party-new`).value;
+            var newConstituecy = document.getElementById(`constituency-new`).getAttribute('data-constituency');
+
+            var saveButton = document.getElementById(`save-new`)
+            
+            console.log(`Creating ${newName} ${newParty}, ${newConstituecy}`)
+
+            var xhr = new XMLHttpRequest();
+            var path = `../members`;
+            var body = {party: newParty, constituency: newConstituecy, name: newName};
+            var json = JSON.stringify(body);
+
+            saveButton.disabled = true;
+            xhr.open('PUT', path, true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onload = function(e) {
+                saveButton.disabled = false;
+                saveButton.parentElement.style["background-color"] = 'rgb(200,255,200)';
+                console.log('done');
+                location.reload();
+            };
+            xhr.send(json);
+        }
+
+
+
+    script.
+        
+        var bloodhounsParties = new Bloodhound({
+          datumTokenizer: function(obj){ return obj.name.split(' ').concat([obj.abbrevation])},
+          queryTokenizer: Bloodhound.tokenizers.whitespace,
+          identify: function(obj) { return obj.abbrevation; },
+          local: parties
+        });
+
+        var bloodhounsConstituencies = new Bloodhound({
+          datumTokenizer: function(obj){ return [obj.display]},
+          queryTokenizer: Bloodhound.tokenizers.whitespace,
+          identify: function(obj) { return obj.id; },
+          local: constituencies
+        });
+
+
+        $('.partytypeahead').typeahead({
+          hint: true,
+          highlight: true,
+          minLength: 1
+        },
+        {
+          display: function(data){ return data.abbrevation; },
+          templates: {
+            suggestion: function(data){ return '<div>' + data.name + ' ('+ data.abbrevation + ')</div>'; }
+          },
+          name: 'parties',
+          source: bloodhounsParties
+        });
+
+        $('.partytypeahead').bind('typeahead:select', function(ev, suggestion) {
+          console.log('Selection: ', suggestion);
+          ev.target.setAttribute('data-party', suggestion.abbrevation);
+        });
+
+        $('.constituencytypeahead').typeahead({
+          hint: true,
+          highlight: true,
+          minLength: 1
+        },
+        {
+          display: function(data){ return data.display; },
+          templates: {
+            suggestion: function(data){ return '<div>' + data.display + '</div>'; }
+          },
+          name: 'constituencies',
+          source: bloodhounsConstituencies
+        });
+
+
+        $('.constituencytypeahead').bind('typeahead:select', function(ev, suggestion) {
+          console.log('Selection: ', suggestion);
+          ev.target.setAttribute('data-constituency', suggestion.id);
+        });

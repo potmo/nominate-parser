@@ -1,0 +1,166 @@
+doctype html
+html
+  head
+    title=Seatings
+    script(src="http://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js")
+    script(src="http://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js")
+    script var chamber = !{JSON.stringify(chamber)}
+    script var seatings = !{JSON.stringify(seatings)}
+    script var members = !{JSON.stringify(members)}
+    script var chamberName = "!{chamberName}"
+    script var pageId = !{pageId}
+
+  body
+    
+
+    script.
+        
+        function saveSquareMember(square, fieldId) {
+
+            var element = document.getElementById(fieldId);
+            var memberId = element.getAttribute('data-member');
+
+            console.log('saving %s on square %s in chamber %s for page %s ', memberId, square, chamberName, pageId);
+
+            var xhr = new XMLHttpRequest();
+            var path = '../' + chamberName + '/' + square;
+            var body = {
+                member_id: memberId,
+                page: pageId
+            };
+            var json = JSON.stringify(body);
+
+            console.log(path, json);
+            
+            xhr.open('PUT', path, true);
+            xhr.setRequestHeader("Content-Type", 'application/json;charset=UTF-8');
+            element.disabled = true;
+            xhr.onload = function(e) {
+                element.disabled = false;
+                element.style["background-color"] = 'rgb(200,255,200)';
+                console.log('done saving member');
+            };
+            xhr.onerror = function(e) {
+                element.disabled = false;
+                element.style["background-color"] = 'rgb(255,200,200)';
+                console.log('failed saving member');  
+            }
+            xhr.send(json);
+
+        }
+
+    - function getMemberOnSeat(seat) {
+    -     if (!seatings[seat]){
+    -       seatings[seat] = [];
+    -     }
+    -     var seatedBefore = seatings[seat]
+    -     seatedBefore.sort((a,b) => { return a.seated_at_page - b.seated_at_page })
+    -     seatedBefore = seatedBefore.filter((a) => { return a.seated_at_page <= pageId });
+    -     var seatedMember = seatedBefore[seatedBefore.length - 1];
+    -     if (seatedMember){
+    -        console.log(`seat ${seat} does have ${seatedMember} at page ${pageId}`, seatedBefore, seatings[seat])
+    -       return getMember(members, seatedMember.member_id);
+    -     } else {
+    -     if (seat < 3) { console.log(`seat ${seat} does not have any member at page ${pageId}`, seatedBefore, seatings[seat]) }
+    -
+    -       return null
+    -     }
+    - }
+
+
+    - function getMember(members, id){
+    -   
+    -     var membersWithId = members.filter((member)=>{
+    -       return member.id === id;
+    -     });
+    -
+    -     if (membersWithId.length == 0) {
+    -       console.log('No member with id ' + id + ' found');
+    -       return null
+    -     }else if (membersWithId.length > 1){
+    -       console.log('More than one member with id ' + id + ' found');
+    -       return null
+    -     }
+    -
+    -     let member = membersWithId[membersWithId.length - 1];
+    -
+    -     if (!member) {
+    -       console.log('No member with id ' + id + ' found');
+    -       return null
+    -     }
+    -
+    -     return member;
+    - }
+     
+
+    style.
+        .tt-menu {
+            background-color: rgb(255, 255, 255);
+            border-style: solid;
+            border-spacing: 1px;
+            border-width: thin;
+        }
+        .tt-selectable {
+            padding: 5px;
+        }
+        .tt-suggestion.tt-cursor {
+            background-color: rgb(200, 200, 200);
+        }
+        .twitter-typeahead {
+            width: 394px;
+        }
+
+    div(id= 'votereference' style='overflow-y: scroll;')
+        style.
+            table {
+                border-spacing: 0px;
+                border-collapse: collapse;
+            }
+        table(border="1")
+            tr
+                td square
+                td seat
+                td party
+                td name
+                td
+            each seat, square in chamber.seat_layout                
+                tr
+                    - var member = getMemberOnSeat(seat)
+                    td #{square}
+                    td !{seat}
+                    td !{member ? member.party.join(', ') : "none"}
+                    td(style='width: 400px;') 
+                        input(id="membername-#{square}" class="membertypeahead" type="text" placeholder="Name" style="width: 100%;" value="#{member ? `${member.name} (${member.party.join(',')}, ${member.constituency.join(',')})`  : ''}")&attributes({'data-member': member ? member.id : ''})
+                    td
+                        input(type="button", value="save" onclick="saveSquareMember(#{square}, 'membername-#{square}')")
+                
+
+
+    script.
+        var blodhoundMembers = new Bloodhound({
+          datumTokenizer: function(obj){ return obj.name.split(' ')},
+          queryTokenizer: Bloodhound.tokenizers.whitespace,
+          identify: function(obj) { return obj.id; },
+          local: members
+        });
+
+        $('.membertypeahead').typeahead({
+          hint: true,
+          highlight: true,
+          minLength: 1
+        },
+        {
+          display: function(data){ return `${data.name} (${data.party.join(',')}, ${data.constituency.join(',')})`},
+          templates: {
+            suggestion: function(data){ return `<div> ${data.name} (${data.party.join(',')}, ${data.constituency.join(',')})</div>`; }
+          },
+          name: 'members',
+          source: blodhoundMembers,
+          limit: 100
+        });
+
+        $('.membertypeahead').bind('typeahead:select', function(ev, suggestion) {
+          console.log('Selection: ', suggestion);
+          ev.target.setAttribute('data-member', suggestion.id);
+        });
+

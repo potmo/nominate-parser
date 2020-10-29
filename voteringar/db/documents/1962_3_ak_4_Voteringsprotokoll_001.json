@@ -1,6 +1,25 @@
 {
+  "status": "created",
+  "id": 9406,
   "name": "1962_3_ak_4_Voteringsprotokoll_001",
   "image": "1962_3_ak_4_Voteringsprotokoll_001.png",
-  "status": "created",
-  "book": "1962-1962_second_3_a_default_4"
+  "book": "1962-1962_second_3_a_default_4",
+  "coordinates": [
+    {
+      "x": 0.016,
+      "y": 0.2126514131897712
+    },
+    {
+      "x": 0.981,
+      "y": 0.22611036339165544
+    },
+    {
+      "x": 0.974,
+      "y": 0.9582772543741588
+    },
+    {
+      "x": 0.013,
+      "y": 0.9475100942126514
+    }
+  ]
 }

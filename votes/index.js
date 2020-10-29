@@ -1,10 +1,10 @@
   'use strict';
 
   var convexHull = require("quick-hull-2d");
-
-  var Canvas = require('canvas'),
-      Image = Canvas.Image,
-      fs = require('fs');
+  var { createCanvas, registerFont, Canvas, Image } = require('canvas');
+  registerFont(__dirname + '/Roboto-Light.ttf', { family: 'Roboto' })
+  var fs = require('fs');
+  var async = require('async');
 
   var outputConter = 0;
 
@@ -29,7 +29,7 @@
     });
   }
 
-  exports.getVotesFromPreparedImage = function(preparedImagePath, rawImagePath, outputImagePath, page, callback) {
+  exports.getVotesFromPreparedImage = function(preparedImagePath, rawImagePath, outputImagePath, page, labels, callback) {
 
     //var imageData = loadImage(rawImagePath);
     //imageData = scaleImage(imageData, 0.8);
@@ -41,7 +41,7 @@
     var squares = getGridSquares(preparedImageData.width, preparedImageData.height);
     var voteSquares = findVotes(preparedImageData, squares)
 
-    var gridImage = drawGridSquares(preparedImageData, voteSquares);
+    var gridImage = drawGridSquares(preparedImageData, voteSquares, labels);
 
     var votes = countVotes(squares);
 
@@ -77,7 +77,7 @@
     var voteSquares = findVotes(binarizedImage, squares)
     //var gridBinarizedImage = drawGridSquares(binarizedImage, voteSquares);
     //printOutputImage(gridBinarizedImage, 'grid-binarized.png');
-    var gridImage = drawGridSquares(imageData, voteSquares);
+    var gridImage = drawGridSquares(imageData, voteSquares, null);
     //printOutputImage(gridImage, 'grid.png');
 
     var votes = countVotes(squares);
@@ -88,17 +88,90 @@
     });
   }
 
-  function main() {
+  
+  exports.detectCoordinatesRectangle = function(original, imagePath, callback) {
+    var originalImageData = scaleImage(loadImage(original), 0.8);
+    var imageData = loadImage(imagePath);
+    //printOutputImage(imageData, 'original.png');
+
+/*
+    console.log('closing');
+    var closedImage = closing(imageData);
+    //printOutputImage(closedImage, 'closed.png');
+
+    console.log('histogram');
+    var histogram = getHistogram(closedImage);
+    console.log('otsu threshold');
+    var threshold = otsu(histogram, closedImage.width * closedImage.height);
+    var highThreshold = Math.min(0xFF, Math.floor(threshold * 1.2));
+    console.log('morph binarize');
+    var morphologicalBinarizedImage = morphologicalBinarize(closedImage, threshold, highThreshold);
+    //printOutputImage(morphologicalBinarizedImage, 'morphbinarized.png');
+
+    */
+
+    var morphologicalBinarizedImage = imageData;
+
+    console.log('label groups');
+    var labeledGroups = labelConnectedComponents(morphologicalBinarizedImage);
+
+    //var connectedComponentsImage = drawConnectedComponent(morphologicalBinarizedImage, labeledGroups);
+    //printOutputImage(connectedComponentsImage, 'connected-components.png');
+
+    console.log('remove groups touching border');
+    var noBorderTouchingLabeledGroups = removeGroupsTouchingImageBorder(morphologicalBinarizedImage, labeledGroups);
+    //var connectedComponentsImageNoBorder = drawConnectedComponent(morphologicalBinarizedImage, noBorderTouchingLabeledGroups);
+    //printOutputImage(connectedComponentsImageNoBorder, 'connected-components-no-border.png');
+
+    console.log('filter circles');
+    var onlyProbableCirclesTouchingLabeledGroups = removeGroupsNotResemblingCircles(noBorderTouchingLabeledGroups);
+    //var connectedComponentsImageOnlyCircles = drawConnectedComponent(morphologicalBinarizedImage, onlyProbableCirclesTouchingLabeledGroups);
+    //printOutputImage(connectedComponentsImageOnlyCircles, 'connected-components-no-border-only-circles.png');
+
+    if (onlyProbableCirclesTouchingLabeledGroups.length <= 0) {
+      return callback('Could not find any circles', null);
+    }
+
+    console.log('center of circles');
+    var centerOfComponents = getCenterOfGroups(onlyProbableCirclesTouchingLabeledGroups);
+    //var connectedComponentsCenterImage = drawCenters(connectedComponentsImageOnlyCircles, centerOfComponents);
+    //printOutputImage(connectedComponentsCenterImage, 'connected-components-no-border-centers.png');
+
+    console.log('expand circles');
+    var expandedCenterOfComponents = expandCentresOfComponents(centerOfComponents);
+
+    console.log('compute hull');
+    var hull = convexHull(expandedCenterOfComponents);
+    //var hullImage = drawHull(connectedComponentsCenterImage, hull);
+    //printOutputImage(hullImage, 'connected-components-no-border-centers-hull.png');
+
+    var hullPolygon = hull.map(a => {return {x: a[0], y: a[1]}})
+    //var minimumBoxImage = drawMinimumBoundingBoxSteps(hullImage, hullPolygon);
+    //printOutputImage(minimumBoxImage, 'connected-components-no-border-centers-hull-minbox.png');
+
+    console.log('compute minimum rectangle');
+    var minimumBoundingRectangle = getMinimumBoundingRectangle(hullPolygon);
+    minimumBoundingRectangle = scaleMinimumBoundingRectangle(minimumBoundingRectangle, imageData);
+    //var minimumBoundingRectangleImage = drawMinimumBoundingRectangle(connectedComponentsCenterImage, minimumBoundingRectangle);
+    //printOutputImage(minimumBoundingRectangleImage, 'connected-components-no-border-centers-hull-min-rectangle.png');
+
+    //var minimumBoundingRectangleOnOriginalImage = drawMinimumBoundingRectangle(originalImageData, minimumBoundingRectangle);
+    //printOutputImage(minimumBoundingRectangleOnOriginalImage, 'min-image-on-original.png');
+
+    callback(null, minimumBoundingRectangle);
+  }
+
+  exports.someExperiments = function() {
       var imageData = loadImage(__dirname + '/proto5.png');
       var descriptor = loadDescriptor(__dirname + '/proto5.json');
 
       printOutputImage(imageData, 'original.png');
 
-      imageData = scaleImage(imageData, 0.8);
-      printOutputImage(imageData, 'scaled.png');
+      //imageData = scaleImage(imageData, 0.8);
+      //printOutputImage(imageData, 'scaled.png');
 
-      imageData = warpImage(imageData, descriptor);
-      printOutputImage(imageData, 'warped.png');
+      //imageData = warpImage(imageData, descriptor);
+      //printOutputImage(imageData, 'warped.png');
 
       var closedImage = closing(imageData);
       printOutputImage(closedImage, 'closed.png');
@@ -106,17 +179,16 @@
       var histogram = getHistogram(closedImage);
       var threshold = otsu(histogram, closedImage.width * closedImage.height);
 
-      var binarizedImage = binarize(closedImage, threshold);
-      printOutputImage(binarizedImage, 'binarized.png');
+      //var binarizedImage = binarize(closedImage, threshold);
+      //printOutputImage(binarizedImage, 'binarized.png');
 
-      var squares = getGridSquares(imageData.width, imageData.height);
-      var voteSquares = findVotes(binarizedImage, squares)
-      var gridBinarizedImage = drawGridSquares(binarizedImage, voteSquares);
-      printOutputImage(gridBinarizedImage, 'grid-binarized.png');
-      var gridImage = drawGridSquares(imageData, voteSquares);
-      printOutputImage(gridImage, 'grid.png');
-
-      var votes = countVotes(squares);
+      //var squares = getGridSquares(imageData.width, imageData.height);
+      //var voteSquares = findVotes(binarizedImage, squares)
+      //var gridBinarizedImage = drawGridSquares(binarizedImage, voteSquares, null);
+      //printOutputImage(gridBinarizedImage, 'grid-binarized.png');
+      //var gridImage = drawGridSquares(imageData, voteSquares, null);
+      //printOutputImage(gridImage, 'grid.png');
+      //var votes = countVotes(squares);
 
       //var imageData = crop(imageData, 0.15, 0, 0.25, 0);
       //printOutputImage(imageData, 'cropped.png');
@@ -125,6 +197,7 @@
       var morphologicalBinarizedImage = morphologicalBinarize(closedImage, threshold, highThreshold);
       printOutputImage(morphologicalBinarizedImage, 'morphbinarized.png');
 
+/*
       var erodedImage = erode(imageData);
       printOutputImage(erodedImage, 'eroded.png');
 
@@ -153,6 +226,12 @@
 
       var dividedImage = divide(imageData, closedImage);
       printOutputImage(dividedImage, 'divided.png');
+      */
+
+      //TODO: Somehow detect all circles and remove the non circles. This can be done with a circlular hough transform
+      // the one below is a line hough transform
+      var binarizedHoughTransformedImage = houghTransform(morphologicalBinarizedImage);
+      printOutputImage(binarizedHoughTransformedImage, 'morph-binarized-hough.png');
 
       var labeledGroups = labelConnectedComponents(morphologicalBinarizedImage);
 
@@ -160,17 +239,45 @@
       printOutputImage(connectedComponentsImage, 'connected-components.png');
 
       var noBorderTouchingLabeledGroups = removeGroupsTouchingImageBorder(morphologicalBinarizedImage, labeledGroups);
-
       var connectedComponentsImageNoBorder = drawConnectedComponent(morphologicalBinarizedImage, noBorderTouchingLabeledGroups);
       printOutputImage(connectedComponentsImageNoBorder, 'connected-components-no-border.png');
 
+      var onlyProbableCirclesTouchingLabeledGroups = removeGroupsNotResemblingCircles(noBorderTouchingLabeledGroups);
+      var connectedComponentsImageOnlyCircles = drawConnectedComponent(morphologicalBinarizedImage, onlyProbableCirclesTouchingLabeledGroups);
+      printOutputImage(connectedComponentsImageOnlyCircles, 'connected-components-no-border-only-circles.png');
+
+      var centerOfComponents = getCenterOfGroups(onlyProbableCirclesTouchingLabeledGroups);
+      var connectedComponentsCenterImage = drawCenters(connectedComponentsImageOnlyCircles, centerOfComponents);
+      printOutputImage(connectedComponentsCenterImage, 'connected-components-no-border-centers.png');
+
+      var expandedCenterOfComponents = expandCentresOfComponents(centerOfComponents);
+
+      var hull = convexHull(expandedCenterOfComponents);
+      var hullImage = drawHull(connectedComponentsCenterImage, hull);
+      printOutputImage(hullImage, 'connected-components-no-border-centers-hull.png');
+
+      var hullPolygon = hull.map(a => {return {x: a[0], y: a[1]}})
+      var minimumBoxImage = drawMinimumBoundingBoxSteps(hullImage, hullPolygon);
+      printOutputImage(minimumBoxImage, 'connected-components-no-border-centers-hull-minbox.png');
+
+      var minimumBoundingRectangle = getMinimumBoundingRectangle(hullPolygon);
+      var minimumBoundingRectangleImage = drawMinimumBoundingRectangle(connectedComponentsCenterImage, minimumBoundingRectangle);
+      printOutputImage(minimumBoundingRectangleImage, 'connected-components-no-border-centers-hull-min-rectangle.png');
+
+      var minimumBoundingRectangleOnOriginalImage = drawMinimumBoundingRectangle(imageData, minimumBoundingRectangle);
+      printOutputImage(minimumBoundingRectangleOnOriginalImage, 'min-image-on-original.png');
+
+
+
+
+/*
       var hulls = getGroupsByConvexHullsArea(noBorderTouchingLabeledGroups);
       var largestHull = getLargestHull(hulls);
       var hullImage = drawLargestHull(largestHull, morphologicalBinarizedImage);
       printOutputImage(hullImage, 'hull.png');
 
-      //var minimumBoxImage = drawMinimumBoundingBox(hullImage, largestHull.polygon);
-      //printOutputImage(minimumBoxImage, 'minimumbox.png');
+      var minimumBoxImage = drawMinimumBoundingBox(hullImage, largestHull.polygon);
+      printOutputImage(minimumBoxImage, 'minimumbox.png');
 
 
       // sobel
@@ -219,6 +326,7 @@
 
       var binarizedHoughTransformedImage = houghTransform(binarizedImage);
       printOutputImage(binarizedHoughTransformedImage, 'binarized-hough.png');
+      */
 
   }
 
@@ -724,11 +832,11 @@
   function removeGroupsTouchingImageBorder(imageData, labeledGroups){
       var width = imageData.width;
       var height = imageData.height;
-
+      var border = 2
       var output = labeledGroups.filter(function(group){
           for (var i = 0; i < group.length; i++) {
               var pixel = group[i];
-              if (pixel.x >= width || pixel.x <= 0 || pixel.y >= height || pixel.y <= 0) {
+              if (pixel.x >= width - border || pixel.x <= border || pixel.y >= height - border || pixel.y <= border) {
                   return false;
               }
           }
@@ -736,6 +844,37 @@
       });
 
       return output;
+  }
+
+  function removeGroupsNotResemblingCircles(labeledGroups) {
+    var maxArea = Math.round(14 * 14 * Math.PI)
+    var minArea = Math.round(6 * 6 * Math.PI)
+    var goodSized = labeledGroups.filter(function(group){
+        return group.length < maxArea && group.length > minArea;
+    });
+
+    var output = goodSized.filter((group)=> {
+
+      let best = group.reduce( (best, pixel) => {
+        best.minx = Math.min(best.minx, pixel.x);
+        best.miny = Math.min(best.miny, pixel.y);
+        best.maxx = Math.max(best.maxx, pixel.x);
+        best.maxy = Math.max(best.maxy, pixel.y);
+        return best;
+      }, {minx: Number.MAX_VALUE, miny: Number.MAX_VALUE, maxx: Number.MIN_VALUE, maxy: Number.MIN_VALUE});
+
+      var width = best.maxx - best.minx;
+      var height = best.maxy - best.miny;
+
+      var ratio = width / height;
+
+      return ratio > 0.7 && ratio < 1.3;
+
+    });
+
+    console.log(`cleaning up from ${labeledGroups.length}, ${goodSized.length}, ${output.length}`)
+
+    return output;
   }
 
   function drawConnectedComponent(imageData, labeledGroups){
@@ -758,9 +897,74 @@
       return outputImageData;
   }
 
+  function drawCenters(imageData, centers){
+
+      var canvas = createCanvas(imageData.width, imageData.height);
+      var context = canvas.getContext('2d');
+      context.putImageData(imageData, 0, 0);
+      context.fillStyle = 'rgba(0,0,0,1.0)';
+    
+      centers.forEach(function(center, index) {
+        context.beginPath();
+        context.arc(center[0], center[1], 10, 0, 2 * Math.PI);
+        context.stroke();
+      });
+
+      return context.getImageData(0, 0, imageData.width, imageData.height);
+  }
+
+    function drawHull(imageData, hull){
+
+      var canvas = createCanvas(imageData.width, imageData.height);
+      var context = canvas.getContext('2d');
+      context.putImageData(imageData, 0, 0);
+      context.strokeStyle = 'rgba(0,0,255,1.0)';
+    
+      var closedHull = hull.concat([hull[0]]);
+
+      context.beginPath();
+      for (var i = 0; i < closedHull.length -1; i++) {
+        context.moveTo(closedHull[i][0], closedHull[i][1]);
+        context.lineTo(closedHull[i+1][0], closedHull[i+1][1])
+      }
+      context.stroke();
+
+
+      return context.getImageData(0, 0, imageData.width, imageData.height);
+  }
+
+  function getCenterOfGroups(labeledGroups) {
+    var centers = labeledGroups.filter(group => group.length > 0).map((group)=> {
+      var points = group.map(function(pixel) {
+        return [pixel.x, pixel.y];
+      });
+      var avgX = points.reduce((l, v)=> l + v[0], 0) / points.length;
+      var avgY = points.reduce((l, v)=> l + v[1], 0) / points.length;
+
+      return [avgX, avgY];
+    });
+
+    return centers;
+
+  }
+
+  function expandCentresOfComponents(centers) {
+    var rad = 12
+    return centers.flatMap((center) => {
+      return [
+        [center[0] - rad, center[1]],
+        [center[0], center[1] - rad],
+        [center[0] + rad, center[1]],
+        [center[0], center[1] + rad],
+      ]
+    })
+  }
+
   function getGroupsByConvexHullsArea(labeledGroups) {
       // find the areas of the convex hulls of the groups
+
       var hulls = labeledGroups.map(function(group) {
+        
           // just convert to array pixel instead since the algo needs it
           var points = group.map(function(pixel) {
               return [pixel.x, pixel.y];
@@ -814,9 +1018,156 @@
       return outputImageData;
   }
 
-  function drawMinimumBoundingBox(imageData, polygon) {
+  function getMinimumBoundingRectangle(polygon) {
 
-      var outputImageData = getEmptyImage(imageData.width, imageData.height, 0xFFFFFFFF);
+      var minArea = Number.MAX_VALUE;
+
+      var minTopLeft = 0;
+      var minTopRight = 0;
+      var minBottomLeft = 0;
+      var minBottomRight = 0;
+
+      var minMinX = 0;
+      var minMaxX = 0;
+      var minMinY = 0;
+      var minMaxY = 0;
+
+      var bestUnit;
+      var bestWidth;
+      var bestHeight;
+      var bestRegpoint;
+
+
+      polygon.reduce(function(previous, current) {
+
+          // loop all the vertices and calculate the maximum and minimum of all
+          // other indices in the current vertices local coordinate system
+          var first = previous;
+          var second = current;
+
+          var direction = subtract(second, first);
+          var unit = normalize(direction);
+          var unitPerp = perpendicular(unit);
+
+          var minX = 0;
+          var maxX = 0;
+          var minY = 0;
+          var maxY = 0;
+
+          polygon.forEach(function(vertex) {
+              var test = subtract(vertex, first);
+              var dotResult = dot(unit, test);
+              var perpDotResult = dot(unitPerp, test);
+              minX = Math.min(minX, dotResult);
+              maxX = Math.max(maxX, dotResult);
+              minY = Math.min(minY, perpDotResult);
+              maxY = Math.max(maxY, perpDotResult);
+          });
+
+          var left = scale(unit, minX);
+          var right = scale(unit, maxX);
+          var up = scale(unitPerp, minY);
+          var down = scale(unitPerp, maxY);
+
+          var topLeft = add(add(first, left), up);
+          var topRight = add(add(first, right), up);
+          var bottomLeft = add(add(first, down), left);
+          var bottomRight = add(add(first, down), right);
+
+          var area = Math.abs(minX - maxX) * Math.abs(minY - maxY);
+
+          if (area < minArea) {
+              minArea = area;
+
+              minTopLeft = topLeft;
+              minTopRight = topRight;
+              minBottomLeft = bottomLeft;
+              minBottomRight = bottomRight;
+
+              minMinX = minX;
+              minMaxX = maxX;
+              minMinY = minY;
+              minMaxY = maxY;
+
+              bestUnit = unit;
+              bestWidth = Math.round(Math.abs(minX - maxX));
+              bestHeight = Math.round(Math.abs(minY - maxY));
+              bestRegpoint = add(add(first, left), up);
+
+          }
+
+          return current;
+
+      });
+
+      return {topLeft: minTopLeft, topRight: minTopRight, bottomLeft: minBottomLeft, bottomRight: minBottomRight};
+  }
+
+  function scaleMinimumBoundingRectangle(rectangle, imageData) {
+
+    var {topLeft, topRight, bottomRight, bottomLeft} = rectangle;
+
+    var points = [topLeft, topRight, bottomRight, bottomLeft].map(c => { 
+      return {x: c.x / imageData.width, y: c.y / imageData.height}
+    })
+    .map( p => new Coordinate(p.x, p.y));
+
+    // find the vertex closest to origo
+    var best = points.reduce((best, current, i)=>{
+      var dist = current.distTo(new Coordinate(0,0));
+      if (dist < best.dist) {
+        best.dist = dist;
+        best.index = i;
+      }
+      return best;
+    },
+      {index: 0, dist: Number.MAX_VALUE}
+    );
+
+    // rotate so that top left is index 0
+    return [
+      points[(0 + best.index) % 4], 
+      points[(3 + best.index) % 4],
+      points[(2 + best.index) % 4], 
+      points[(1 + best.index) % 4]
+    ];
+  }
+
+   function drawMinimumBoundingRectangle(imageData, rectangle){
+
+      var canvas = createCanvas(imageData.width, imageData.height);
+      var context = canvas.getContext('2d');
+      context.putImageData(imageData, 0, 0);
+      context.strokeStyle = 'rgba(0,255,0,1.0)';
+    
+      
+      context.beginPath();
+      
+      context.moveTo(rectangle[0].x * imageData.width, rectangle[0].y * imageData.height);
+      context.lineTo(rectangle[1].x * imageData.width, rectangle[1].y * imageData.height);
+      context.lineTo(rectangle[2].x * imageData.width, rectangle[2].y * imageData.height);
+      context.lineTo(rectangle[3].x * imageData.width, rectangle[3].y * imageData.height);
+      context.lineTo(rectangle[0].x * imageData.width, rectangle[0].y * imageData.height);
+
+      context.arc(rectangle[0].x * imageData.width, rectangle[0].y * imageData.height, 10, 0, 2 * Math.PI);
+      
+      context.stroke();
+      
+      context.font = '9px Roboto'
+      context.textAlign = "left";
+      context.fillStyle = 'rgba(255,0,0,1.0)';
+      context.fillText('0', rectangle[0].x * imageData.width, rectangle[0].y * imageData.height);
+      context.fillText('1', rectangle[1].x * imageData.width, rectangle[1].y * imageData.height);
+      context.fillText('2', rectangle[2].x * imageData.width, rectangle[2].y * imageData.height);
+      context.fillText('3', rectangle[3].x * imageData.width, rectangle[3].y * imageData.height);
+
+      return context.getImageData(0, 0, imageData.width, imageData.height);
+  }
+
+  function drawMinimumBoundingBoxSteps(imageData, polygon) {
+
+      var outputImageData = cloneImage(imageData);
+
 
       var minArea = 999999999999999;
 
@@ -918,6 +1269,7 @@
 
       console.log('found best %j %j %j %j', bestUnit, bestWidth, bestHeight, bestRegpoint);
 
+/*
       var xBins = new Array(bestWidth);
       var yBins = new Array(bestHeight);
 
@@ -939,8 +1291,10 @@
               //setPixel(outputImageData, x, y, 0xFFFF0000);
           }
       }
+      */
 
       // draw the grid
+      /*
       var gridWidth = 16;
       var gridHeight = 20;
       for (var i = 0; i < gridWidth; i++) {
@@ -954,6 +1308,7 @@
           var to = add(from, scale(bestUnit, bestWidth));
           drawLine(outputImageData, from.x, from.y, to.x, to.y, 0xFF000000);
       }
+      */
 
       // draw sweep histogram
 
@@ -1452,11 +1807,16 @@
           img,
           fileBuffer = fs.readFileSync(path);
 
-      img = new Image;
+      console.log(`load image ${path}`)
+
+      img = new Image();
+
+      img.onerror = (mess) => { console.err("error:", mess) }
+      img.onloaded = (mess) => { console.log("loaded:", mess) }
 
       img.src = fileBuffer;
 
-      canvas = new Canvas(img.width, img.height);
+      canvas = createCanvas(img.width, img.height);
       context = canvas.getContext('2d');
 
       context.drawImage(img, 0, 0, img.width, img.height);
@@ -1471,7 +1831,7 @@
 
   function printOutputImage(imageData, filename) {
       var fullPath = __dirname + '/output/' + outputConter + "_" + filename;
-      writeImageDataToFile(fullPath, (err)=>{
+      writeImageDataToFile(imageData, fullPath, (err)=>{
         console.log('saved %s', filename);
       });
       outputConter = outputConter + 1;
@@ -1481,7 +1841,7 @@
       var canvas,
           context;
 
-      canvas = new Canvas(imageData.width, imageData.height);
+      canvas = createCanvas(imageData.width, imageData.height);
       context = canvas.getContext('2d');
 
       context.putImageData(imageData, 0, 0);
@@ -1507,7 +1867,7 @@
       var canvas,
           context;
 
-      canvas = new Canvas(width, height);
+      canvas = createCanvas(width, height);
       context = canvas.getContext('2d');
 
       var imageData = context.createImageData(width, height);
@@ -1526,7 +1886,7 @@
     var canvas,
         context;
 
-    canvas = new Canvas(image.width, image.height);
+    canvas = createCanvas(image.width, image.height);
     context = canvas.getContext('2d');
 
     var imageData = context.createImageData(image.width, image.height);
@@ -1542,8 +1902,8 @@
   }
 
   function scaleImage(image, scale) {
-    var fromImg = new Image;
-    var fromCanvas = new Canvas(image.width, image.height);
+    var fromImg = new Image();
+    var fromCanvas = createCanvas(image.width, image.height);
     var fromContext = fromCanvas.getContext('2d');
     fromContext.putImageData(image, 0, 0);
     fromImg.src = fromCanvas.toBuffer();
@@ -1551,7 +1911,7 @@
     var newWidth = Math.floor(image.width * scale);
     var newHeight = Math.floor(image.height * scale);
 
-    var canvas = new Canvas(newWidth, newHeight);
+    var canvas = createCanvas(newWidth, newHeight);
     var context = canvas.getContext('2d');
     //context.putImageData(image, 0, 0, 0, 0, newWidth, newHeight);
     context.drawImage(fromImg, 0, 0, newWidth, newHeight);
@@ -1560,23 +1920,23 @@
     return resultImageData;
   }
 
-  function drawGridSquares(imageData, squares) {
-    var image = new Image;
-    var canvas = new Canvas(imageData.width, imageData.height);
+  function drawGridSquares(imageData, squares, labels) {
+    labels = labels || [];
+    var image = new Image();
+    var canvas = createCanvas(imageData.width, imageData.height);
     var context = canvas.getContext('2d');
     context.putImageData(imageData, 0, 0);
 
-    var font = new Canvas.Font('Roboto', __dirname + '/Roboto-Light.ttf')
-    font.addFace(__dirname + '/Roboto-Light.ttf', 'light')
-    context.addFont(font)
-    context.font = '10px Roboto'
+    
+    context.font = '9px Roboto'
     context.textAlign = "right";
 
     context.fillStyle = 'rgba(255,0,0,1.0)';
 
     var types = ['yes','no','refrain','absent'];
 
-    squares.forEach((square) => {
+    squares.forEach((square, i) => {
+        let label = labels[i] || 'N/A';
         context.strokeStyle = 'rgba(255,0,0,1.0)';
         var voteOffset = types.indexOf(square.vote);
         if (voteOffset !== -1){
@@ -1604,6 +1964,9 @@
 
         context.fillStyle = 'rgba(255,0,0,1.0)';
         context.fillText(square.vote +'\t'+square.id, square.upperRight.x - 5, square.upperRight.y + 10);
+
+        context.fillStyle = 'rgba(0,0,255,1.0)';
+        context.fillText(label, square.upperRight.x - 5, square.upperRight.y + 20);
 
         context.strokeStyle = 'rgba(255,0,0,0.2)';
         context.beginPath();
@@ -1891,7 +2254,4 @@
     }
     return this;
   }
-
-
-  //main();
 

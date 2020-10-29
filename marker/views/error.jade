@@ -1,0 +1,117 @@
+doctype html
+html
+  head
+    title=page.name
+    script(src="http://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js")
+    script(src="http://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js")
+    script var page = !{JSON.stringify(page)}
+    script var book = !{JSON.stringify(book)}
+    script var book_index = !{JSON.stringify(book_index)}
+    script var error = !{JSON.stringify(error)}
+  body
+    div.
+        <b>#{book.start_year}-#{book.end_year}</b> #{book.book}#{book.book_letter}-#{book.book_number_type} <i>#{book.chamber} chamber</i>
+        <br>session: #{book.sessiontype}
+
+    div(style="background-color: rgb(255,0,0)").
+        <b>Error:</b><br>
+        #{error}
+        <br>
+
+    div
+        | book type: 
+        input(type="radio", name="book_type", value="0", checked=book.type=="unknown")
+        | unknown 
+        input(type="radio", name="book_type", value="0", checked=book.type=="grid")
+        | grid 
+        input(type="radio", name="book_type", value="0", checked=book.type=="handwritten")
+        | handwritten 
+
+    div.
+        <br>page: #{page.page}/#{book.total_pages}
+        <br>status: #{page.status}
+    div.
+        <a href="/pageeditor/!{page.id - page.page + 1}">first</a>
+        <a href="/pageeditor/!{page.id - 1}">previous</a>
+        <a href="/pageeditor/!{page.id + 1}">next</a>
+        <a href="/pageeditor/!{page.id - page.page + book.total_pages}">last</a>
+    script.
+        document.onkeydown = function(evt) {
+            evt = evt || window.event;
+            switch(evt.keyCode){
+                case 37: // left
+                    //window.location.href = "/pageeditor/" + (page.id - 1);
+                    break;
+                case 39: // right
+                    //window.location.href = "/pageeditor/" + (page.id + 1);
+                    break;
+                case 13: // enter
+                    //readPage();
+                    //break;
+            }
+        };
+    div.
+        <a href="/pageeditor/!{page.id - page.page}">previous book</a> <a href="/pageeditor/!{page.id + book.total_pages - page.page + 1}">next book</a>
+
+    
+    style.
+        .tt-menu {
+            background-color: rgb(255, 255, 255);
+            border-style: solid;
+            border-spacing: 1px;
+            border-width: thin;
+        }
+        .tt-selectable {
+            padding: 5px;
+        }
+        .tt-suggestion.tt-cursor {
+            background-color: rgb(200, 200, 200);
+        }
+        .twitter-typeahead {
+            width: 394px;
+        }
+
+
+    div(id='bookindex')
+        each book in book_index
+            div.
+                !{book.start_document_id}. <a href="/pageeditor/!{book.start_document_id}"><b>#{book.start_year}-#{book.end_year}</b> #{book.book}#{book.book_letter}-#{book.book_number_type} <i>#{book.chamber} chamber</i></a>
+
+
+     script.
+        $(document).ready(()=>{
+            var parties = new Bloodhound({
+              datumTokenizer: function(obj){ return obj.name.split(' ').concat([obj.abbrevation])},
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
+              identify: function(obj) { return obj.name; },
+              prefetch: {
+                cache: false,
+                url: '../members',
+                /*transform: function(data){
+                    return data.map((party)=>{
+                        return party.name;
+                    });
+                }*/
+              }
+            });
+
+            $('#votereference .typeahead').typeahead({
+              hint: true,
+              highlight: true,
+              minLength: 1
+            },
+            {
+              display: function(data){ return data.name + ' - ' + data.constituency.join(',') },
+              templates: {
+                suggestion: function(data){ return '<div>' + data.name + ' ('+ data.party.join(',') +')'+  ' - ' + data.constituency.join(',') + '</div>'; }
+              },
+              name: 'parties',
+              source: parties,
+              limit: 15
+            });
+
+            $('#votereference .typeahead').bind('typeahead:select', function(ev, suggestion) {
+              console.log('Selection: ', suggestion);
+              ev.target.setAttribute('data-seated-member-id', suggestion.id);
+            });
+        });

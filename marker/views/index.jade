@@ -8,10 +8,10 @@ html
     script var book = !{JSON.stringify(book)}
     script var chamber = !{JSON.stringify(chamber)}
     script var seatings = !{JSON.stringify(seatings)}
+    script var book_index = !{JSON.stringify(book_index)}
   body
     div.
-        <b>#{book.start_year}-#{book.end_year}</b> #{book.book}#{book.book_letter}-#{book.book_number_type} <i>#{book.chamber} chamber</i>
-        <br>session: #{book.sessiontype}
+        <b>#{book.start_year}-#{book.end_year}</b> #{book.book}#{book.book_letter}-#{book.book_number_type} <i>#{book.chamber} chamber</i> (session: #{book.sessiontype}) page: <b>#{page.page}/#{book.total_pages}</b> (status: #{page.status})
 
     div
         | book type: 
@@ -28,22 +28,25 @@ html
     else
         -voteStyle= "background-color: rgb(255,255,255)"
 
-    div(style=voteStyle id="votecontainer").
-        Yes: #{page.votes.total.yes}        <br>
-        No: #{page.votes.total.no}          <br>
-        Refrain: #{page.votes.total.refrain}<br>
-        Absent: #{page.votes.total.absent}  <br>
-        Missing: #{page.votes.total.missing}<br>
-        Total counted: #{page.votes.total.yes + page.votes.total.no + page.votes.total.refrain + page.votes.total.absent}
+    div.
+        <a href="/pageeditor/!{page.id - 1}">previous page</a>
+        <a href="/pageeditor/!{page.id + 1}">next page</a><br>
+        <a href="/pageeditor/!{page.id - page.page + 1}">first page</a>
+        <a href="/pageeditor/!{page.id - page.page + book.total_pages}">last page</a>
+        <a href="/pageeditor/!{page.id - page.page}">previous book</a>
+        <a href="/pageeditor/!{page.id + book.total_pages - page.page + 1}">next book</a>
 
-    div.
-        <br>page: #{page.page}/#{book.total_pages}
-        <br>status: #{page.status}
-    div.
-        <a href="/pageeditor/!{page.id - page.page + 1}">first</a>
-        <a href="/pageeditor/!{page.id - 1}">previous</a>
-        <a href="/pageeditor/!{page.id + 1}">next</a>
-        <a href="/pageeditor/!{page.id - page.page + book.total_pages}">last</a>
+    div( id="votecontainer")
+        table(border=1 style=voteStyle)
+            tr
+                td Yes: #{page.votes.total.yes}
+                td Refrain: #{page.votes.total.refrain}
+            tr
+                td No: #{page.votes.total.no}
+                td Missing: #{page.votes.total.missing}
+            tr
+                td(colspan=2) Total counted: #{page.votes.total.yes + page.votes.total.no + page.votes.total.refrain + page.votes.total.absent}
+
     script.
         document.onkeydown = function(evt) {
             evt = evt || window.event;
@@ -59,10 +62,6 @@ html
                     //break;
             }
         };
-    div.
-        <a href="/pageeditor/!{page.id - page.page}">previous book</a> <a href="/pageeditor/!{page.id + book.total_pages - page.page + 1}">next book</a>
-    div.
-        <input type="button" id="savebutton" value="Save" onclick="readPage()"/>
 
     div.
         <script>
@@ -210,7 +209,7 @@ html
                 xhr.send(json);
             }
 
-            function updateSquareVote(square, vote){
+            function updateSquareVote(square, vote, element){
                 console.log('update %s to %s', square, vote);
 
                 var xhr = new XMLHttpRequest();
@@ -219,9 +218,12 @@ html
                 var json = JSON.stringify(body);
 
                 console.log(json);
+                element.disabled = true;
                 xhr.open('PATCH', path, true);
                 xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
                 xhr.onload = function(e) {
+                    element.disabled = false;
+                    element.parentElement.style["background-color"] = 'rgb(200,255,200)';
                     console.log('done');
                     //location.reload();
                 };
@@ -235,19 +237,19 @@ html
                         return element.checked
                     })
                     .forEach((element=>{
-                        updateSquareVote(id, element.value);
+                        updateSquareVote(id, element.value, element);
                     }));
             }
 
-            function saveMember(seat, fieldId) {
+            function saveSquareMember(square, fieldId) {
 
                 var element = document.getElementById(fieldId);
                 var memberId = element.getAttribute('data-seated-member-id');
 
-                console.log('saving %s on seat %s in chamber %s for page %s ', memberId, seat, book.chamber, page.id);
+                console.log('saving %s on square %s in chamber %s for page %s ', memberId, square, book.chamber, page.id);
 
                 var xhr = new XMLHttpRequest();
-                var path = '../seatings/' + book.chamber + '/' + seat;
+                var path = '../seatings/' + book.chamber + '/' + square;
                 var body = {
                     member_id: memberId,
                     page: page.id
@@ -267,13 +269,19 @@ html
 
             }
         </script>
+        <div id="resolvedcontainer" style="max-width: 1000px; max-height: 1000px; position: relative;">
+            <img id="resolvedimage" src="../image/resolved/#{page.image}" style="width: 100%; height: auto;"/>
+        </div>
+    
+    div.
+        <input type="button" id="savebutton" value="Detect votes from grid" onclick="readPage()"/>
+
         <div id="imagecontainer" style="max-width: 1000px; max-height: 1000px; position: relative;">
             <img id="originalimage" src="../image/#{page.image}" style="position: absolute; width: 100%; height: auto;" onload="onLoaded()"/>
             <canvas id="gridcanvas" style="position: relative; width: 100%; height: auto;">
         </div>
-        <div id="resolvedcontainer" style="max-width: 1000px; max-height: 1000px; position: relative;">
-            <img id="resolvedimage" src="../image/resolved/#{page.image}" style="width: 100%; height: auto;"/>
-        </div>
+    
+        
 
     style.
         .tt-menu {
@@ -315,7 +323,7 @@ html
                 tr
                     td #{square.id}
                     td !{chamber.seat_layout[square.id] || 'empty'}
-                    td !{chamber.party_layout[square.id] || 'empty'}
+                    td !{seatings[square.id] ? seatings[square.id].party.join(',') : 'empty'}
                     td
                         input(type="radio", name="vote-#{square.id}", value="yes", checked=square.vote=="yes")
                     td
@@ -329,11 +337,37 @@ html
                     td
                         input(type="button", value="save" onclick="saveSquareVote('vote-#{square.id}', #{square.id})")
                     td(style='width: 400px;')
-                        input(id="membername-#{square.id}" class="typeahead" type="text" placeholder="Name" style="width: 100%;" value="#{seatings[chamber.seat_layout[square.id]] ? seatings[chamber.seat_layout[square.id]].name+' - '+seatings[chamber.seat_layout[square.id]].constituency.join(',') : ''}")&attributes({'data-seated-member-id': seatings[chamber.seat_layout[square.id]] ? seatings[chamber.seat_layout[square.id]].id : ''})
+                        input(id="membername-#{square.id}" class="typeahead" type="text" placeholder="Name" style="width: 100%;" value="#{seatings[square.id] ? seatings[square.id].name+' - '+seatings[square.id].constituency.join(',') : ''}")&attributes({'data-seated-member-id': seatings[square.id] ? seatings[square.id].id : ''})
                     td
-                        input(type="button", value="save" onclick="saveMember(chamber.seat_layout[ #{square.id} ], 'membername-#{square.id}')")
+                        input(type="button", value="save" onclick="saveSquareMember(#{square.id}, 'membername-#{square.id}')")
 
-     script.
+    div(id='partyvotes')
+        table(border=1)
+            tr
+                td party
+                td yes
+                td no
+                td refrain
+                td absent
+                td missing
+                
+            each party in Object.keys(partyVotes)
+                tr
+                    td !{party}
+                    td !{partyVotes[party].yes}
+                    td !{partyVotes[party].no}
+                    td !{partyVotes[party].refrain}
+                    td !{partyVotes[party].absent}
+                    td !{partyVotes[party].missing}
+
+
+    div(id='bookindex')
+        each book in book_index
+            div.
+                !{book.start_document_id}. <a href="/pageeditor/!{book.start_document_id}"><b>#{book.start_year}-#{book.end_year}</b> #{book.book}#{book.book_letter}-#{book.book_number_type} <i>#{book.chamber} chamber</i></a>
+
+
+    script.
         $(document).ready(()=>{
             var parties = new Bloodhound({
               datumTokenizer: function(obj){ return obj.name.split(' ').concat([obj.abbrevation])},

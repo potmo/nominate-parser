@@ -9,7 +9,8 @@
   "author": "Nisse Bergman",
   "license": "BSD-2-Clause",
   "dependencies": {
-    "quick-hull-2d": "~0.1.0",
-    "canvas": "~1.3.12"
+    "async": "^3.2.0",
+    "canvas": "2.6.1",
+    "quick-hull-2d": "~0.1.0"
   }
 }
