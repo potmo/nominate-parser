@@ -1,6 +1,27 @@
 {
+  "status": "created",
+  "id": 7185,
   "name": "1958_2_a_ak_4_Voteringsprotokoll_002",
   "image": "1958_2_a_ak_4_Voteringsprotokoll_002.png",
-  "status": "created",
-  "book": "1958-1958_second_2_a_default_4"
+  "book": "1958-1958_second_2_a_default_4",
+  "page": 2,
+  "votes": null,
+  "coordinates": [
+    {
+      "x": 0.08712926030510412,
+      "y": 0.42972347830090524
+    },
+    {
+      "x": 0.9472286941921682,
+      "y": 0.3414479715276014
+    },
+    {
+      "x": 1.048850095013724,
+      "y": 0.8516822967750826
+    },
+    {
+      "x": 0.18875066112666003,
+      "y": 0.9399578035483864
+    }
+  ]
 }

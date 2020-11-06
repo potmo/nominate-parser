@@ -1,6 +1,27 @@
 {
+  "status": "created",
+  "id": 6786,
   "name": "1957_2_ak_4_Voteringsprotokoll_001",
   "image": "1957_2_ak_4_Voteringsprotokoll_001.png",
-  "status": "created",
-  "book": "1957-1957_second_2_a_default_4"
+  "book": "1957-1957_second_2_a_default_4",
+  "page": 1,
+  "votes": null,
+  "coordinates": [
+    {
+      "x": 0.016,
+      "y": 0.2126514131897712
+    },
+    {
+      "x": 0.981,
+      "y": 0.22611036339165544
+    },
+    {
+      "x": 0.974,
+      "y": 0.9582772543741588
+    },
+    {
+      "x": 0.013,
+      "y": 0.9475100942126514
+    }
+  ]
 }
