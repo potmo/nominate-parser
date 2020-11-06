@@ -1777,34 +1777,7 @@
     "last_record_on": 50,
     "total_pages": 50
   },
-  "1958-1958_second_1_b_default_4": {
-    "hashkey": "1958-1958_second_1_b_default_4",
-    "start_year": 1958,
-    "end_year": 1958,
-    "book": 1,
-    "book_letter": "b",
-    "sessiontype": "default",
-    "chamber": "second",
-    "type": "unknown",
-    "book_number_type": 4,
-    "first_record_on": 1,
-    "last_record_on": 55,
-    "total_pages": 55
-  },
-  "1958-1958_first_1_b_default_4": {
-    "hashkey": "1958-1958_first_1_b_default_4",
-    "start_year": 1958,
-    "end_year": 1958,
-    "book": 1,
-    "book_letter": "b",
-    "sessiontype": "default",
-    "chamber": "first",
-    "type": "unknown",
-    "book_number_type": 4,
-    "first_record_on": 1,
-    "last_record_on": 46,
-    "total_pages": 46
-  },
+  
   "1958-1958_second_2_a_default_4": {
     "hashkey": "1958-1958_second_2_a_default_4",
     "start_year": 1958,
@@ -1832,6 +1805,34 @@
     "first_record_on": 1,
     "last_record_on": 51,
     "total_pages": 51
+  },
+  "1958-1958_second_1_b_default_4": {
+    "hashkey": "1958-1958_second_1_b_default_4",
+    "start_year": 1958,
+    "end_year": 1958,
+    "book": 1,
+    "book_letter": "b",
+    "sessiontype": "default",
+    "chamber": "second",
+    "type": "unknown",
+    "book_number_type": 4,
+    "first_record_on": 1,
+    "last_record_on": 55,
+    "total_pages": 55
+  },
+  "1958-1958_first_1_b_default_4": {
+    "hashkey": "1958-1958_first_1_b_default_4",
+    "start_year": 1958,
+    "end_year": 1958,
+    "book": 1,
+    "book_letter": "b",
+    "sessiontype": "default",
+    "chamber": "first",
+    "type": "unknown",
+    "book_number_type": 4,
+    "first_record_on": 1,
+    "last_record_on": 46,
+    "total_pages": 46
   },
   "1958-1958_second_2_b_default_4": {
     "hashkey": "1958-1958_second_2_b_default_4",
