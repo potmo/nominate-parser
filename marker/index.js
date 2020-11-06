@@ -314,6 +314,21 @@ app.patch('/doc/:id/votes/:square', (req, res) => {
   });
 });
 
+app.post('/doc/:id/nullifyvotes', (req, res) => {
+  var id = parseInt(req.params.id);
+
+  console.log(`Nullifying votes for page ${id}`);
+
+  getPage(id, (err, page) => {
+    if (err) return res.status(500).send(err);
+    page.votes = null
+    savePage(page, (err) => {
+      if (err) return res.status(500).send(err);
+      res.status(200).send('OK');
+    })
+  });
+});
+
 app.post('/doc/:id/coordinates', (req, res) => {
   var id = parseInt(req.params.id);
   var coordinates = req.body;
@@ -386,7 +401,6 @@ function getAllDataForPage(page, callback) {
           if (err) return callback(null, {page: page, book: book, book_index: bookIndex, error: err});
 
           var partyVotes = getVotesPerParty(page, seatings);
-          console.log(partyVotes);
 
           return callback(null, {page: page, book: book, chamber: chamber, seatings: seatings, book_index: bookIndex, partyVotes})
         });

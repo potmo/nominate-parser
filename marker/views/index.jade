@@ -43,7 +43,9 @@ html
                 td Refrain: #{page.votes.total.refrain}
             tr
                 td No: #{page.votes.total.no}
-                td Missing: #{page.votes.total.missing}
+                td Absent: #{page.votes.total.absent}
+            tr
+                td(colspan=2) Missing: #{page.votes.total.missing}
             tr
                 td(colspan=2) Total counted: #{page.votes.total.yes + page.votes.total.no + page.votes.total.refrain + page.votes.total.absent}
 
@@ -209,6 +211,19 @@ html
                 xhr.send(json);
             }
 
+            function nullifyVotes() {
+                document.getElementById('nullifyvotesbutton').disabled = true;
+                var xhr = new XMLHttpRequest();
+                var path = '../doc/' + page.id + '/nullifyvotes';
+
+                xhr.open('POST', path, true);
+                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                xhr.onload = function(e) {
+                    location.reload();
+                };
+                xhr.send();
+            }
+
             function updateSquareVote(square, vote, element){
                 console.log('update %s to %s', square, vote);
 
@@ -280,6 +295,7 @@ html
             <img id="originalimage" src="../image/#{page.image}" style="position: absolute; width: 100%; height: auto;" onload="onLoaded()"/>
             <canvas id="gridcanvas" style="position: relative; width: 100%; height: auto;">
         </div>
+        <input type="button" id="nullifyvotesbutton" value="Nullify votes" onclick="nullifyVotes()"/>
     
         
 
@@ -337,7 +353,7 @@ html
                     td
                         input(type="button", value="save" onclick="saveSquareVote('vote-#{square.id}', #{square.id})")
                     td(style='width: 400px;')
-                        input(id="membername-#{square.id}" class="typeahead" type="text" placeholder="Name" style="width: 100%;" value="#{seatings[square.id] ? seatings[square.id].name+' - '+seatings[square.id].constituency.join(',') : ''}")&attributes({'data-seated-member-id': seatings[square.id] ? seatings[square.id].id : ''})
+                        input(id="membername-#{square.id}" class="typeahead" type="text" placeholder="Name" style="width: 100%;" value="#{seatings[square.id] ? seatings[square.id].name+' - '+ seatings[square.id].party.join(',') + ',' + seatings[square.id].constituency.join(',') : ''}")&attributes({'data-seated-member-id': seatings[square.id] ? seatings[square.id].id : ''})
                     td
                         input(type="button", value="save" onclick="saveSquareMember(#{square.id}, 'membername-#{square.id}')")
 
@@ -350,15 +366,111 @@ html
                 td refrain
                 td absent
                 td missing
-                
-            each party in Object.keys(partyVotes)
+                td counted total
+                td chamber total
+            -var totPartyMembers = 0
+            each party in unique(Object.keys(partyVotes).concat(Object.keys(chamber.allocation)))
                 tr
+                    -var votes = partyVotes[party] || {yes:0, no: 0, refrain: 0, absent: 0, missing: 0}
                     td !{party}
-                    td !{partyVotes[party].yes}
-                    td !{partyVotes[party].no}
-                    td !{partyVotes[party].refrain}
-                    td !{partyVotes[party].absent}
-                    td !{partyVotes[party].missing}
+                    td !{votes.yes}
+                    td !{votes.no}
+                    td !{votes.refrain}
+                    td !{votes.absent}
+                    td !{votes.missing}
+                    td !{votes.yes + votes.no + votes.refrain + votes.absent + votes.missing}
+                    td !{chamber.allocation[party] || '-'}
+                    - totPartyMembers += votes.yes + votes.no + votes.refrain + votes.absent + votes.missing
+            tr
+                td 
+                td !{page.votes.total.yes}
+                td !{page.votes.total.no}
+                td !{page.votes.total.refrain}
+                td !{page.votes.total.absent}
+                td !{page.votes.total.missing}
+                td !{totPartyMembers}
+                td !{chamber.seats}
+
+    div(id='duplets')
+        table(style='background-color: red')
+            each member in page.votes.squares.map(square => seatings[square.id]).filter(Boolean).map(m => m.name).filter((val, i, self) => self.indexOf(val) !== i)
+                tr
+                    td
+                        !{member} is double
+
+
+    div(id='party-members')
+        table(border=1)
+            each constituency in Object.keys(chamber.constituency_allocation)
+                tr
+                    td 
+                        b !{constituency}
+                each party in unique(Object.keys(partyVotes).concat(Object.keys(chamber.allocation)))
+                    tr
+                        td(style='padding-left: 1em') 
+                            b !{party}
+                    each member in page.votes.squares.map(square => seatings[square.id]).filter(Boolean).filter(member => member.party.indexOf(party) >= 0).filter(member => member.constituency.indexOf(constituency) >= 0).sort(sortSurname)
+                        tr
+                            td(style='padding-left: 2em') !{member.name + ' (' + member.party.join(', ') + ')'}
+
+
+    - function sortSurname(a, b) {
+    -   var nameA = a.name.split(' ');
+    -   var surnameA = nameA[nameA.length-1];
+    -   var nameB = b.name.split(' ');
+    -   var surnameB = nameB[nameB.length-1];
+    -   return surnameA.localeCompare(surnameB);
+    - }
+    -
+    - function isFirstUnique(value, index, self) {
+    -     return self.indexOf(value) === index;
+    - }
+    - function unique(array) {
+    -     return array.filter(isFirstUnique);
+    - }
+    - 
+    - function getConstituencies() {
+    -     var c = page.votes.squares.map( (square) => {
+    -               return seatings[square.id]
+    -           }).filter(Boolean).flatMap( (member) => {
+    -               return member.constituency
+    -           });
+    -     return unique(c)
+    - }
+    -
+    - function getNumberOfVotesPerConstituency() {
+    -   result = {};
+    -   page.votes.squares.map( (square) => {
+    -       return seatings[square.id]
+    -   }).filter(Boolean).reduce((result, member) => {
+    -       console.log(member)
+    -       result[member.constituency.join(',')] = result[member.constituency.join(',')] || 0 
+    -       result[member.constituency.join(',')]++;
+    -       return result;
+    -   }, result);
+    -   return result;
+    - }
+
+    div(id='chamber-constituency-allocation')
+        table(border=1)
+            tr
+                td constituency
+                td counted allocation
+                td chamber allocation
+            - var constituencies = getNumberOfVotesPerConstituency()
+            - var totCountedConstituency = 0
+            - var totChamberConstituency = 0
+            each constituency in Object.keys(constituencies)
+                tr
+                    td !{constituency}
+                    td !{constituencies[constituency]}
+                    - totCountedConstituency += constituencies[constituency]
+                    td !{chamber.constituency_allocation[constituency]}
+                    - totChamberConstituency += chamber.constituency_allocation[constituency]
+            tr
+                td total
+                td !{totCountedConstituency}
+                td !{totChamberConstituency}
 
 
     div(id='bookindex')
@@ -370,17 +482,12 @@ html
     script.
         $(document).ready(()=>{
             var parties = new Bloodhound({
-              datumTokenizer: function(obj){ return obj.name.split(' ').concat([obj.abbrevation])},
+              datumTokenizer: function(obj){ return obj.name.split(' ')},
               queryTokenizer: Bloodhound.tokenizers.whitespace,
-              identify: function(obj) { return obj.name; },
+              identify: function(obj) { return obj.name + obj.party.join('') + obj.constituency.join('') ; },
               prefetch: {
                 cache: false,
                 url: '../members',
-                /*transform: function(data){
-                    return data.map((party)=>{
-                        return party.name;
-                    });
-                }*/
               }
             });
 
@@ -390,7 +497,7 @@ html
               minLength: 1
             },
             {
-              display: function(data){ return data.name + ' - ' + data.constituency.join(',') },
+              display: function(data){ return data.name + ' - ' + data.party.join(',') + ', ' + data.constituency.join(',') },
               templates: {
                 suggestion: function(data){ return '<div>' + data.name + ' ('+ data.party.join(',') +')'+  ' - ' + data.constituency.join(',') + '</div>'; }
               },

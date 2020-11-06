@@ -11,7 +11,7 @@ html
 
     body
         div(id="newmember" style="display: flex; flex-direction: column; padding: 30px; width:300px")
-            input(id="name-new" class="" type="text" placeholder="Name" style="width: 100%;" autofocus)
+            input(id="name-new" class="membertypeahead" type="text" placeholder="Name" style="width: 100%;" autofocus)
             input(id="party-new" class="partytypeahead" type="text" placeholder="Party" style="width: 100%;" autofocus)
             input(id="constituency-new" class="constituencytypeahead" type="text" placeholder="Constituency" style="width: 100%;" autofocus)
             input(id="save-new" type="button" value="Create" style="width: 100%;" onclick="createMember()")
@@ -127,6 +127,13 @@ html
           local: parties
         });
 
+        var bloodhounsMembers = new Bloodhound({
+          datumTokenizer: function(obj){ return obj.name.split(' ')},
+          queryTokenizer: Bloodhound.tokenizers.whitespace,
+          identify: function(obj) { return obj.name + obj.party.join('') + obj.constituency.join('') ; },
+          local: members
+        });
+
         var bloodhounsConstituencies = new Bloodhound({
           datumTokenizer: function(obj){ return [obj.display]},
           queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -153,6 +160,22 @@ html
           console.log('Selection: ', suggestion);
           ev.target.setAttribute('data-party', suggestion.abbrevation);
         });
+
+        $('.membertypeahead').typeahead({
+          hint: true,
+          highlight: true,
+          minLength: 1
+        },
+        {
+          display: function(data){ return data.name + ' - ' + data.party.join(',') + ', ' + data.constituency.join(',') },
+          templates: {
+            suggestion: function(data){ return '<div>' + data.name + ' ('+ data.party.join(',') +')'+  ' - ' + data.constituency.join(',') + '</div>'; }
+          },
+          name: 'members',
+          source: bloodhounsMembers,
+          limit: 20
+        });
+
 
         $('.constituencytypeahead').typeahead({
           hint: true,

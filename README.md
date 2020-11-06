@@ -57,6 +57,9 @@ To figure out who voted you need to first look up the `chambers` to figure out t
 
 ## Fixes for problems when working
 
+## Mandates
+> TOD: write this
+
 ### Prepared PNG image is corrupt
 If a prepped image is not working you can first check with `pngcheck`
 
@@ -111,6 +114,85 @@ https://sv.wikipedia.org/wiki/Partil%C3%B6s
 In some cases the dot is the record is missing for one or several votes. It is sometimes possible to deduce the actual vote from the total in the record assuming that is correct. Sometimes there are multiple missing votes and just using the total is not enough. I have in those cases chosen the most probable vote using the fact that party members usually vote as their fellow party members.
 
 > TODO: Change party affiliations mid election?
+
+## 1957-1958 (spring)
+### First Chamber
+> TODO: Do this
+
+### Second Chamber
+
+https://sv.wikipedia.org/wiki/Resultat_i_andrakammarvalet_1958
+
+
+#### Parties
+_Socialdemokraterna (s)_ got 106 seats
+_Högerpartiet (h)_ got 42 seats 
+_Folkpartiet (f)_ got 58 seats 
+_Centerpartiet (c)_ got 19 seats
+_Sveriges kommunistiska parti (k)_ got 6 seats
+
+#### Voting records
+The records does not contain any summation so it is hard to double check thew count. It also doesn't contain any party abbrevation so it becomes hard to figure out whos on what chair.
+
+#### Members
+1957 starts of by beeing one person short. There is only 230 of the 231 members in the record. It seems that there should be one social democrat since there is one short of filling their mandate of 106 (maybe the speaker that was s and did not have any vote). It might have something to do with the empty seats at 51 and 155.
+There also seems to be one person too many for Värmland.
+
+Seat 51 and 155 is empty. Im guessing that those seats are the first and second vice speakers Martin Skoglund and Oscar Malmborg.
+
+Seat 92 and 96 are both members of Kristianstad and both called Nilsson (Jöns (h)/Arvid(f)). I'm guessing the second are are Arvid and the first Jöns. It seems to work with how they vote.
+
+Seat 120 and 122 are both members of Halldn and both called Bengtsson (Ingemund (s) and Tore (s)) and both are from the same party so it is impossible to figure out whos who without seating lists.
+
+Seat 138 and 140 are seated by two Johansson (Olof (f)/Carl (s)) from Bohuslän
+
+Seat 137 and 141 are seated by two Svensson (Waldemar (f)/Evert(s)) from Bohuslän. They seem to sit in that order according to how they vote.
+
+Seat 200 and 201 are seated by two Nilsson (Henning(k)/Gerhard (h)) from Gävleborg. They seem to sit in that order according to how they vote.
+
+Seat 207, 208, 209 are seated by three Andersson (Alf(s) / Oscar (f) / John (f)) from Västernorrland. Alf most probably sit on 207 but the other two, being both f, are impossible to figure out without a seating list. (It might be that Oscar should replace John on seat 209 due to that Oscar leaves 1958 in the autumn and that would make everyone keep their seat).
+
+#### Errors
+|Page       | Seat      | Note                  |
+|---        |---        |---                    |
+|6703       | 180        | Missing vote |
+
+
+
+## 1958 (autumn)-1960
+
+### First Chamber
+> TODO: Do this
+
+### Second Chamber
+https://sv.wikipedia.org/wiki/Lista_%C3%B6ver_ledam%C3%B6ter_av_Sveriges_riksdags_andra_kammare_1958%E2%80%931960
+
+https://sv.wikipedia.org/wiki/Andrakammarvalet_i_Sverige_1958
+
+This election was an extra election. It ended up with the socialist block (s+k) having 116 seats and opposition 115 but since the speaker was a social democrat and did not have any vote it ended up being 115 to 115.
+
+#### Parties
+_Socialdemokraterna (s)_ got 111 seats
+_Högerpartiet (h)_ got 45 seats 
+_Folkpartiet (f)_ got 38 seats 
+_Centerpartiet (c)_ got 32 seats
+_Sveriges kommunistiska parti (k)_ got 5 seats
+
+#### Members
+
+There are only 230 members counted (but should be 231). One socialdemocrat missing (that might be the speaker who is social democrat and not allowed to vote. It should be Patrik Svensson at this time from Älvsborg norra). Once again Älvsborgs Norra has one too many members.
+
+Seat 113 and 115 is both occupied by a Hansson (Nils g (c)/ Stig(c)) from Malmöhus and both are from the same party. It is impossible to know who is who without a seating list.
+
+Seat 120 adn 121 both has a Bengtsson (Ingemund (s)/Tore(s)) from Halland and both are the same party. It is impossible to know who is who without a seating list.
+
+#### Errors
+|Page       | Seat      | Note                  |
+|---        |---        |---                    |
+|7131       | 10        | Missing vote |
+|7185       | All        | The page is a handwritten record with only parties. I havent bothered to manually type it in. |
+
+
 
 ## 1961-1964
 
@@ -167,6 +249,14 @@ Here are some missing
 |8562       | 193       | Missing vote          |
 |8706       | 1,2,3     | Sear Hagberg, Erlander and Ohlins votes are obscured by a paper note saying that "First time the Sepaker gets to vote". Unsure why since there is 15 more votes for no.                        |
 |9022       | 121       | No marked vote. All other s vote refrain so I set Bengtsson as that too        |
+|9834,9835       | 226       | Missing vote. Counted total is printed on paper so it is possible to deduce the vote          |
+|10565       | 55       | Missing vote. Counted total is printed on paper so it is possible to deduce the vote          |
+|10821       | 20,32,52,62       | Missing vote. Counted total is printed on paper so it is possible to deduce the vote          |
+|10827       | 20,32,52       | Missing vote. Counted total is printed on paper so it is possible to deduce the vote          |
+|10930,10932,10933,10935,10937,10941,10942,10943,10945       | 56       | Missing vote. Counted total is printed on paper so it is possible to deduce the vote          |
+|11054       | 102,122,142,222       | Missing vote. Counted total is printed on paper so it is possible to deduce the vote          |
+
+
 
 
 

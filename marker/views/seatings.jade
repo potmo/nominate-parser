@@ -133,6 +133,21 @@ html
                         input(id="membername-#{square}" class="membertypeahead" type="text" placeholder="Name" style="width: 100%;" value="#{member ? `${member.name} (${member.party.join(',')}, ${member.constituency.join(',')})`  : ''}")&attributes({'data-member': member ? member.id : ''})
                     td
                         input(type="button", value="save" onclick="saveSquareMember(#{square}, 'membername-#{square}')")
+
+
+        table(border="1")
+            -var rows = Math.ceil(chamber.seats / chamber.seat_layout_width);
+            -var columns = chamber.seat_layout_width;
+            -var r=0
+            -var c=0
+            while r < rows
+                tr
+                - c = 0
+                while c < columns
+                    td #{c + ',' + r}
+                    - c++
+                - r++
+
                 
 
 

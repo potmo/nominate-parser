@@ -31,9 +31,9 @@
 
   exports.getVotesFromPreparedImage = function(preparedImagePath, rawImagePath, outputImagePath, page, labels, callback) {
 
-    //var imageData = loadImage(rawImagePath);
-    //imageData = scaleImage(imageData, 0.8);
-    //imageData = warpImage(imageData, page);
+    var imageData = loadImage(rawImagePath);
+    imageData = scaleImage(imageData, 0.8);
+    imageData = warpImage(imageData, page);
 
     var preparedImageData = loadImage(preparedImagePath);
     preparedImageData = warpImage(preparedImageData, page);
@@ -41,7 +41,7 @@
     var squares = getGridSquares(preparedImageData.width, preparedImageData.height);
     var voteSquares = findVotes(preparedImageData, squares)
 
-    var gridImage = drawGridSquares(preparedImageData, voteSquares, labels);
+    var gridImage = drawGridSquares(imageData, voteSquares, labels);
 
     var votes = countVotes(squares);
 
@@ -110,7 +110,7 @@
 
     */
 
-    var morphologicalBinarizedImage = imageData;
+    var morphologicalBinarizedImage = clearTopOfImage(imageData);
 
     console.log('label groups');
     var labeledGroups = labelConnectedComponents(morphologicalBinarizedImage);
@@ -875,6 +875,19 @@
     console.log(`cleaning up from ${labeledGroups.length}, ${goodSized.length}, ${output.length}`)
 
     return output;
+  }
+
+  function clearTopOfImage(imageData) {
+    var canvas = createCanvas(imageData.width, imageData.height);
+      var context = canvas.getContext('2d');
+      context.putImageData(imageData, 0, 0);
+      context.fillStyle = 'rgba(255,255,255,1.0)';
+    
+      context.beginPath();
+      context.rect(0, 0, imageData.width, imageData.height * 0.20)
+      context.fill();
+
+      return context.getImageData(0, 0, imageData.width, imageData.height);
   }
 
   function drawConnectedComponent(imageData, labeledGroups){
@@ -1934,6 +1947,13 @@
     context.fillStyle = 'rgba(255,0,0,1.0)';
 
     var types = ['yes','no','refrain','absent'];
+    var typeAbbr = {
+      yes: 'y',
+      no: 'n',
+      refrain: 'r',
+      absent: 'a',
+      missing: 'm'
+    };
 
     squares.forEach((square, i) => {
         let label = labels[i] || 'N/A';
@@ -1962,11 +1982,13 @@
         context.lineTo(square.upperLeft.x, square.upperLeft.y);
         context.stroke();
 
+        context.textAlign = "right";
         context.fillStyle = 'rgba(255,0,0,1.0)';
-        context.fillText(square.vote +'\t'+square.id, square.upperRight.x - 5, square.upperRight.y + 10);
+        context.fillText(typeAbbr[square.vote] +'\t'+square.id, square.upperRight.x - 5, square.upperRight.y + 20);
 
+        context.textAlign = "left";
         context.fillStyle = 'rgba(0,0,255,1.0)';
-        context.fillText(label, square.upperRight.x - 5, square.upperRight.y + 20);
+        context.fillText(label, square.upperLeft.x + 5, square.upperLeft.y + 10);
 
         context.strokeStyle = 'rgba(255,0,0,0.2)';
         context.beginPath();
