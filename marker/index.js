@@ -329,6 +329,61 @@ app.post('/doc/:id/nullifyvotes', (req, res) => {
   });
 });
 
+app.get('/doc/clean', (req, res) => {
+  
+  console.log(`Cleaning up votes`);
+
+  getSeatings( (err, seatings) => {
+    if (err) return res.status(500).send(err);
+
+
+    async.forEachOfSeries(documentIndex, (value, index, callback) => {
+      getDocument(index, (err, doc) => {
+        if (err) return callback(err);
+
+        if (doc.id !== undefined && doc.id !== index) {
+          console.log(`index missmatch. Document says ${doc.id} index says ${index} offset ${index - doc.id}`);
+
+          var oldDocId = doc.id;
+          doc.id = index;
+          savePage(doc, (err) => {
+            if (err) callback(err);
+            
+             seatings.second = seatings.second.map((seat, i) => {
+              if (!seat) return;
+              return seat.map((s) => {
+                if (s.seated_at_page == oldDocId) {
+                  console.log(`seat ${i} should change from ${oldDocId} to ${index}`);
+                  s.seated_at_page = index;
+                }
+                return s;
+              });
+            });
+
+            saveSeatings(seatings, (err) => {
+              if (err) callback(err);
+              callback(null);
+            });
+            // save newSeatings
+          });
+        } else {
+          callback(null);
+        }
+
+      });
+    }, (err)=> {
+      if (err) {
+        if (err) return res.status(500).send(err);
+      } else {
+        res.status(200).send('OK');
+      }
+    });
+  });
+  
+});
+
+
+
 app.post('/doc/:id/coordinates', (req, res) => {
   var id = parseInt(req.params.id);
   var coordinates = req.body;

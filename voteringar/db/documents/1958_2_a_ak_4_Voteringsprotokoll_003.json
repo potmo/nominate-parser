@@ -1,22 +1,22 @@
 {
   "status": "created",
-  "id": 7186,
+  "id": 7085,
   "name": "1958_2_a_ak_4_Voteringsprotokoll_003",
   "image": "1958_2_a_ak_4_Voteringsprotokoll_003.png",
   "book": "1958-1958_second_2_a_default_4",
   "page": 3,
   "votes": {
     "total": {
-      "yes": 109,
+      "yes": 110,
       "no": 81,
       "refrain": 11,
-      "absent": 29,
+      "absent": 28,
       "missing": 10
     },
     "squares": [
       {
         "id": 0,
-        "vote": "absent"
+        "vote": "yes"
       },
       {
         "id": 1,

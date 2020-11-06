@@ -186,11 +186,13 @@ Seat 113 and 115 is both occupied by a Hansson (Nils g (c)/ Stig(c)) from Malmö
 
 Seat 120 adn 121 both has a Bengtsson (Ingemund (s)/Tore(s)) from Halland and both are the same party. It is impossible to know who is who without a seating list.
 
+When we come in to 1958 there is a folkpartiet memebr too little while all other parties are as expected.
+
 #### Errors
 |Page       | Seat      | Note                  |
 |---        |---        |---                    |
-|7131       | 10        | Missing vote |
-|7185       | All        | The page is a handwritten record with only parties. I havent bothered to manually type it in. |
+|7251       | 10        | Missing vote |
+|7084       | All       | The page is a handwritten record with only parties. I havent bothered to manually type it in. |
 
 
 
