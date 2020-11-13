@@ -1,0 +1,44 @@
+doctype html
+html
+  head
+    title=Left/Joiend
+    
+  body 
+    
+    style.
+        table {
+            border-spacing: 0px;
+            border-collapse: collapse;
+        }
+
+    p.
+        left (!{left.length})
+    table(border="1")
+        tr
+            td id
+            td name
+            td party
+            td constituency
+        each member in left                
+            tr
+                td !{id}
+                td !{member.name}
+                td !{member.party.join(', ')}
+                td !{member.constituency.join(', ')}
+    
+    p.
+        joined (!{joined.length})
+    table(border="1")
+        tr
+            td id
+            td name
+            td party
+            td constituency
+        each member in joined                
+            tr
+                td !{id}
+                td !{member.name}
+                td !{member.party.join(', ')}
+                td !{member.constituency.join(', ')}
+
+

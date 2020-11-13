@@ -10,11 +10,38 @@ html
         script var parties = !{JSON.stringify(parties)}
 
     body
+        script.
+            function saveValues(){
+
+              var constElem = document.getElementById("constituency-new")
+              var partyElem = document.getElementById("party-new")
+              
+              localStorage.setItem('party-value', partyElem.value);
+              localStorage.setItem('party-data', partyElem.getAttribute('data-party'));
+
+              localStorage.setItem('constituency-value', constElem.value);
+              localStorage.setItem('constituency-data', constElem.getAttribute('data-constituency'));
+            }
+
+            function getSavedValues(){
+                var constElem = document.getElementById("constituency-new")
+                var partyElem = document.getElementById("party-new")
+
+                constElem.setAttribute('data-constituency', localStorage.getItem('constituency-data') || '');
+                constElem.value = localStorage.getItem('constituency-value') || '';
+
+                partyElem.setAttribute('data-party', localStorage.getItem('party-data') || '');
+                partyElem.value = localStorage.getItem('party-value') || '';
+            }
+
         div(id="newmember" style="display: flex; flex-direction: column; padding: 30px; width:300px")
             input(id="name-new" class="membertypeahead" type="text" placeholder="Name" style="width: 100%;" autofocus)
-            input(id="party-new" class="partytypeahead" type="text" placeholder="Party" style="width: 100%;" autofocus)
-            input(id="constituency-new" class="constituencytypeahead" type="text" placeholder="Constituency" style="width: 100%;" autofocus)
+            input(id="party-new" class="partytypeahead" type="text" placeholder="Party" style="width: 100%;" onchange='saveValues();')
+            input(id="constituency-new" class="constituencytypeahead" type="text" placeholder="Constituency" style="width: 100%;" onchange='saveValues();')
             input(id="save-new" type="button" value="Create" style="width: 100%;" onclick="createMember()")
+
+        script.
+          getSavedValues(document.getElementById("party-new"));
 
     style.
         input {

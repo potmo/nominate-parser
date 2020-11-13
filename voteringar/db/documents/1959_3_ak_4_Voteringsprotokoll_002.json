@@ -1,6 +1,27 @@
 {
+  "status": "created",
+  "id": 7600,
   "name": "1959_3_ak_4_Voteringsprotokoll_002",
   "image": "1959_3_ak_4_Voteringsprotokoll_002.png",
-  "status": "created",
-  "book": "1959-1959_second_3_a_default_4"
+  "book": "1959-1959_second_3_a_default_4",
+  "page": 2,
+  "votes": null,
+  "coordinates": [
+    {
+      "x": 0.6497119529694496,
+      "y": 0.22754252116395307
+    },
+    {
+      "x": 0.6714357112889646,
+      "y": 0.2324046827472643
+    },
+    {
+      "x": 0.3851347982753245,
+      "y": 0.8923245782226208
+    },
+    {
+      "x": 0.36341103995580953,
+      "y": 0.8874624166393096
+    }
+  ]
 }

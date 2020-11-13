@@ -57,9 +57,6 @@ To figure out who voted you need to first look up the `chambers` to figure out t
 
 ## Fixes for problems when working
 
-## Mandates
-> TOD: write this
-
 ### Prepared PNG image is corrupt
 If a prepped image is not working you can first check with `pngcheck`
 
@@ -68,6 +65,9 @@ If a prepped image is not working you can first check with `pngcheck`
 `pngcheck -tcv xxx/nominate/voteringar/prepared_png/1961_1_ak_4_Voteringsprotokoll_049.png`
 
 and then call `http://localhost:3000/prepared/:pageid` to reprepare it (binarize etc.)
+
+## Mandates
+> TOD: write this
 
 ## Records 
 
@@ -115,11 +115,64 @@ In some cases the dot is the record is missing for one or several votes. It is s
 
 > TODO: Change party affiliations mid election?
 
-## 1957-1958 (spring)
 ### First Chamber
-> TODO: Do this
 
-### Second Chamber
+The first chamber protocols are nicer than the second chamber since it contains destinctive names. There are no seat numbering on the protocols so I have just numbered them from 1 to 150 from top left (plus the row of 151 and 152 that is the first and second vice speakers seats).
+The first chamber also (at least after 1957) always have a summation of the votes so that it is easy to double check against.
+
+### 1957-1957
+Since both the seats in the upper left and the seats in the lower right is empty it makes the automatic grid detection detect a rotated rectangle in a lot of the cases making the scanning more tedious. 
+
+#### Parties
+_Socialdemokraterna (s)_ got 79 seats
+_Högerpartiet (h)_ got 13 seats 
+_Folkpartiet (f)_ got 30 seats 
+_Centerpartiet (c)_ got 25 seats
+_Sveriges kommunistiska parti (k)_ got 3 seats
+
+Erik Boheman (f) from Göteborgs stad is speaker and have no vote.
+
+#### Voting records
+Seats 1, 2, 24 is empty. I'm guessing since that is the Speaker, 1st vice speaker and 2nd vice speaker that usually sits there. The two vice speakers are seated at seat 151 and 152.
+
+#### Members
+
+#### Errors
+
+### 1958-1958
+
+
+#### Parties
+_Socialdemokraterna (s)_ got 79 seats
+_Högerpartiet (h)_ got 16 seats 
+_Folkpartiet (f)_ got 29 seats 
+_Centerpartiet (c)_ got 24 seats
+_Sveriges kommunistiska parti (k)_ got 3 seats
+
+Erik Boheman (f) from Göteborgs stad is speaker and have no vote.
+Total members are increased to 151 meaning that seat 153 gets occupied.
+Göteborgs stad gets one more seat.
+
+#### Voting records
+Seats 1, 2, 24 is empty. I'm guessing since that is the Speaker, 1st vice speaker and 2nd vice speaker that usually sits there. The two vice speakers are seated at seat 151 and 152.
+
+#### Members
+Gunnar Svärd (h), changes from Göteborgs stad to Jönköpings län.
+Bo Seigbahn (s) is representing s, but will later represent h.
+
+>TODO: There is a missmatch between what I can see and what it's supposed to be. s has one seat too few and c has one too many. I can't find where it is.
+
+
+#### Errors
+
+#### Errors
+|Page       | Seat      | Note                  |
+|---        |---        |---                    |
+|7157-7163       | 21-40        | Missing vote |
+|7287| all | photography failed so no votes registered |
+
+## Second Chamber
+### 1957-1958 (spring)
 
 https://sv.wikipedia.org/wiki/Resultat_i_andrakammarvalet_1958
 
@@ -159,12 +212,8 @@ Seat 207, 208, 209 are seated by three Andersson (Alf(s) / Oscar (f) / John (f))
 
 
 
-## 1958 (autumn)-1960
+### 1958 (autumn)-1960
 
-### First Chamber
-> TODO: Do this
-
-### Second Chamber
 https://sv.wikipedia.org/wiki/Lista_%C3%B6ver_ledam%C3%B6ter_av_Sveriges_riksdags_andra_kammare_1958%E2%80%931960
 
 https://sv.wikipedia.org/wiki/Andrakammarvalet_i_Sverige_1958
@@ -186,22 +235,33 @@ Seat 113 and 115 is both occupied by a Hansson (Nils g (c)/ Stig(c)) from Malmö
 
 Seat 120 adn 121 both has a Bengtsson (Ingemund (s)/Tore(s)) from Halland and both are the same party. It is impossible to know who is who without a seating list.
 
-When we come in to 1958 there is a folkpartiet memebr too little while all other parties are as expected.
+In 1958 the seat layout changes slightly from missing seat 163 to missing seat 143 in the chamber layout.
+
+In the middle of 1958 (page 7308) seat 143 disappears and 163 comes back. I'm not sure why that is, if it is a typo or something else strange. 
+
+In the very end of 1960 (page 8531) they again switch seats. Seat 52 gets empty and seat 143 becomes seated and reappear again while seat 155 disappears. 
 
 #### Errors
 |Page       | Seat      | Note                  |
 |---        |---        |---                    |
 |7251       | 10        | Missing vote |
 |7084       | All       | The page is a handwritten record with only parties. I havent bothered to manually type it in. |
+|7087, 7096       | 78        | missing vote |
+|7090, 7091 | 53, 78    | missing vote |
+|7097 | 32    | missing vote |
+|7113, 7115, 7116 | 36    | missing vote |
+|7338| 20,50, 80, 100,120,191,201,211 | missing vote (probably all absent and the rightmost column is missing) |
+|7344| 50 | vote missing |
+|7348| 100 | vote missing |
+|7600, 7601, 7602| all | vote is a handwritten record|
+|7644| 161, 221 | vote missing |
+|8375, 8377| all | vote is handwritten record |
+|8479, 8480,8481,8482| all | vote has not been photographed due to technical errors. (8482 contains a nice note on why it didn't work)|
+|8485, 8486, 8487, 8488| 33 | missing vote |
+|8549| 40 | missing vote |
 
 
-
-## 1961-1964
-
-### First chamber
-> TODO: Do this
-
-### Second Chamber
+### 1961-1964
 
 https://sv.wikipedia.org/wiki/Lista_%C3%B6ver_ledam%C3%B6ter_av_Sveriges_riksdags_andra_kammare_1961%E2%80%931964
 
@@ -223,13 +283,17 @@ There is no total count written on the records so it is hard to know if my count
 The first book of 1961 doesn't show party affiliation in the records so it is a bit hard to figure out whos who.
 A few question marks remain.
 
-Seat 114 and 116 is occupied by two c-members from Malmöhus both called Hansson (Nils G and Stig).
+Seat 52 is empty. Seat 31 and 32 is missing.
 
-Seat 146 and 147 is occupied by two s-members from Älvsborg Norra both called Andersson (Sven and Ruth).
+Seat 114 and 116 is occupied by two c-members from Malmöhus both called Hansson (Nils G/Stig).
 
-Seat 120 and 121 is occupied by two s-members from Halland both called Bengtsson (Ingemund and Tore).
+Seat 146 and 147 is occupied by two s-members from Älvsborg Norra both called Andersson (Sven/Ruth).
 
-Seat 52 is empty in much of the first book of '61. It is a s-seat for Östergötland that is later held by Fridolf Thapper. There are no votes on that seat in the firsst part of 1961 (until april 26) so it's possible it unoccupied. I have counted it as unoccupied.
+Seat 120 and 121 is occupied by two s-members from Halland both called Bengtsson (Ingemund/Tore).
+
+Seat 164 and 168 is occupied by two s-members from Värmland both called Andersson (Arvid / Karl-Gustaf)
+
+Seat 52 is empty in much of the first book of '61. It is a s-seat for Östergötland that is later held by Fridolf Thapper. There are no votes on that seat in the firsst part of 1961 (until april 26) so it's possible it unoccupied. I have counted it as unoccupied. Edit: Fridolf Thapper is the speaker from 1960 (17 Jul '60 when Patrik Svensson dies) to 1968.
 
 > TODO: Make sure the member on seat 52 does not occupy that seat until Thapper appears. i.e. must be a way to set seat as unoccupied. (this should be fixed by setting `member_id` to `null` but there should maybe be a way to set that via the UI?)
 
@@ -259,18 +323,8 @@ Here are some missing
 |11054       | 102,122,142,222       | Missing vote. Counted total is printed on paper so it is possible to deduce the vote          |
 
 
+### 1965-1968
 
-
-
-
-
-
-## 1965-1968
-
-### First chamber
-> TODO: Do this
-
-### Second Chamber
 https://sv.wikipedia.org/wiki/Lista_%C3%B6ver_ledam%C3%B6ter_av_Sveriges_riksdags_andra_kammare_1965%E2%80%931968
 
 https://sv.wikipedia.org/wiki/Andrakammarvalet_i_Sverige_1964

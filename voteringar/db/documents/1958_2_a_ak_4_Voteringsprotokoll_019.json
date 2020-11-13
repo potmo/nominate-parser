@@ -1,6 +1,997 @@
 {
+  "status": "created",
+  "id": 7101,
   "name": "1958_2_a_ak_4_Voteringsprotokoll_019",
   "image": "1958_2_a_ak_4_Voteringsprotokoll_019.png",
-  "status": "created",
-  "book": "1958-1958_second_2_a_default_4"
+  "book": "1958-1958_second_2_a_default_4",
+  "page": 19,
+  "votes": {
+    "total": {
+      "yes": 61,
+      "no": 87,
+      "refrain": 40,
+      "absent": 42,
+      "missing": 10
+    },
+    "squares": [
+      {
+        "id": 0,
+        "vote": "no"
+      },
+      {
+        "id": 1,
+        "vote": "refrain"
+      },
+      {
+        "id": 2,
+        "vote": "refrain"
+      },
+      {
+        "id": 3,
+        "vote": "yes"
+      },
+      {
+        "id": 4,
+        "vote": "refrain"
+      },
+      {
+        "id": 5,
+        "vote": "no"
+      },
+      {
+        "id": 6,
+        "vote": "no"
+      },
+      {
+        "id": 7,
+        "vote": "yes"
+      },
+      {
+        "id": 8,
+        "vote": "absent"
+      },
+      {
+        "id": 9,
+        "vote": "no"
+      },
+      {
+        "id": 10,
+        "vote": "yes"
+      },
+      {
+        "id": 11,
+        "vote": "no"
+      },
+      {
+        "id": 12,
+        "vote": "refrain"
+      },
+      {
+        "id": 13,
+        "vote": "no"
+      },
+      {
+        "id": 14,
+        "vote": "no"
+      },
+      {
+        "id": 15,
+        "vote": "no"
+      },
+      {
+        "id": 16,
+        "vote": "no"
+      },
+      {
+        "id": 17,
+        "vote": "yes"
+      },
+      {
+        "id": 18,
+        "vote": "refrain"
+      },
+      {
+        "id": 19,
+        "vote": "no"
+      },
+      {
+        "id": 20,
+        "vote": "no"
+      },
+      {
+        "id": 21,
+        "vote": "absent"
+      },
+      {
+        "id": 22,
+        "vote": "no"
+      },
+      {
+        "id": 23,
+        "vote": "no"
+      },
+      {
+        "id": 24,
+        "vote": "no"
+      },
+      {
+        "id": 25,
+        "vote": "yes"
+      },
+      {
+        "id": 26,
+        "vote": "yes"
+      },
+      {
+        "id": 27,
+        "vote": "no"
+      },
+      {
+        "id": 28,
+        "vote": "no"
+      },
+      {
+        "id": 29,
+        "vote": "refrain"
+      },
+      {
+        "id": 30,
+        "vote": "refrain"
+      },
+      {
+        "id": 31,
+        "vote": "no"
+      },
+      {
+        "id": 32,
+        "vote": "refrain"
+      },
+      {
+        "id": 33,
+        "vote": "refrain"
+      },
+      {
+        "id": 34,
+        "vote": "refrain"
+      },
+      {
+        "id": 35,
+        "vote": "no"
+      },
+      {
+        "id": 36,
+        "vote": "no"
+      },
+      {
+        "id": 37,
+        "vote": "no"
+      },
+      {
+        "id": 38,
+        "vote": "yes"
+      },
+      {
+        "id": 39,
+        "vote": "yes"
+      },
+      {
+        "id": 40,
+        "vote": "refrain"
+      },
+      {
+        "id": 41,
+        "vote": "absent"
+      },
+      {
+        "id": 42,
+        "vote": "no"
+      },
+      {
+        "id": 43,
+        "vote": "yes"
+      },
+      {
+        "id": 44,
+        "vote": "yes"
+      },
+      {
+        "id": 45,
+        "vote": "refrain"
+      },
+      {
+        "id": 46,
+        "vote": "absent"
+      },
+      {
+        "id": 47,
+        "vote": "refrain"
+      },
+      {
+        "id": 48,
+        "vote": "no"
+      },
+      {
+        "id": 49,
+        "vote": "no"
+      },
+      {
+        "id": 50,
+        "vote": "missing"
+      },
+      {
+        "id": 51,
+        "vote": "no"
+      },
+      {
+        "id": 52,
+        "vote": "refrain"
+      },
+      {
+        "id": 53,
+        "vote": "refrain"
+      },
+      {
+        "id": 54,
+        "vote": "no"
+      },
+      {
+        "id": 55,
+        "vote": "no"
+      },
+      {
+        "id": 56,
+        "vote": "refrain"
+      },
+      {
+        "id": 57,
+        "vote": "no"
+      },
+      {
+        "id": 58,
+        "vote": "no"
+      },
+      {
+        "id": 59,
+        "vote": "yes"
+      },
+      {
+        "id": 60,
+        "vote": "no"
+      },
+      {
+        "id": 61,
+        "vote": "absent"
+      },
+      {
+        "id": 62,
+        "vote": "yes"
+      },
+      {
+        "id": 63,
+        "vote": "absent"
+      },
+      {
+        "id": 64,
+        "vote": "refrain"
+      },
+      {
+        "id": 65,
+        "vote": "yes"
+      },
+      {
+        "id": 66,
+        "vote": "refrain"
+      },
+      {
+        "id": 67,
+        "vote": "refrain"
+      },
+      {
+        "id": 68,
+        "vote": "refrain"
+      },
+      {
+        "id": 69,
+        "vote": "no"
+      },
+      {
+        "id": 70,
+        "vote": "absent"
+      },
+      {
+        "id": 71,
+        "vote": "yes"
+      },
+      {
+        "id": 72,
+        "vote": "no"
+      },
+      {
+        "id": 73,
+        "vote": "absent"
+      },
+      {
+        "id": 74,
+        "vote": "yes"
+      },
+      {
+        "id": 75,
+        "vote": "absent"
+      },
+      {
+        "id": 76,
+        "vote": "no"
+      },
+      {
+        "id": 77,
+        "vote": "yes"
+      },
+      {
+        "id": 78,
+        "vote": "yes"
+      },
+      {
+        "id": 79,
+        "vote": "yes"
+      },
+      {
+        "id": 80,
+        "vote": "no"
+      },
+      {
+        "id": 81,
+        "vote": "yes"
+      },
+      {
+        "id": 82,
+        "vote": "yes"
+      },
+      {
+        "id": 83,
+        "vote": "yes"
+      },
+      {
+        "id": 84,
+        "vote": "no"
+      },
+      {
+        "id": 85,
+        "vote": "refrain"
+      },
+      {
+        "id": 86,
+        "vote": "no"
+      },
+      {
+        "id": 87,
+        "vote": "no"
+      },
+      {
+        "id": 88,
+        "vote": "absent"
+      },
+      {
+        "id": 89,
+        "vote": "no"
+      },
+      {
+        "id": 90,
+        "vote": "yes"
+      },
+      {
+        "id": 91,
+        "vote": "absent"
+      },
+      {
+        "id": 92,
+        "vote": "no"
+      },
+      {
+        "id": 93,
+        "vote": "yes"
+      },
+      {
+        "id": 94,
+        "vote": "refrain"
+      },
+      {
+        "id": 95,
+        "vote": "no"
+      },
+      {
+        "id": 96,
+        "vote": "absent"
+      },
+      {
+        "id": 97,
+        "vote": "absent"
+      },
+      {
+        "id": 98,
+        "vote": "no"
+      },
+      {
+        "id": 99,
+        "vote": "refrain"
+      },
+      {
+        "id": 100,
+        "vote": "no"
+      },
+      {
+        "id": 101,
+        "vote": "no"
+      },
+      {
+        "id": 102,
+        "vote": "refrain"
+      },
+      {
+        "id": 103,
+        "vote": "no"
+      },
+      {
+        "id": 104,
+        "vote": "no"
+      },
+      {
+        "id": 105,
+        "vote": "no"
+      },
+      {
+        "id": 106,
+        "vote": "no"
+      },
+      {
+        "id": 107,
+        "vote": "no"
+      },
+      {
+        "id": 108,
+        "vote": "no"
+      },
+      {
+        "id": 109,
+        "vote": "yes"
+      },
+      {
+        "id": 110,
+        "vote": "no"
+      },
+      {
+        "id": 111,
+        "vote": "no"
+      },
+      {
+        "id": 112,
+        "vote": "no"
+      },
+      {
+        "id": 113,
+        "vote": "absent"
+      },
+      {
+        "id": 114,
+        "vote": "no"
+      },
+      {
+        "id": 115,
+        "vote": "no"
+      },
+      {
+        "id": 116,
+        "vote": "no"
+      },
+      {
+        "id": 117,
+        "vote": "yes"
+      },
+      {
+        "id": 118,
+        "vote": "no"
+      },
+      {
+        "id": 119,
+        "vote": "yes"
+      },
+      {
+        "id": 120,
+        "vote": "absent"
+      },
+      {
+        "id": 121,
+        "vote": "yes"
+      },
+      {
+        "id": 122,
+        "vote": "absent"
+      },
+      {
+        "id": 123,
+        "vote": "refrain"
+      },
+      {
+        "id": 124,
+        "vote": "absent"
+      },
+      {
+        "id": 125,
+        "vote": "no"
+      },
+      {
+        "id": 126,
+        "vote": "refrain"
+      },
+      {
+        "id": 127,
+        "vote": "refrain"
+      },
+      {
+        "id": 128,
+        "vote": "absent"
+      },
+      {
+        "id": 129,
+        "vote": "no"
+      },
+      {
+        "id": 130,
+        "vote": "no"
+      },
+      {
+        "id": 131,
+        "vote": "no"
+      },
+      {
+        "id": 132,
+        "vote": "no"
+      },
+      {
+        "id": 133,
+        "vote": "no"
+      },
+      {
+        "id": 134,
+        "vote": "absent"
+      },
+      {
+        "id": 135,
+        "vote": "absent"
+      },
+      {
+        "id": 136,
+        "vote": "yes"
+      },
+      {
+        "id": 137,
+        "vote": "no"
+      },
+      {
+        "id": 138,
+        "vote": "no"
+      },
+      {
+        "id": 139,
+        "vote": "no"
+      },
+      {
+        "id": 140,
+        "vote": "no"
+      },
+      {
+        "id": 141,
+        "vote": "yes"
+      },
+      {
+        "id": 142,
+        "vote": "yes"
+      },
+      {
+        "id": 143,
+        "vote": "no"
+      },
+      {
+        "id": 144,
+        "vote": "absent"
+      },
+      {
+        "id": 145,
+        "vote": "yes"
+      },
+      {
+        "id": 146,
+        "vote": "yes"
+      },
+      {
+        "id": 147,
+        "vote": "absent"
+      },
+      {
+        "id": 148,
+        "vote": "refrain"
+      },
+      {
+        "id": 149,
+        "vote": "yes"
+      },
+      {
+        "id": 150,
+        "vote": "yes"
+      },
+      {
+        "id": 151,
+        "vote": "yes"
+      },
+      {
+        "id": 152,
+        "vote": "absent"
+      },
+      {
+        "id": 153,
+        "vote": "missing"
+      },
+      {
+        "id": 154,
+        "vote": "yes"
+      },
+      {
+        "id": 155,
+        "vote": "yes"
+      },
+      {
+        "id": 156,
+        "vote": "absent"
+      },
+      {
+        "id": 157,
+        "vote": "absent"
+      },
+      {
+        "id": 158,
+        "vote": "absent"
+      },
+      {
+        "id": 159,
+        "vote": "absent"
+      },
+      {
+        "id": 160,
+        "vote": "refrain"
+      },
+      {
+        "id": 161,
+        "vote": "no"
+      },
+      {
+        "id": 162,
+        "vote": "refrain"
+      },
+      {
+        "id": 163,
+        "vote": "absent"
+      },
+      {
+        "id": 164,
+        "vote": "no"
+      },
+      {
+        "id": 165,
+        "vote": "yes"
+      },
+      {
+        "id": 166,
+        "vote": "yes"
+      },
+      {
+        "id": 167,
+        "vote": "yes"
+      },
+      {
+        "id": 168,
+        "vote": "yes"
+      },
+      {
+        "id": 169,
+        "vote": "yes"
+      },
+      {
+        "id": 170,
+        "vote": "yes"
+      },
+      {
+        "id": 171,
+        "vote": "yes"
+      },
+      {
+        "id": 172,
+        "vote": "no"
+      },
+      {
+        "id": 173,
+        "vote": "yes"
+      },
+      {
+        "id": 174,
+        "vote": "absent"
+      },
+      {
+        "id": 175,
+        "vote": "no"
+      },
+      {
+        "id": 176,
+        "vote": "absent"
+      },
+      {
+        "id": 177,
+        "vote": "refrain"
+      },
+      {
+        "id": 178,
+        "vote": "absent"
+      },
+      {
+        "id": 179,
+        "vote": "no"
+      },
+      {
+        "id": 180,
+        "vote": "yes"
+      },
+      {
+        "id": 181,
+        "vote": "yes"
+      },
+      {
+        "id": 182,
+        "vote": "no"
+      },
+      {
+        "id": 183,
+        "vote": "no"
+      },
+      {
+        "id": 184,
+        "vote": "yes"
+      },
+      {
+        "id": 185,
+        "vote": "absent"
+      },
+      {
+        "id": 186,
+        "vote": "yes"
+      },
+      {
+        "id": 187,
+        "vote": "absent"
+      },
+      {
+        "id": 188,
+        "vote": "yes"
+      },
+      {
+        "id": 189,
+        "vote": "yes"
+      },
+      {
+        "id": 190,
+        "vote": "absent"
+      },
+      {
+        "id": 191,
+        "vote": "no"
+      },
+      {
+        "id": 192,
+        "vote": "refrain"
+      },
+      {
+        "id": 193,
+        "vote": "yes"
+      },
+      {
+        "id": 194,
+        "vote": "refrain"
+      },
+      {
+        "id": 195,
+        "vote": "yes"
+      },
+      {
+        "id": 196,
+        "vote": "no"
+      },
+      {
+        "id": 197,
+        "vote": "no"
+      },
+      {
+        "id": 198,
+        "vote": "no"
+      },
+      {
+        "id": 199,
+        "vote": "yes"
+      },
+      {
+        "id": 200,
+        "vote": "refrain"
+      },
+      {
+        "id": 201,
+        "vote": "refrain"
+      },
+      {
+        "id": 202,
+        "vote": "refrain"
+      },
+      {
+        "id": 203,
+        "vote": "absent"
+      },
+      {
+        "id": 204,
+        "vote": "refrain"
+      },
+      {
+        "id": 205,
+        "vote": "absent"
+      },
+      {
+        "id": 206,
+        "vote": "yes"
+      },
+      {
+        "id": 207,
+        "vote": "no"
+      },
+      {
+        "id": 208,
+        "vote": "no"
+      },
+      {
+        "id": 209,
+        "vote": "no"
+      },
+      {
+        "id": 210,
+        "vote": "no"
+      },
+      {
+        "id": 211,
+        "vote": "absent"
+      },
+      {
+        "id": 212,
+        "vote": "no"
+      },
+      {
+        "id": 213,
+        "vote": "no"
+      },
+      {
+        "id": 214,
+        "vote": "refrain"
+      },
+      {
+        "id": 215,
+        "vote": "no"
+      },
+      {
+        "id": 216,
+        "vote": "refrain"
+      },
+      {
+        "id": 217,
+        "vote": "absent"
+      },
+      {
+        "id": 218,
+        "vote": "refrain"
+      },
+      {
+        "id": 219,
+        "vote": "yes"
+      },
+      {
+        "id": 220,
+        "vote": "yes"
+      },
+      {
+        "id": 221,
+        "vote": "yes"
+      },
+      {
+        "id": 222,
+        "vote": "absent"
+      },
+      {
+        "id": 223,
+        "vote": "no"
+      },
+      {
+        "id": 224,
+        "vote": "no"
+      },
+      {
+        "id": 225,
+        "vote": "no"
+      },
+      {
+        "id": 226,
+        "vote": "absent"
+      },
+      {
+        "id": 227,
+        "vote": "absent"
+      },
+      {
+        "id": 228,
+        "vote": "yes"
+      },
+      {
+        "id": 229,
+        "vote": "yes"
+      },
+      {
+        "id": 230,
+        "vote": "absent"
+      },
+      {
+        "id": 231,
+        "vote": "yes"
+      },
+      {
+        "id": 232,
+        "vote": "missing"
+      },
+      {
+        "id": 233,
+        "vote": "missing"
+      },
+      {
+        "id": 234,
+        "vote": "missing"
+      },
+      {
+        "id": 235,
+        "vote": "missing"
+      },
+      {
+        "id": 236,
+        "vote": "missing"
+      },
+      {
+        "id": 237,
+        "vote": "missing"
+      },
+      {
+        "id": 238,
+        "vote": "missing"
+      },
+      {
+        "id": 239,
+        "vote": "missing"
+      }
+    ]
+  },
+  "coordinates": [
+    {
+      "x": 0.005208468636605598,
+      "y": 0.2305402954344779
+    },
+    {
+      "x": 0.9764328689886723,
+      "y": 0.23417941786895896
+    },
+    {
+      "x": 0.9748420884305712,
+      "y": 0.9419768605114225
+    },
+    {
+      "x": 0.003617688078504379,
+      "y": 0.9383377380769415
+    }
+  ]
 }

@@ -29,7 +29,7 @@
     });
   }
 
-  exports.getVotesFromPreparedImage = function(preparedImagePath, rawImagePath, outputImagePath, page, labels, callback) {
+  exports.getVotesFromPreparedImage = function(preparedImagePath, rawImagePath, outputImagePath, page, chamberName, labels, callback) {
 
     var imageData = loadImage(rawImagePath);
     imageData = scaleImage(imageData, 0.8);
@@ -38,7 +38,7 @@
     var preparedImageData = loadImage(preparedImagePath);
     preparedImageData = warpImage(preparedImageData, page);
 
-    var squares = getGridSquares(preparedImageData.width, preparedImageData.height);
+    var squares = getGridSquares(preparedImageData.width, preparedImageData.height, chamberName);
     var voteSquares = findVotes(preparedImageData, squares)
 
     var gridImage = drawGridSquares(imageData, voteSquares, labels);
@@ -52,7 +52,7 @@
   }
 
 
-  exports.getVotes = function(imagePath, outputImagePath, page, callback) {
+  exports.getVotes = function(imagePath, outputImagePath, page, chamberName, callback) {
 
     var imageData = loadImage(imagePath);
 
@@ -73,7 +73,7 @@
     var binarizedImage = binarize(closedImage, threshold);
     //printOutputImage(binarizedImage, 'binarized.png');
 
-    var squares = getGridSquares(imageData.width, imageData.height);
+    var squares = getGridSquares(imageData.width, imageData.height, chamberName);
     var voteSquares = findVotes(binarizedImage, squares)
     //var gridBinarizedImage = drawGridSquares(binarizedImage, voteSquares);
     //printOutputImage(gridBinarizedImage, 'grid-binarized.png');
@@ -152,8 +152,14 @@
     console.log('compute minimum rectangle');
     var minimumBoundingRectangle = getMinimumBoundingRectangle(hullPolygon);
     minimumBoundingRectangle = scaleMinimumBoundingRectangle(minimumBoundingRectangle, imageData);
-    //var minimumBoundingRectangleImage = drawMinimumBoundingRectangle(connectedComponentsCenterImage, minimumBoundingRectangle);
+
+    //var minimumBoundingRectangleImage = drawMinimumBoundingRectangle(originalImageData, minimumBoundingRectangle);
     //printOutputImage(minimumBoundingRectangleImage, 'connected-components-no-border-centers-hull-min-rectangle.png');
+
+    //var wrapSquare = getWrapSquare(hullPolygon);
+    //wrapSquare = scaleMinimumBoundingRectangle(wrapSquare, imageData);
+    //var wrapSquareImage = drawMinimumBoundingRectangle(originalImageData, wrapSquare);
+    //printOutputImage(wrapSquareImage, 'wrap-square-on-original-image.png');
 
     //var minimumBoundingRectangleOnOriginalImage = drawMinimumBoundingRectangle(originalImageData, minimumBoundingRectangle);
     //printOutputImage(minimumBoundingRectangleOnOriginalImage, 'min-image-on-original.png');
@@ -872,7 +878,7 @@
 
     });
 
-    console.log(`cleaning up from ${labeledGroups.length}, ${goodSized.length}, ${output.length}`)
+    //console.log(`cleaning up from ${labeledGroups.length}, ${goodSized.length}, ${output.length}`)
 
     return output;
   }
@@ -1040,17 +1046,7 @@
       var minBottomLeft = 0;
       var minBottomRight = 0;
 
-      var minMinX = 0;
-      var minMaxX = 0;
-      var minMinY = 0;
-      var minMaxY = 0;
-
-      var bestUnit;
-      var bestWidth;
-      var bestHeight;
-      var bestRegpoint;
-
-
+    
       polygon.reduce(function(previous, current) {
 
           // loop all the vertices and calculate the maximum and minimum of all
@@ -1087,25 +1083,17 @@
           var bottomLeft = add(add(first, down), left);
           var bottomRight = add(add(first, down), right);
 
-          var area = Math.abs(minX - maxX) * Math.abs(minY - maxY);
+          var horizontal = length(subtract(topRight, topLeft));
+          var vertical = length(subtract(bottomLeft, topLeft));
+          var area = horizontal * vertical;
 
-          if (area < minArea) {
-              minArea = area;
+          if (horizontal < minArea) {
+              minArea = horizontal;
 
               minTopLeft = topLeft;
               minTopRight = topRight;
               minBottomLeft = bottomLeft;
               minBottomRight = bottomRight;
-
-              minMinX = minX;
-              minMaxX = maxX;
-              minMinY = minY;
-              minMaxY = maxY;
-
-              bestUnit = unit;
-              bestWidth = Math.round(Math.abs(minX - maxX));
-              bestHeight = Math.round(Math.abs(minY - maxY));
-              bestRegpoint = add(add(first, left), up);
 
           }
 
@@ -1115,6 +1103,74 @@
 
       return {topLeft: minTopLeft, topRight: minTopRight, bottomLeft: minBottomLeft, bottomRight: minBottomRight};
   }
+
+  function getWrapSquare(polygon) {
+    var lefts = polygon.sort((a,b) => a.x - b.x).slice(0,2);
+    var rights = polygon.sort((a,b) => b.x - a.x).slice(0,2);
+    var tops = polygon.sort((a,b) => a.y - b.y).slice(0,2);
+    var bottoms = polygon.sort((a,b) => b.y - a.y).slice(0,2);
+
+    console.log('lefts', lefts);
+    console.log('rights', rights);
+    console.log('tops', tops);
+    console.log('bottoms', bottoms);
+
+
+    var topLeft = checkLineIntersection(lefts[0], lefts[1], tops[0], tops[1]);
+    var topRight = checkLineIntersection(rights[0], rights[1], tops[0], tops[1]);
+    var bottomRight = checkLineIntersection(rights[0], rights[1], bottoms[0], bottoms[1]);
+    var bottomLeft = checkLineIntersection(lefts[0], lefts[1], bottoms[0], bottoms[1]);
+
+    console.log(topLeft, topRight, bottomLeft, bottomRight)
+
+
+    return {topLeft, topRight, bottomLeft, bottomRight};
+  }
+
+  function checkLineIntersection(line1Start, line1End, line2Start, line2End) {
+
+      var denominator; 
+      var numerator1, numerator2;
+      var a, b;
+      var result = {
+          x: null,
+          y: null,
+          onLine1: false,
+          onLine2: false
+      };
+
+      console.log('intersect', line1Start, line1End, line2Start, line2End)
+      
+      denominator = ((line2End.y - line2Start.y) * (line1End.x - line1Start.x)) - ((line2End.x - line2Start.x) * (line1End.y - line1Start.y));
+      if (denominator == 0) {
+          return result;
+      }
+      a = line1Start.y - line2Start.y;
+      b = line1Start.x - line2Start.x;
+      numerator1 = ((line2End.x - line2Start.x) * a) - ((line2End.y - line2Start.y) * b);
+      numerator2 = ((line1End.x - line1Start.x) * a) - ((line1End.y - line1Start.y) * b);
+      a = numerator1 / denominator;
+      b = numerator2 / denominator;
+
+      // if we cast these lines infinitely in both directions, they intersect here:
+      result.x = line1Start.x + (a * (line1End.x - line1Start.x));
+      result.y = line1Start.y + (a * (line1End.y - line1Start.y));
+  /*
+          // it is worth noting that this should be the same as:
+          x = line2StartX + (b * (line2EndX - line2StartX));
+          y = line2StartX + (b * (line2EndY - line2StartY));
+          */
+      // if line1 is a segment and line2 is infinite, they intersect if:
+      if (a > 0 && a < 1) {
+          result.onLine1 = true;
+      }
+      // if line2 is a segment and line1 is infinite, they intersect if:
+      if (b > 0 && b < 1) {
+          result.onLine2 = true;
+      }
+      // if line1 and line2 are segments, they intersect if both of the above are true
+      return result;
+  };
 
   function scaleMinimumBoundingRectangle(rectangle, imageData) {
 
@@ -1247,7 +1303,7 @@
           if (area < minArea) {
               minArea = area;
 
-              console.log('new min area %j', minArea);
+              //console.log('new min area %j', minArea);
 
               minTopLeft = topLeft;
               minTopRight = topRight;
@@ -1271,7 +1327,7 @@
       });
 
 
-      console.log('now draw the thing: ', minTopLeft, minTopRight, minBottomLeft, minBottomRight);
+      //console.log('now draw the thing: ', minTopLeft, minTopRight, minBottomLeft, minBottomRight);
 
 
       drawLine(outputImageData, minTopLeft.x, minTopLeft.y, minTopRight.x, minTopRight.y, 0xFFFF0000);
@@ -1280,7 +1336,7 @@
       drawLine(outputImageData, minBottomLeft.x, minBottomLeft.y, minTopLeft.x, minTopLeft.y, 0xFFFF0000);
 
 
-      console.log('found best %j %j %j %j', bestUnit, bestWidth, bestHeight, bestRegpoint);
+      //console.log('found best %j %j %j %j', bestUnit, bestWidth, bestHeight, bestRegpoint);
 
 /*
       var xBins = new Array(bestWidth);
@@ -1603,7 +1659,7 @@
           var current = averaged[i];
 
           if (Math.abs(last - current) > 2) {
-              console.log('new group', last - current, last, current, i);
+              //console.log('new group', last - current, last, current, i);
               groups.push([]);
           }
           groups[groups.length - 1].push({
@@ -1678,7 +1734,7 @@
 
     for (var i = 0; i < 255; i++) {
       var strength = Math.round( histogram[i] / max * 300 );
-      console.log(histogram[i], strength);
+      //console.log(histogram[i], strength);
       var out = '0x' + i.toString(16) + ':';
       setPixel(output, i, 0, 0xFF0000FF);
       setPixel(output, i, 1, 0xFF0000FF);
@@ -1965,7 +2021,7 @@
           context.arc(middle.x, middle.y, square.height/2, 0, 2 * Math.PI);
           context.stroke();
         }else{
-          context.fillStyle = 'rgba(255,0,0,0.3)';
+          context.fillStyle = 'rgba(255,0,0,0.2)';
           context.beginPath();
           context.moveTo(square.upperLeft.x, square.upperLeft.y);
           context.lineTo(square.upperRight.x, square.upperRight.y);
@@ -2046,11 +2102,24 @@
     return {total: totalVotes, squares: squareResults};
   }
 
-  function getGridSquares(gridWidth, gridHeight){
+  function getGridSquares(gridWidth, gridHeight, chamberName){
     //TODO: this only applies to the second chamber
-    var rows = 24;
+    var rows;
+    var columns;
+
+    switch (chamberName) {
+      case 'first':
+        rows = 16;
+        columns = 10;
+        break;
+
+      case 'second':
+        rows = 24;
+        columns = 10;
+        break;
+    }
+
     var horizontalLines = rows + 2;
-    var columns = 10;
     var verticalLines = columns + 2 + 2;
 
     var middleColumnRatio = 1.0 / 30.0;
@@ -2074,9 +2143,9 @@
     var lastRowExtraRatio = 1/100;
     var rowRatios = new Array(rows).fillUsing(0);
     rowRatios = rowRatios.map( ()=> {
-      return 1/24 - lastRowExtraRatio / 24;
+      return 1/rows - lastRowExtraRatio / rows;
     });
-    rowRatios[rowRatios.length-1] += lastRowExtraRatio / 24 + lastRowExtraRatio;
+    rowRatios[rowRatios.length-1] += lastRowExtraRatio / rows + lastRowExtraRatio;
     rowRatios = rowRatios.map((ratio)=>{
       return ratio * gridHeight;
     });

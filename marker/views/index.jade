@@ -9,45 +9,47 @@ html
     script var chamber = !{JSON.stringify(chamber)}
     script var seatings = !{JSON.stringify(seatings)}
     script var book_index = !{JSON.stringify(book_index)}
+
   body
-    div.
-        <b>#{book.start_year}-#{book.end_year}</b> #{book.book}#{book.book_letter}-#{book.book_number_type} <i>#{book.chamber} chamber</i> (session: #{book.sessiontype}) page: <b>#{page.page}/#{book.total_pages}</b> (status: #{page.status})
+    div(style="background-image: url(../image/#{page.image}); background-position: bottom left; background-size: auto 600px; background-repeat: repeat-y;")
+        div(style="background-color: #FFFFFF;display: inline;").
+            <b>#{book.start_year}-#{book.end_year}</b> #{book.book}#{book.book_letter}-#{book.book_number_type} <i>#{book.chamber} chamber</i> (session: #{book.sessiontype}) page: <b>#{page.page}/#{book.total_pages}</b> (status: #{page.status}, autodetect: #{page.detected_now ? 'yes' : 'no'})
+        br
+        div(style="background-color: #FFFFFF;display: inline;")
+            | book type: 
+            input(type="radio", name="book_type", value="0", checked=book.type=="unknown")
+            | unknown 
+            input(type="radio", name="book_type", value="0", checked=book.type=="grid")
+            | grid 
+            input(type="radio", name="book_type", value="0", checked=book.type=="handwritten")
+            | handwritten 
 
-    div
-        | book type: 
-        input(type="radio", name="book_type", value="0", checked=book.type=="unknown")
-        | unknown 
-        input(type="radio", name="book_type", value="0", checked=book.type=="grid")
-        | grid 
-        input(type="radio", name="book_type", value="0", checked=book.type=="handwritten")
-        | handwritten 
+        - var voteStyle= ''
+        if page.votes.total.yes + page.votes.total.no + page.votes.total.refrain + page.votes.total.absent != chamber.seats
+            -voteStyle= "background-color: rgb(255,0,0)"
+        else
+            -voteStyle= "background-color: rgb(255,255,255)"
+        br
+        div(style="background-color: #FFFFFF;display: inline;").
+            <a href="/pageeditor/!{page.id - 1}">previous page</a>
+            <a href="/pageeditor/!{page.id + 1}">next page</a><br>
+            <a href="/pageeditor/!{page.id - page.page + 1}">first page</a>
+            <a href="/pageeditor/!{page.id - page.page + book.total_pages}">last page</a>
+            <a href="/pageeditor/!{page.id - page.page}">previous book</a>
+            <a href="/pageeditor/!{page.id + book.total_pages - page.page + 1}">next book</a>
 
-    - var voteStyle= ''
-    if page.votes.total.yes + page.votes.total.no + page.votes.total.refrain + page.votes.total.absent != chamber.seats
-        -voteStyle= "background-color: rgb(255,0,0)"
-    else
-        -voteStyle= "background-color: rgb(255,255,255)"
-
-    div.
-        <a href="/pageeditor/!{page.id - 1}">previous page</a>
-        <a href="/pageeditor/!{page.id + 1}">next page</a><br>
-        <a href="/pageeditor/!{page.id - page.page + 1}">first page</a>
-        <a href="/pageeditor/!{page.id - page.page + book.total_pages}">last page</a>
-        <a href="/pageeditor/!{page.id - page.page}">previous book</a>
-        <a href="/pageeditor/!{page.id + book.total_pages - page.page + 1}">next book</a>
-
-    div( id="votecontainer")
-        table(border=1 style=voteStyle)
-            tr
-                td Yes: #{page.votes.total.yes}
-                td Refrain: #{page.votes.total.refrain}
-            tr
-                td No: #{page.votes.total.no}
-                td Absent: #{page.votes.total.absent}
-            tr
-                td(colspan=2) Missing: #{page.votes.total.missing}
-            tr
-                td(colspan=2) Total counted: #{page.votes.total.yes + page.votes.total.no + page.votes.total.refrain + page.votes.total.absent}
+        div( id="votecontainer")
+            table(border=1 style=voteStyle)
+                tr
+                    td Yes: #{page.votes.total.yes}
+                    td Refrain: #{page.votes.total.refrain}
+                tr
+                    td No: #{page.votes.total.no}
+                    td Absent: #{page.votes.total.absent}
+                tr
+                    td(colspan=2) Missing: #{page.votes.total.missing}
+                tr
+                    td(colspan=2) Total counted: #{page.votes.total.yes + page.votes.total.no + page.votes.total.refrain + page.votes.total.absent}
 
     script.
         document.onkeydown = function(evt) {
@@ -67,19 +69,12 @@ html
 
     div.
         <script>
-            console.log('page: %o', page);
-            console.log('book: %o', book);
-            console.log('chamber: %o', chamber);
-            console.log('seatings: %o', seatings);
+            
 
             var selectedHandle = null;
             var handles = [];
             var canvas;
             var context;
-
-            var move = 0;
-            var verticalRatios = [move+=.097, move+=.097, move+=.097, move+=.097, move+=.097, move+=.031, move+=.097, move+=.097, move+=.097, move+=.097];
-            var horizontalRatios = Array(23).fill(1/24 - 0.0003).map(function(item, index){ return item * (index + 1) });
 
 
             function onLoaded(){
@@ -116,6 +111,11 @@ html
                             return dist(mouse,b) - dist(mouse, a);
                         })
                         .pop();
+
+                    if (selectedHandle) {
+                        selectedHandle.x = mouse.x;
+                        selectedHandle.y = mouse.y;
+                    }
                 });
 
                 canvas.addEventListener('mouseup', function(){
@@ -135,6 +135,55 @@ html
 
 
             function step(timestamp){
+
+                var verticalRatios;
+                var horizontalRatios;
+                switch (chamber.name) {
+                    case 'first':
+                        var move = 0;
+                        verticalRatios = [
+                            move+=.097, 
+                            move+=.097,
+                            move+=.097, 
+                            move+=.097, 
+                            move+=.097, 
+                            move+=.031, 
+                            move+=.097, 
+                            move+=.097, 
+                            move+=.097, 
+                            move+=.097
+                        ];
+
+                        horizontalRatios = Array(15)
+                            .fill(1/16 - 0.0003)
+                            .map((item, index) => item * (index + 1));
+                        break;
+
+                    case 'second':
+                        var move = 0;
+                        verticalRatios = [
+                            move+=.097, 
+                            move+=.097,
+                            move+=.097, 
+                            move+=.097, 
+                            move+=.097, 
+                            move+=.031, 
+                            move+=.097, 
+                            move+=.097, 
+                            move+=.097, 
+                            move+=.097
+                        ];
+
+                        horizontalRatios = Array(23)
+                            .fill(1/24 - 0.0003)
+                            .map((item, index) => item * (index + 1));
+                        break;
+                }
+
+                
+                
+                
+
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 handles.forEach(function(handle){
                     context.beginPath();
@@ -202,7 +251,7 @@ html
                 });
                 var json = JSON.stringify(coordinates);
 
-                console.log(json);
+                
                 xhr.open('POST', path, true);
                 xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
                 xhr.onload = function(e) {
@@ -357,6 +406,13 @@ html
                     td
                         input(type="button", value="save" onclick="saveSquareMember(#{square.id}, 'membername-#{square.id}')")
 
+    div(id='duplets')
+        table(style='background-color: red')
+            each member in page.votes.squares.map(square => seatings[square.id]).filter(Boolean).filter((val, i, self) => self.findIndex(e => e.id === val.id) !== i)
+                tr
+                    td
+                        !{member.name} (!{member.id}) is double
+
     div(id='partyvotes')
         table(border=1)
             tr
@@ -391,27 +447,6 @@ html
                 td !{totPartyMembers}
                 td !{chamber.seats}
 
-    div(id='duplets')
-        table(style='background-color: red')
-            each member in page.votes.squares.map(square => seatings[square.id]).filter(Boolean).map(m => m.name).filter((val, i, self) => self.indexOf(val) !== i)
-                tr
-                    td
-                        !{member} is double
-
-
-    div(id='party-members')
-        table(border=1)
-            each constituency in Object.keys(chamber.constituency_allocation)
-                tr
-                    td 
-                        b !{constituency}
-                each party in unique(Object.keys(partyVotes).concat(Object.keys(chamber.allocation)))
-                    tr
-                        td(style='padding-left: 1em') 
-                            b !{party}
-                    each member in page.votes.squares.map(square => seatings[square.id]).filter(Boolean).filter(member => member.party.indexOf(party) >= 0).filter(member => member.constituency.indexOf(constituency) >= 0).sort(sortSurname)
-                        tr
-                            td(style='padding-left: 2em') !{member.name + ' (' + member.party.join(', ') + ')'}
 
 
     - function sortSurname(a, b) {
@@ -439,16 +474,19 @@ html
     - }
     -
     - function getNumberOfVotesPerConstituency() {
-    -   result = {};
-    -   page.votes.squares.map( (square) => {
-    -       return seatings[square.id]
-    -   }).filter(Boolean).reduce((result, member) => {
-    -       console.log(member)
-    -       result[member.constituency.join(',')] = result[member.constituency.join(',')] || 0 
-    -       result[member.constituency.join(',')]++;
-    -       return result;
-    -   }, result);
-    -   return result;
+    -     var result = Object.keys(chamber.constituency_allocation).reduce((r, c) => {
+    -         r[c] = 0;
+    -         return r;
+    -     }, {});
+    -  
+    -     page.votes.squares.map( (square) => {
+    -         return seatings[square.id]
+    -     }).filter(Boolean).reduce((result, member) => {
+    -         var consts = member.constituency.filter(a => Object.keys(result).indexOf(a) !== -1);
+    -         result[consts.join(',')] = (result[consts.join(',')] || 0) + 1;
+    -         return result;
+    -     }, result);
+    -     return result;
     - }
 
     div(id='chamber-constituency-allocation')
@@ -463,15 +501,28 @@ html
             each constituency in Object.keys(constituencies)
                 tr
                     td !{constituency}
-                    td !{constituencies[constituency]}
-                    - totCountedConstituency += constituencies[constituency]
-                    td !{chamber.constituency_allocation[constituency]}
-                    - totChamberConstituency += chamber.constituency_allocation[constituency]
+                    td !{constituencies[constituency] || 0}
+                    - totCountedConstituency += constituencies[constituency] || 0
+                    td !{chamber.constituency_allocation[constituency] || 0}
+                    - totChamberConstituency += chamber.constituency_allocation[constituency] || 0
             tr
                 td total
                 td !{totCountedConstituency}
                 td !{totChamberConstituency}
 
+    div(id='party-members')
+        table(border=1)
+            each constituency in Object.keys(chamber.constituency_allocation)
+                tr
+                    td 
+                        b !{constituency}
+                each party in unique(Object.keys(partyVotes).concat(Object.keys(chamber.allocation)))
+                    tr
+                        td(style='padding-left: 1em') 
+                            b !{party}
+                    each member in page.votes.squares.map(square => seatings[square.id]).filter(Boolean).filter(member => member.party.indexOf(party) >= 0).filter(member => member.constituency.indexOf(constituency) >= 0).sort(sortSurname)
+                        tr
+                            td(style='padding-left: 2em') !{member.name + ' (' + member.party.join(', ') + ')'}
 
     div(id='bookindex')
         each book in book_index
@@ -503,7 +554,7 @@ html
               },
               name: 'parties',
               source: parties,
-              limit: 15
+              limit: 60
             });
 
             $('#votereference .typeahead').bind('typeahead:select', function(ev, suggestion) {

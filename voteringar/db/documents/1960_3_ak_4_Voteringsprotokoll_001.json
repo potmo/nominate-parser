@@ -1,6 +1,27 @@
 {
+  "status": "created",
+  "id": 8191,
   "name": "1960_3_ak_4_Voteringsprotokoll_001",
   "image": "1960_3_ak_4_Voteringsprotokoll_001.png",
-  "status": "created",
-  "book": "1960-1960_second_3_a_default_4"
+  "book": "1960-1960_second_3_a_default_4",
+  "page": 1,
+  "votes": null,
+  "coordinates": [
+    {
+      "x": 0.4861728624097492,
+      "y": 0.6570099821860568
+    },
+    {
+      "x": 0.54863526208122,
+      "y": 0.6846456938669164
+    },
+    {
+      "x": 0.518925007581142,
+      "y": 0.8803306340337511
+    },
+    {
+      "x": 0.45646260790967125,
+      "y": 0.8526949223528913
+    }
+  ]
 }

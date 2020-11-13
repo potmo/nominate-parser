@@ -36,7 +36,6 @@ app.get('/pageeditor/:id', (req, res) => {
     if (err) return res.status(500).send(err);
 
     if (obj.chamber == null || obj.seatings == null) {
-      obj.err = err
       return res.render('error', obj);
     } 
 
@@ -135,7 +134,6 @@ app.put('/seatings/:chamber/:square', (req, res) => {
 
         saveSeatings(seatings, (err) => {
           if (err) return res.status(500).send(err);
-          console.log('%j',seatings);
           res.status(200).send('OK');
         });
 
@@ -187,7 +185,6 @@ app.put('/members', (req, res) => {
     if (err) return res.status(500).send(err);
   
     var memberIds = members.map(m => m.id).sort((a,b)=>a-b).reverse()
-    console.log(memberIds)
 
     var id = memberIds[0] + 1;
 
@@ -240,6 +237,40 @@ app.get('/prepared/:id', (req, res) => {
     if (err) return res.status(500).send(err);
     res.status(200).send('OK');
   });
+});
+
+app.get('/diff/:from/:to', (req, res) => {
+  var from = parseInt(req.params.from);
+  var to = parseInt(req.params.to);
+
+  
+
+
+  getAllDataFromId(from, (err, objFrom) => {
+    if (err) return res.status(500).send(err);
+    getAllDataFromId(to, (err, objTo) => {
+      if (err) return res.status(500).send(err);
+
+      getMembersOnSeats(from, objFrom.chamber, (err, fromSeats) => {
+        if (err) return res.status(500).send(err);
+        getMembersOnSeats(to, objTo.chamber, (err, toSeats) => {
+          if (err) return res.status(500).send(err);
+
+          fromSeats = fromSeats.filter(Boolean);
+          toSeats = toSeats.filter(Boolean);
+
+          var left = fromSeats.filter(f => !toSeats.find( t => t.id === f.id))
+          var joined = toSeats.filter(f => !fromSeats.find( t => t.id === f.id))
+
+          console.log('joined', joined);
+          console.log('left', left);
+
+          res.render('diff', {left, joined});
+        });
+      });
+    });
+  });
+
 });
 
 function prep(from, to, callback){
@@ -422,11 +453,13 @@ function detectVotesAndSave(page, callback) {
 
     var labels = data.seatings.map((d) => {return d ? `${d.name}, ${d.party.join(',')}` : "[empty]"})
 
-    imageParser.getVotesFromPreparedImage(preparedImagePath, imagePath, resolvedImagePath, page, labels, (err, votes)=> {
+    imageParser.getVotesFromPreparedImage(preparedImagePath, imagePath, resolvedImagePath, page, data.chamber.name, labels,  (err, votes)=> {
       if (err) return callback(err, null);
       page.votes = votes;
       savePage(page, (err)=>{
         if (err) return callback(err, null);
+        // after saving add a temporary marker that it was detected
+        page.detected_now = true;
         callback(null, page);
       });
     });
@@ -452,12 +485,16 @@ function getAllDataForPage(page, callback) {
       getChamberForPage(page, (err, chamber)=>{
         if (err) return callback(null, {page: page, book: book, book_index: bookIndex, error: err});
       
-        getMembersOnSeats(page.id, book.chamber, chamber, (err, seatings)=>{
+        getMembersOnSeats(page.id, chamber, (err, seatings)=>{
           if (err) return callback(null, {page: page, book: book, book_index: bookIndex, error: err});
 
-          var partyVotes = getVotesPerParty(page, seatings);
+          getConstituencies( (err, constituencies) => {
+            if (err) return callback(null, {page: page, book: book, book_index: bookIndex, error: err});
 
-          return callback(null, {page: page, book: book, chamber: chamber, seatings: seatings, book_index: bookIndex, partyVotes})
+            var partyVotes = getVotesPerParty(page, seatings);
+
+            return callback(null, {page: page, book: book, chamber: chamber, seatings: seatings, book_index: bookIndex, partyVotes, constituencies: constituencies})
+          });
         });
       });
     });
@@ -550,6 +587,7 @@ function getChamberForPageId(chamberName, pageId, callback) {
 
     var matchingChambers = chambers.chambers[chamberName].filter((chamber)=>{
         //console.log(page.id, chamber.start_page, chamber.end_page);
+        //console.log(`checking ${pageId} >= ${chamber.start_page} && ${pageId} <= ${chamber.end_page}`)
         if (pageId >= chamber.start_page  &&  pageId <= chamber.end_page) {
           return true;
         }else{
@@ -605,6 +643,22 @@ function getSeatings(callback){
   fs.readFile(fileName, (err, data)=>{
     if (err) return callback(err, null);
     var json = JSON.parse(data);
+
+    // sort the seatings if they are not sorted
+    json.second = json.second.map((seat) => {
+      if (seat == null) return null;
+      return seat.sort((a,b) => {
+        return a.seated_at_page > b.seated_at_page;
+      });
+    })
+
+    json.first = json.first.map((seat) => {
+      if (seat == null) return null;
+      return seat.sort((a,b) => {
+        return a.seated_at_page > b.seated_at_page;
+      });
+    })
+
     callback(null, json);
   });
 }
@@ -619,9 +673,9 @@ function saveSeatings(seatings, callback){
   });
 }
 
-function getMembersOnSeats(pageNum, chamberName, chamber, callback) {
+function getMembersOnSeats(pageNum, chamber, callback) {
   async.map(chamber.seat_layout, (seat, cb)=>{
-    getMemberOnSeat(pageNum, chamberName, chamber.seat_layout, seat, cb);
+    getMemberOnSeat(pageNum, chamber.name, chamber.seat_layout, seat, cb);
   }, callback);
 }
 
