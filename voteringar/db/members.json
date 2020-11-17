@@ -1836,7 +1836,8 @@
       "h"
     ],
     "constituency": [
-      "örebro_län"
+      "örebro_län",
+      "fk_göteborgs_och_bohus_län"
     ],
     "id": 182
   },
@@ -3749,7 +3750,8 @@
       "f"
     ],
     "constituency": [
-      "hallands_län"
+      "hallands_län",
+      "fk_kronobergs_och_hallands_län"
     ],
     "id": 373
   },
@@ -3769,7 +3771,8 @@
       "f"
     ],
     "constituency": [
-      "göteborg"
+      "göteborg",
+      "fk_göteborgs_stad"
     ],
     "id": 375
   },
@@ -5142,7 +5145,8 @@
       "s"
     ],
     "constituency": [
-      "fk_kopparbergs_län"
+      "fk_kopparbergs_län",
+      "fk_göteborgs_stad"
     ],
     "id": 512
   },
@@ -5566,5 +5570,135 @@
       "fk_kopparbergs_län"
     ],
     "id": 554
+  },
+  {
+    "name": "Bengt Gustavsson",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_södermanlands_och_västmanlands_län"
+    ],
+    "id": 555
+  },
+  {
+    "name": "Ferdinand Nilsson",
+    "party": [
+      "c"
+    ],
+    "constituency": [
+      "fk_stockholms_och_uppsala_län"
+    ],
+    "id": 556
+  },
+  {
+    "name": "Torsten Mattsson",
+    "party": [
+      "c"
+    ],
+    "constituency": [
+      "fk_kronobergs_och_hallands_län"
+    ],
+    "id": 557
+  },
+  {
+    "name": "Thorsten Larsson",
+    "party": [
+      "c"
+    ],
+    "constituency": [
+      "fk_malmöhus_län"
+    ],
+    "id": 558
+  },
+  {
+    "name": "Lisa Mattson",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_göteborgs_stad"
+    ],
+    "id": 559
+  },
+  {
+    "name": "Erik Boheman",
+    "party": [
+      "f"
+    ],
+    "constituency": [
+      "fk_göteborgs_stad"
+    ],
+    "id": 560
+  },
+  {
+    "name": "Fridolf Wirmark",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_örebro_län"
+    ],
+    "id": 561
+  },
+  {
+    "name": "Åke Larsson",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_örebro_län"
+    ],
+    "id": 562
+  },
+  {
+    "name": "Gunnar Pettersson",
+    "party": [
+      "f"
+    ],
+    "constituency": [
+      "fk_örebro_län"
+    ],
+    "id": 563
+  },
+  {
+    "name": "Herbert Larsson",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_älvsborgs_län"
+    ],
+    "id": 564
+  },
+  {
+    "name": "Tage Johansson",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_jönköpings_län"
+    ],
+    "id": 565
+  },
+  {
+    "name": "Sture Palm",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_stockholms_och_uppsala_län"
+    ],
+    "id": 566
+  },
+  {
+    "name": "Ernst Olsson",
+    "party": [
+      "c"
+    ],
+    "constituency": [
+      "fk_blekinge_och_kristianstads_län"
+    ],
+    "id": 567
   }
 ]

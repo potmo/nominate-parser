@@ -460,7 +460,14 @@ function detectVotesAndSave(page, callback) {
         if (err) return callback(err, null);
         // after saving add a temporary marker that it was detected
         page.detected_now = true;
+
+        //imageParser.splitVotesIntoSeatImages(resolvedImagePath, data.chamber.name, (err) => {
+        //  if (err) return callback(err, null);
+        //  
+        //});
+
         callback(null, page);
+        
       });
     });
   });

@@ -133,9 +133,7 @@ html
                 window.requestAnimationFrame(step);
             }
 
-
-            function step(timestamp){
-
+            function getRatios() {
                 var verticalRatios;
                 var horizontalRatios;
                 switch (chamber.name) {
@@ -180,10 +178,59 @@ html
                         break;
                 }
 
-                
-                
-                
+                return {verticalRatios, horizontalRatios};
+            }
 
+            function getSquarePositions() {
+                var {verticalRatios, horizontalRatios} = getRatios();
+
+                verticalRatios.push(1.0);
+                horizontalRatios.push(1.0)
+
+                var squares = [];
+                var yPos = 0;
+                var i = 0;
+                for (var y = 0; y < horizontalRatios.length; y++) {
+                    var xPos = 0;
+                    var newYPos = horizontalRatios[y];
+                    var height = newYPos - yPos;
+                    for (var x = 0; x < verticalRatios.length; x++) {
+                        
+                        
+                        var newXPos = verticalRatios[x];
+                        var width = newXPos - xPos;
+                        squares.push({x: xPos, 
+                                      y: yPos, 
+                                      indexX: x,
+                                      indexY: y,
+                                      width: width, 
+                                      height: height, 
+                                      id: i++});
+                        xPos += width;
+                    }
+
+                    yPos += height;
+                }
+
+                // remove the squares in the middle line
+                squares = squares.filter((square)=> {
+                  return square.indexX  != 5;
+                });
+
+                squares = squares.map((square, index)=>{
+                  square.id = index;
+                  return square;
+                });
+
+                return squares;
+            }
+
+
+            function step(timestamp){
+
+                
+                var {verticalRatios, horizontalRatios} = getRatios();
+            
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 handles.forEach(function(handle){
                     context.beginPath();
@@ -233,6 +280,22 @@ html
                     context.lineTo(handle.x, handle.y);
                 });
                 context.stroke();
+
+                /*
+                var sq = getSquarePositions();
+                context.fillStyle = 'rgba(255,0,0,1.0)';
+                sq.forEach(pos => {
+                    context.beginPath();
+                    var x = pos.x * 908;
+                    var y = pos.y * 343;
+                    var width = pos.width * 908 - 10;
+                    var height = pos.height * 343 - 10;
+                    context.rect(x,y,width,height);
+                    context.stroke();   
+
+                    context.fillText(`${pos.id}`, x, y+10);                     
+                })
+                */
 
                 window.requestAnimationFrame(step);
             }
@@ -287,7 +350,7 @@ html
                 xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
                 xhr.onload = function(e) {
                     element.disabled = false;
-                    element.parentElement.style["background-color"] = 'rgb(200,255,200)';
+                    element.parentElement.style["background-color"] = 'rgb(0,255,0, 0.5)';
                     console.log('done');
                     //location.reload();
                 };
@@ -333,9 +396,71 @@ html
 
             }
         </script>
-        <div id="resolvedcontainer" style="max-width: 1000px; max-height: 1000px; position: relative;">
-            <img id="resolvedimage" src="../image/resolved/#{page.image}" style="width: 100%; height: auto;"/>
-        </div>
+
+    div(id="resolvedcontainer" style="max-width: 1000px; max-height: 1000px; position: relative;")
+        div(id="resolved-image-overlays")
+            style.
+                .miniinput input{
+                    border: 0;
+                    margin: 0;
+                    visibility: hidden;
+                }
+
+                .miniinput:hover input {
+                    visibility: visible;
+                }
+
+            script.
+                function createResolvedImageOverlay() {
+                    var squarePositions = getSquarePositions();    
+                    var resolvedImage = document.getElementById('resolvedimage')
+                    var resolvedImageOverlays = document.getElementById('resolved-image-overlays')
+
+                    var container = document.createElement("div");
+                    container.setAttribute('id', `inscreen-votes`);
+                    
+                    
+                    page.votes.squares.forEach((square, index) => {
+
+                        var pos = squarePositions[index];
+                        var element = document.createElement("div");
+                        element.style['left'] = `${pos.x * 100}%`;
+                        element.style['top'] = `${pos.y * 100}%`;
+                        element.style['width'] = `${pos.width * 100}%`;
+                        element.style['height'] = `${pos.height * 100}%`;
+                        element.style['position'] = 'absolute';
+                        element.setAttribute('id', `inscreen-vote-${square.id}`);
+                        element.classList.add("miniinput");
+
+                        var voteTypes = ["yes", "no", "refrain", "absent", "missing"]
+
+                        voteTypes.forEach(type => {
+                            var input = document.createElement("input")
+                            input.setAttribute('type', 'radio');
+                            input.setAttribute('name', `inscreen-vote-${square.id}`);
+                            input.setAttribute('value', `${type}`);
+                            input.checked = square.vote == type;
+                            element.appendChild(input);
+                        })
+
+                        var save = document.createElement("input")
+                        save.setAttribute('type', 'button');
+                        save.setAttribute('name', `inscreen-vote-${square.id}-save`);
+                        save.setAttribute('value', `s`);
+                        save.onclick = ()=>{
+                            saveSquareVote(`inscreen-vote-${square.id}`, square.id);
+                        }
+                        element.appendChild(save);
+
+                        container.appendChild(element);
+
+                    })
+
+                    resolvedImageOverlays.appendChild(container);
+                }
+
+        img(id="resolvedimage", src="../image/resolved/#{page.image}", style="width: 100%; height: auto;" onload="createResolvedImageOverlay()")
+
     
     div.
         <input type="button" id="savebutton" value="Detect votes from grid" onclick="readPage()"/>
@@ -373,6 +498,7 @@ html
             }
         table(border="1")
             tr
+                td picture
                 td square
                 td seat
                 td party
@@ -386,6 +512,8 @@ html
                 td
             each square in page.votes.squares
                 tr
+                    td
+                        canvas(name="vote-picture" data-square="#{square.id}" id="vote-picture-#{square.id}" width="100" height="20")
                     td #{square.id}
                     td !{chamber.seat_layout[square.id] || 'empty'}
                     td !{seatings[square.id] ? seatings[square.id].party.join(',') : 'empty'}
@@ -405,6 +533,33 @@ html
                         input(id="membername-#{square.id}" class="typeahead" type="text" placeholder="Name" style="width: 100%;" value="#{seatings[square.id] ? seatings[square.id].name+' - '+ seatings[square.id].party.join(',') + ',' + seatings[square.id].constituency.join(',') : ''}")&attributes({'data-seated-member-id': seatings[square.id] ? seatings[square.id].id : ''})
                     td
                         input(type="button", value="save" onclick="saveSquareMember(#{square.id}, 'membername-#{square.id}')")
+
+    script.
+        //TODO: FIX THIS
+        function fillCanvases() {
+            
+            var resolvedImage = document.getElementById('resolvedimage');
+            var elements = Array.prototype.slice.call(document.getElementsByName("vote-picture"));
+
+            var squarePositions = getSquarePositions();
+
+            elements.forEach(element => {
+                let square = parseInt(element.getAttribute('data-square'));
+                var position = squarePositions[square];
+                var context = element.getContext('2d');
+                context.drawImage(resolvedImage, 
+                                  position.x * resolvedImage.width, 
+                                  position.y * resolvedImage.height,
+                                  position.width * resolvedImage.width, 
+                                  position.height * resolvedImage.height,
+                                  0,
+                                  0,
+                                  element.width, 
+                                  element.height);
+            });
+        }
+
+        // fillCanvases();
 
     div(id='duplets')
         table(style='background-color: red')

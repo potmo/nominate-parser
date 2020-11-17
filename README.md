@@ -160,16 +160,34 @@ Seats 1, 2, 24 is empty. I'm guessing since that is the Speaker, 1st vice speake
 Gunnar Svärd (h), changes from Göteborgs stad to Jönköpings län.
 Bo Seigbahn (s) is representing s, but will later represent h.
 
->TODO: There is a missmatch between what I can see and what it's supposed to be. s has one seat too few and c has one too many. I can't find where it is.
-
-
-#### Errors
 
 #### Errors
 |Page       | Seat      | Note                  |
 |---        |---        |---                    |
 |7157-7163       | 21-40        | Missing vote |
 |7287| all | photography failed so no votes registered |
+
+
+### 1959-1960
+
+#### Parties
+_Socialdemokraterna (s)_ got 79 seats
+_Högerpartiet (h)_ got 16 seats 
+_Folkpartiet (f)_ got 32 seats 
+_Centerpartiet (c)_ got 22 seats
+_Sveriges kommunistiska parti (k)_ got 2 seats
+
+#### Voting records
+Seats 1, 2, 42 is empty. The speaker is Gunnar Sundelin (f) from Örebro. Ivar Johansson (c) from Östergötland becomes the 2nd vice speaker. On page 7562 it is confirmed by the notes on the protocol that it it the vice speakers voting from seat 151 and 152.
+
+#### Members
+
+
+#### Errors
+|Page       | Seat      | Note                  |
+|---        |---        |---                    |
+|7496       | all       | technichal error with photographing the record so all votes are missing |
+
 
 ## Second Chamber
 ### 1957-1958 (spring)

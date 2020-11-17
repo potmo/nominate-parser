@@ -88,6 +88,42 @@
     });
   }
 
+  exports.splitVotesIntoSeatImages = function(imagePath, chamberName, callback) {
+    var imageData = loadImage(imagePath);
+    var squares = getGridSquares(imageData.width, imageData.height, chamberName);
+    var canvas = createCanvas(imageData.width, imageData.height);
+    var context = canvas.getContext('2d');      
+    context.putImageData(imageData, 0, 0);
+
+    console.log('write squares')
+
+    async.forEachOfSeries(squares, (square, index, cb) => {
+      
+      var x = Math.floor(square.upperLeft.x);
+      var y = Math.floor(square.upperLeft.y);
+      var width = Math.floor(square.width);
+      var height = Math.floor(square.height);
+      console.log(`copy ${x}, ${y}, ${width}, ${height}`);
+
+      //var canvas = createCanvas(width, height);
+      //var context = canvas.getContext('2d');      
+      //context.putImageData(imageData, 0, 0, x, y, width, height);
+      var img = context.getImageData(x, y, width, height);
+
+      var fullPath = __dirname + '/output/squares/square' + square.id + '.png';
+
+      writeImageDataToFile(img, fullPath, (err) => {
+        console.log(`saved ${fullPath}`);
+        cb(err, img);
+      });
+    }, 
+    (err, images)=>{
+      callback(err, images);
+    });
+
+
+  }
+
   
   exports.detectCoordinatesRectangle = function(original, imagePath, callback) {
     var originalImageData = scaleImage(loadImage(original), 0.8);
@@ -111,11 +147,12 @@
     */
 
     var morphologicalBinarizedImage = clearTopOfImage(imageData);
+    //printOutputImage(morphologicalBinarizedImage, 'morphbinarized.png');
 
     console.log('label groups');
     var labeledGroups = labelConnectedComponents(morphologicalBinarizedImage);
 
-    //var connectedComponentsImage = drawConnectedComponent(morphologicalBinarizedImage, labeledGroups);
+    var connectedComponentsImage = drawConnectedComponent(morphologicalBinarizedImage, labeledGroups);
     //printOutputImage(connectedComponentsImage, 'connected-components.png');
 
     console.log('remove groups touching border');
@@ -125,7 +162,7 @@
 
     console.log('filter circles');
     var onlyProbableCirclesTouchingLabeledGroups = removeGroupsNotResemblingCircles(noBorderTouchingLabeledGroups);
-    //var connectedComponentsImageOnlyCircles = drawConnectedComponent(morphologicalBinarizedImage, onlyProbableCirclesTouchingLabeledGroups);
+    var connectedComponentsImageOnlyCircles = drawConnectedComponent(morphologicalBinarizedImage, onlyProbableCirclesTouchingLabeledGroups);
     //printOutputImage(connectedComponentsImageOnlyCircles, 'connected-components-no-border-only-circles.png');
 
     if (onlyProbableCirclesTouchingLabeledGroups.length <= 0) {
@@ -134,7 +171,7 @@
 
     console.log('center of circles');
     var centerOfComponents = getCenterOfGroups(onlyProbableCirclesTouchingLabeledGroups);
-    //var connectedComponentsCenterImage = drawCenters(connectedComponentsImageOnlyCircles, centerOfComponents);
+    var connectedComponentsCenterImage = drawCenters(connectedComponentsImageOnlyCircles, centerOfComponents);
     //printOutputImage(connectedComponentsCenterImage, 'connected-components-no-border-centers.png');
 
     console.log('expand circles');
@@ -151,20 +188,54 @@
 
     console.log('compute minimum rectangle');
     var minimumBoundingRectangle = getMinimumBoundingRectangle(hullPolygon);
-    minimumBoundingRectangle = scaleMinimumBoundingRectangle(minimumBoundingRectangle, imageData);
+    //console.log('minRect', minimumBoundingRectangle);
+    var minimumBoundingRectangleScaled = scaleMinimumBoundingRectangle(minimumBoundingRectangle, imageData);
 
-    //var minimumBoundingRectangleImage = drawMinimumBoundingRectangle(originalImageData, minimumBoundingRectangle);
+    //var minimumBoundingRectangleImage = drawMinimumBoundingRectangle(hullImage, minimumBoundingRectangleScaled, 'rgba(255,0,0,0.5)');
     //printOutputImage(minimumBoundingRectangleImage, 'connected-components-no-border-centers-hull-min-rectangle.png');
 
-    //var wrapSquare = getWrapSquare(hullPolygon);
-    //wrapSquare = scaleMinimumBoundingRectangle(wrapSquare, imageData);
-    //var wrapSquareImage = drawMinimumBoundingRectangle(originalImageData, wrapSquare);
+    var hullAndBoundingSquare = hullPolygon.concat([minimumBoundingRectangle.topLeft, 
+                                                    minimumBoundingRectangle.topRight, 
+                                                    minimumBoundingRectangle.bottomRight, 
+                                                    minimumBoundingRectangle.bottomLeft].map(a => {return {x:a.x, y:a.y}}))
+    var wrapSquare = getWrapSquare(hullAndBoundingSquare);
+    var wrapSquareScaled = scaleMinimumBoundingRectangle(wrapSquare, imageData);
+    //var wrapSquareImage = drawMinimumBoundingRectangle(minimumBoundingRectangleImage, wrapSquareScaled, 'rgba(0,255,0,0.5)');
     //printOutputImage(wrapSquareImage, 'wrap-square-on-original-image.png');
 
+    var wrapHull = [wrapSquare.topLeft, 
+                    wrapSquare.topRight, 
+                    wrapSquare.bottomRight, 
+                    wrapSquare.bottomLeft]
+                      .map(a => {return {x:a.x, y:a.y}});
+
+    var minimumBoundingWrapSquareRectangle = getMinimumBoundingRectangle(wrapHull);
+
+    var minimumBoundingWrapSquareRectangleScaled = scaleMinimumBoundingRectangle(minimumBoundingWrapSquareRectangle, imageData);
+
+    //var minimumBoundingWrapSquareRectangleImage = drawMinimumBoundingRectangle(wrapSquareImage, minimumBoundingWrapSquareRectangleScaled, 'rgba(255,0,255,0.5)');
+    //printOutputImage(minimumBoundingWrapSquareRectangleImage, 'min-rectangle-wrapped-squareed-image.png');
     //var minimumBoundingRectangleOnOriginalImage = drawMinimumBoundingRectangle(originalImageData, minimumBoundingRectangle);
     //printOutputImage(minimumBoundingRectangleOnOriginalImage, 'min-image-on-original.png');
 
-    callback(null, minimumBoundingRectangle);
+    //var smallest = minimumArea(minimumBoundingWrapSquareRectangleScaled, minimumBoundingRectangleScaled)
+    callback(null, minimumBoundingWrapSquareRectangleScaled);
+  }
+
+  function minimumArea(a, b) {
+    var aArea = distance(a[0], a[3]) * distance(a[0], a[1]);
+    var bArea = distance(b[0], b[3]) * distance(b[0], b[1]);
+
+    if (aArea < bArea) {
+      return a;
+    } else {
+      return b;
+    }
+
+  }
+
+  function distance(a,b) {
+    return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
   }
 
   exports.someExperiments = function() {
@@ -1087,8 +1158,8 @@
           var vertical = length(subtract(bottomLeft, topLeft));
           var area = horizontal * vertical;
 
-          if (horizontal < minArea) {
-              minArea = horizontal;
+          if (area < minArea) {
+              minArea = area;
 
               minTopLeft = topLeft;
               minTopRight = topRight;
@@ -1105,10 +1176,19 @@
   }
 
   function getWrapSquare(polygon) {
-    var lefts = polygon.sort((a,b) => a.x - b.x).slice(0,2);
-    var rights = polygon.sort((a,b) => b.x - a.x).slice(0,2);
-    var tops = polygon.sort((a,b) => a.y - b.y).slice(0,2);
-    var bottoms = polygon.sort((a,b) => b.y - a.y).slice(0,2);
+    // sort most extreme, remove points too close to the previous best (to avoid local maximas), take the best two 
+
+    var filterTooClose = (curr, index, array) => {
+      if (index === 0) return true;
+      var prev = array[index - 1];
+      var dist = Math.sqrt(Math.pow(prev.x - curr.x, 2) + Math.pow(prev.y - curr.y, 2));
+      return dist >= 40;
+    }
+
+    var lefts = polygon.sort((a,b) => a.x - b.x).filter(filterTooClose).slice(0,2);
+    var rights = polygon.sort((a,b) => b.x - a.x).filter(filterTooClose).slice(0,2);
+    var tops = polygon.sort((a,b) => a.y - b.y).filter(filterTooClose).slice(0,2);
+    var bottoms = polygon.sort((a,b) => b.y - a.y).filter(filterTooClose).slice(0,2);
 
     console.log('lefts', lefts);
     console.log('rights', rights);
@@ -1202,12 +1282,12 @@
     ];
   }
 
-   function drawMinimumBoundingRectangle(imageData, rectangle){
+   function drawMinimumBoundingRectangle(imageData, rectangle, strokeStyle){
 
       var canvas = createCanvas(imageData.width, imageData.height);
       var context = canvas.getContext('2d');
       context.putImageData(imageData, 0, 0);
-      context.strokeStyle = 'rgba(0,255,0,1.0)';
+      context.strokeStyle = strokeStyle || 'rgba(0,255,0,1.0)';
     
       
       context.beginPath();
@@ -2103,7 +2183,6 @@
   }
 
   function getGridSquares(gridWidth, gridHeight, chamberName){
-    //TODO: this only applies to the second chamber
     var rows;
     var columns;
 
