@@ -843,24 +843,22 @@ function getPage(id, callback) {
       console.log('page does not have coordinates. Try to detect them');
       var originalImagePath = getLocalImagePath(page.image);
       var preparedImagePath = getLocalPreparedImagePath(page.image);
-      imageParser.detectCoordinatesRectangle(originalImagePath, preparedImagePath, (err, rectangle) => {
-        if (err) {
-          // fallback
-          page.coordinates = [
-            {x:0.016,y:0.2126514131897712},
-            {x:0.981,y:0.22611036339165544},
-            {x:0.974,y:0.9582772543741588},
-            {x:0.013,y:0.9475100942126514}];
-        } else if (rectangle) {
-          console.log(`detected coordinates: ${rectangle}`);
-          page.coordinates = rectangle;  
-        }
-
-        // if we have a chamber we can try to save this right away
-        getChamberForPage(page, (err, chamber)=>{
+      getChamberForPage(page, (err, chamber)=>{
           // if no chamber just return without saving
-          if (err) return callback(null, page);
+        if (err) return callback(`no chamber for page ${page.id}`, null);
 
+        imageParser.detectCoordinatesRectangle(originalImagePath, preparedImagePath, chamber.name, (err, rectangle) => {
+          if (err) {
+            // fallback
+            page.coordinates = [
+              {x:0.016,y:0.2126514131897712},
+              {x:0.981,y:0.22611036339165544},
+              {x:0.974,y:0.9582772543741588},
+              {x:0.013,y:0.9475100942126514}];
+          } else if (rectangle) {
+            page.coordinates = rectangle;  
+          }
+          
           detectVotesAndSave(page, callback);
         });        
       });

@@ -120,9 +120,9 @@
       {
         "name": "first",
         "start_year": 1959,
-        "end_year": 1960,
+        "end_year": 1969,
         "start_page": 7447,
-        "end_page": 8463,
+        "end_page": 8009,
         "allocation": {
           "s": 79,
           "f": 32,
@@ -177,15 +177,189 @@
 
       {
         "name": "first",
+        "start_year": 1960,
+        "end_year": 1960,
+        "start_page": 8010,
+        "end_page": 8463,
+        "allocation": {
+          "s": 78,
+          "f": 32,
+          "c": 22,
+          "h": 17,
+          "k": 2
+        },
+        "constituency_allocation":
+        {
+          "fk_stockholms_stad": 0,
+          "fk_stockholms_och_uppsala_län": 0,
+          "fk_södermanlands_och_västmanlands_län": 0,
+          "fk_östergötlands_med_norrköpings_stad": 0,
+          "fk_jönköpings_län": 0,
+          "fk_kalmar_och_gotlands_län": 0,
+          "fk_kronobergs_och_hallands_län": 0,
+          "fk_blekinge_och_kristianstads_län": 0,
+          "fk_malmöhus_län": 0,
+          "fk_göteborgs_och_bohus_län": 0,
+          "fk_göteborgs_stad": 0,
+          "fk_älvsborgs_län": 0,
+          "fk_skaraborgs_län": 0,
+          "fk_värmlands_län": 0,
+          "fk_örebro_län": 0,
+          "fk_kopparbergs_län": 0,
+          "fk_gävleborgs_län_och_gävle_stad": 0,
+          "fk_västernorrlands_och_jämtlands_län": 0,
+          "fk_västerbottens_och_norrbottens_län": 0
+        },
+        "seats": 150,
+        "seat_layout_width": 10,
+        "seat_layout":
+        [
+             1,   2,    3,    4,    5,     6,    7,    8,    9,   10,
+            11,  12,   13,   14,   15,    16,   17,   18,   19,   20,
+            21,  22,   23,   24,   25,    26,   27,   28,   29,   30,
+            31,  32,   33,   34,   35,    36,   37,   38,   39,   40,
+            41,  42,   43,   44,   45,    46,   47,   48,   49,   50,
+            51,  52,   53,   54,   55,    56,   57,   58,   59,   60,
+            61,  62,   63,   64,   65,    66,   67,   68,   69,   70,
+            71,  72,   73,   74,   75,    76,   77,   78,   79,   80,
+            81,  82,   83,   84,   85,    86,   87,   88,   89,   90,
+            91,  92,   93,   94,   95,    96,   97,   98,   99,  100,
+           101, 102,  103,  104,  105,   106,  107,  108,  109,  110,
+           111, 112,  113,  114,  115,   116,  117,  118,  119,  120,
+           121, 122,  123,  124,  125,   126,  127,  128,  129,  130,
+           131, 132,  133,  134,  135,   136,  137,  138,  139,  140,
+           141, 142,  143,  144,  145,   146,  147,  148,  149,  150,
+           151, 152,  153,  154,  155,   156,  157,  158,  159,  160
+        ]
+      },
+
+      {
+        "name": "first",
         "start_year": 1961,
-        "end_year": 1964,
+        "end_year": 1961,
         "start_page": 8609,
-        "end_page": 11161,
+        "end_page": 9171,
         "allocation": {
           "s": 77,
           "f": 33,
           "c": 20,
           "h": 19,
+          "k": 2
+        },
+        "constituency_allocation":
+        {
+          "fk_stockholms_stad": 0,
+          "fk_stockholms_och_uppsala_län": 0,
+          "fk_södermanlands_och_västmanlands_län": 0,
+          "fk_östergötlands_med_norrköpings_stad": 0,
+          "fk_jönköpings_län": 0,
+          "fk_kalmar_och_gotlands_län": 0,
+          "fk_kronobergs_och_hallands_län": 0,
+          "fk_blekinge_och_kristianstads_län": 0,
+          "fk_malmöhus_län": 0,
+          "fk_göteborgs_och_bohus_län": 0,
+          "fk_göteborgs_stad": 0,
+          "fk_älvsborgs_län": 0,
+          "fk_skaraborgs_län": 0,
+          "fk_värmlands_län": 0,
+          "fk_örebro_län": 0,
+          "fk_kopparbergs_län": 0,
+          "fk_gävleborgs_län_och_gävle_stad": 0,
+          "fk_västernorrlands_och_jämtlands_län": 0,
+          "fk_västerbottens_och_norrbottens_län": 0
+        },
+        "seats": 151,
+        "seat_layout_width": 10,
+        "seat_layout":
+        [
+             1,   2,    3,    4,    5,     6,    7,    8,    9,   10,
+            11,  12,   13,   14,   15,    16,   17,   18,   19,   20,
+            21,  22,   23,   24,   25,    26,   27,   28,   29,   30,
+            31,  32,   33,   34,   35,    36,   37,   38,   39,   40,
+            41,  42,   43,   44,   45,    46,   47,   48,   49,   50,
+            51,  52,   53,   54,   55,    56,   57,   58,   59,   60,
+            61,  62,   63,   64,   65,    66,   67,   68,   69,   70,
+            71,  72,   73,   74,   75,    76,   77,   78,   79,   80,
+            81,  82,   83,   84,   85,    86,   87,   88,   89,   90,
+            91,  92,   93,   94,   95,    96,   97,   98,   99,  100,
+           101, 102,  103,  104,  105,   106,  107,  108,  109,  110,
+           111, 112,  113,  114,  115,   116,  117,  118,  119,  120,
+           121, 122,  123,  124,  125,   126,  127,  128,  129,  130,
+           131, 132,  133,  134,  135,   136,  137,  138,  139,  140,
+           141, 142,  143,  144,  145,   146,  147,  148,  149,  150,
+           151, 152,  153,  154,  155,   156,  157,  158,  159,  160
+        ]
+      },
+
+      {
+        "name": "first",
+        "start_year": 1962,
+        "end_year": 1962,
+        "start_page": 9172,
+        "end_page": 9835,
+        "allocation": {
+          "s": 77,
+          "f": 29,
+          "c": 19,
+          "h": 23,
+          "k": 3
+        },
+        "constituency_allocation":
+        {
+          "fk_stockholms_stad": 0,
+          "fk_stockholms_och_uppsala_län": 0,
+          "fk_södermanlands_och_västmanlands_län": 0,
+          "fk_östergötlands_med_norrköpings_stad": 0,
+          "fk_jönköpings_län": 0,
+          "fk_kalmar_och_gotlands_län": 0,
+          "fk_kronobergs_och_hallands_län": 0,
+          "fk_blekinge_och_kristianstads_län": 0,
+          "fk_malmöhus_län": 0,
+          "fk_göteborgs_och_bohus_län": 0,
+          "fk_göteborgs_stad": 0,
+          "fk_älvsborgs_län": 0,
+          "fk_skaraborgs_län": 0,
+          "fk_värmlands_län": 0,
+          "fk_örebro_län": 0,
+          "fk_kopparbergs_län": 0,
+          "fk_gävleborgs_län_och_gävle_stad": 0,
+          "fk_västernorrlands_och_jämtlands_län": 0,
+          "fk_västerbottens_och_norrbottens_län": 0
+        },
+        "seats": 151,
+        "seat_layout_width": 10,
+        "seat_layout":
+        [
+             1,   2,    3,    4,    5,     6,    7,    8,    9,   10,
+            11,  12,   13,   14,   15,    16,   17,   18,   19,   20,
+            21,  22,   23,   24,   25,    26,   27,   28,   29,   30,
+            31,  32,   33,   34,   35,    36,   37,   38,   39,   40,
+            41,  42,   43,   44,   45,    46,   47,   48,   49,   50,
+            51,  52,   53,   54,   55,    56,   57,   58,   59,   60,
+            61,  62,   63,   64,   65,    66,   67,   68,   69,   70,
+            71,  72,   73,   74,   75,    76,   77,   78,   79,   80,
+            81,  82,   83,   84,   85,    86,   87,   88,   89,   90,
+            91,  92,   93,   94,   95,    96,   97,   98,   99,  100,
+           101, 102,  103,  104,  105,   106,  107,  108,  109,  110,
+           111, 112,  113,  114,  115,   116,  117,  118,  119,  120,
+           121, 122,  123,  124,  125,   126,  127,  128,  129,  130,
+           131, 132,  133,  134,  135,   136,  137,  138,  139,  140,
+           141, 142,  143,  144,  145,   146,  147,  148,  149,  150,
+           151, 152,  153,  154,  155,   156,  157,  158,  159,  160
+        ]
+      },
+
+      {
+        "name": "first",
+        "start_year": 1963,
+        "end_year": 1963,
+        "start_page": 9836,
+        "end_page": 10384,
+        "allocation": {
+          "s": 77,
+          "f": 27,
+          "c": 19,
+          "h": 26,
           "k": 2
         },
         "constituency_allocation":

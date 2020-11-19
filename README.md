@@ -4,6 +4,8 @@ This is some tools to semi-automaticallty read voting records from the swedish p
 
 ## Usage
 
+>TODO: the votes should really be Yea, Nay, Abstain or Missing
+
 ### Starting
 Start the server by `cd marker` and `./run.sh`
 It will start a deamon that watches the files you need
@@ -19,6 +21,9 @@ Then compare the results on the printed paper with the OCR-read results.
 #### How to check correctness
 >TODO: Write this
 
+#### What is registered stands
+Sometimes a note on the record states that a member has declared they voted wrong. I'm still recording the actual vote instead of the intended vote.
+
 ### Editing members
 This is useful to change the name of a member but it doesn't seem to be properly implemented.
 Open the browser and go to e.g. `http://localhost:3000/membereditor`
@@ -31,6 +36,8 @@ Seatings can be edited by navigating to
 where `:chamber` can be `first|second|one` and `pageid` refers to the internal pageid.
 
 ## Data layout
+
+>TODO: Expand on this what is actually in the data
 
 ### `chambers.json`
 Chambers contains, for each chamber (`first`, `second` and `one`), a list of chamber configurations. The configuration contains a layout of the parties and of the seatings. Parties and seatings are zero indexed and referring to the `square`.
@@ -94,18 +101,26 @@ Members are sourced from `https://sv.wikipedia.org/wiki/Kategori:Listor_%C3%B6ve
 #### Non-unique names
 Sometimes there are members with the same name. For example in the second chamber of 1965 there is a _Rune Johansson_ from both Koronobergs and Östergötlands constituency.
 
+In the first chamber they have unique names so if there is two Johansson it will be stated the first letter of the first name to differentiate.
+In the second chamber there is sometimes a party sign that can be used to figure out who is who. It is also possible to count the constituency members if there is only one Johansson in one constituency.
+
 ### Seatings
 Members are seated by constituency with the largest constituency on the front row starting from the left (seen from the seatings). The person with most votes sits first and then in decending order.
 e.g. in 1965 Stockholms stad is biggest and most votes in stockholms stad is Tager Erlander so he sits at the first chair. Second in Bertil Ohlin and so on.
 Between years the seatings changes for some, to me currently, unkown reason. Two persons might swap places for example.
 
+The speaker is not usually registered in the votes and the first vice speaker and second vice speaker is seated among the last seats instead of with the constituency.
+
 >TODO: When people swap places in the beginning of the year. They seating also changes party so that has to be fixed. Hence the `chambers.json -> .party_layout` is wrong after a new year.
 
 #### Replacement members
-If one member is replaced their name is corrected in the records with a pencil. Since the seat is allocated to a constituency and party is is possible to deduce the member without extensive research from their surname since the set surname, constituency, party is usually unique.
+If one member is replaced their name is corrected in the records with a pencil. Since the seat is allocated to a constituency and party is is possible to deduce the member without extensive research from their surname since the set surname, constituency, party is usually unique. Usually a replacement is preceeded by a couple of votes with the name striked out and the vote beeing recorded as absent.
 
-#### Party changes and "wilds"
+#### Party changes and "wilds" and constituencies
 Sometimes members leave their original party and joins a new one mid elected period. Since the seat is allocated to a specific party only the original party affiliation is recorded. I have currently not changed party affiliation mid-election period but insted elected to record the vote as the party the member was elected to.
+A couple of members have had multiple party associations. Some members who are in both the first and then the second chamber sometimes changes party.
+In the first chamber members does not have to live in their constituency and therefore they might be moving around. Some members have been associated with multiple constituencies. Currently in the data the constituency association does not have any timestamps.
+
 
 There is a list here that could be useful:
 https://sv.wikipedia.org/wiki/Partil%C3%B6s
@@ -120,7 +135,7 @@ In some cases the dot is the record is missing for one or several votes. It is s
 The first chamber protocols are nicer than the second chamber since it contains destinctive names. There are no seat numbering on the protocols so I have just numbered them from 1 to 150 from top left (plus the row of 151 and 152 that is the first and second vice speakers seats).
 The first chamber also (at least after 1957) always have a summation of the votes so that it is easy to double check against.
 
-### 1957-1957
+### 1957
 Since both the seats in the upper left and the seats in the lower right is empty it makes the automatic grid detection detect a rotated rectangle in a lot of the cases making the scanning more tedious. 
 
 #### Parties
@@ -139,8 +154,7 @@ Seats 1, 2, 24 is empty. I'm guessing since that is the Speaker, 1st vice speake
 
 #### Errors
 
-### 1958-1958
-
+### 1958
 
 #### Parties
 _Socialdemokraterna (s)_ got 79 seats
@@ -168,7 +182,7 @@ Bo Seigbahn (s) is representing s, but will later represent h.
 |7287| all | photography failed so no votes registered |
 
 
-### 1959-1960
+### 1959
 
 #### Parties
 _Socialdemokraterna (s)_ got 79 seats
@@ -178,7 +192,9 @@ _Centerpartiet (c)_ got 22 seats
 _Sveriges kommunistiska parti (k)_ got 2 seats
 
 #### Voting records
-Seats 1, 2, 42 is empty. The speaker is Gunnar Sundelin (f) from Örebro. Ivar Johansson (c) from Östergötland becomes the 2nd vice speaker. On page 7562 it is confirmed by the notes on the protocol that it it the vice speakers voting from seat 151 and 152.
+Seats 1, 2, 43 is empty. The speaker is Gunnar Sundelin (f) from Örebro. Ivar Johansson (c) from Östergötland becomes the 2nd vice speaker. On page 7562 it is confirmed by the notes on the protocol that it it the vice speakers voting from seat 151 and 152.
+On page 7849 Stockholm stad gains one member and Örebro loses one making seat 1 be occupied and seat 116 be empty. Both are from f so the party setup does not change.
+On page 8011 seat 1 is empty again and seat 2 is occupied instead.
 
 #### Members
 
@@ -188,6 +204,89 @@ Seats 1, 2, 42 is empty. The speaker is Gunnar Sundelin (f) from Örebro. Ivar J
 |---        |---        |---                    |
 |7496       | all       | technichal error with photographing the record so all votes are missing |
 
+### 1960
+
+#### Parties
+_Socialdemokraterna (s)_ got 78 seats
+_Högerpartiet (h)_ got 17 seats 
+_Folkpartiet (f)_ got 32 seats 
+_Centerpartiet (c)_ got 22 seats
+_Sveriges kommunistiska parti (k)_ got 2 seats
+
+#### Voting records
+Seat 1 is empty again and seat 2 is occupied instead.
+Seat 43 and 116 is still empty.
+
+#### Members
+
+
+#### Errors
+|Page       | Seat      | Note                  |
+|---        |---        |---                    |
+|8313       | all       | voting record is missing and just a sum is displayed |
+
+### 1961
+
+#### Parties
+_Socialdemokraterna (s)_ got 77 seats
+_Högerpartiet (h)_ got 19 seats 
+_Folkpartiet (f)_ got 33 seats 
+_Centerpartiet (c)_ got 20 seats
+_Sveriges kommunistiska parti (k)_ got 2 seats
+
+#### Voting records
+Seat 1, 41 and 116 is empty.
+
+#### Members
+On page 8744-8894 the speaker Gustaf Sundelin (f) starts voting from seat 116. I don't know why the speaker all of a sudden starts to vote. There is no tie or anything like that.
+
+#### Errors
+|Page       | Seat      | Note                  |
+|---        |---        |---                    |
+|8610       | all       | The dot markers are mirrored ontop of the names |
+|8849       | all       | The number is skipped for some reason |
+
+### 1962
+
+Stockholms Stad and Älvsborg elected new members in 1960 (to start in Jan 1961).
+
+#### Parties
+_Socialdemokraterna (s)_ got 77 seats
+_Högerpartiet (h)_ got 23 seats 
+_Folkpartiet (f)_ got 29 seats 
+_Centerpartiet (c)_ got 19 seats
+_Sveriges kommunistiska parti (k)_ got 3 seats
+
+#### Voting records
+Seats 2, 42 are empty.
+The records now contains both unique names but also party designations.
+
+#### Members
+
+
+#### Errors
+No errors found.
+
+### 1963
+
+#### Parties
+_Socialdemokraterna (s)_ got 77 seats
+_Högerpartiet (h)_ got 26 seats 
+_Folkpartiet (f)_ got 27 seats 
+_Centerpartiet (c)_ got 19 seats
+_Sveriges kommunistiska parti (k)_ got 2 seats
+
+
+#### Voting records
+Seats 2, 42 are empty.
+The records now contains both unique names but also party designations.
+
+#### Members
+
+
+#### Errors
+|Page       | Seat      | Note                  |
+|---        |---        |---                    |
 
 ## Second Chamber
 ### 1957-1958 (spring)

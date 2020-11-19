@@ -30,10 +30,17 @@
   }
 
   exports.getVotesFromPreparedImage = function(preparedImagePath, rawImagePath, outputImagePath, page, chamberName, labels, callback) {
-
+  
     var imageData = loadImage(rawImagePath);
     imageData = scaleImage(imageData, 0.8);
+
+    var cords = page.coordinates.map(a => coord(a.x * imageData.width, a.y * imageData.height))
+    var width = distance(cords[0], cords[1]);
+    var height = distance(cords[0], cords[3])
+    console.log(`saving width/height: ${width}, ${height} aspect: ${width/height} ${height/width}`);
+
     imageData = warpImage(imageData, page);
+
 
     var preparedImageData = loadImage(preparedImagePath);
     preparedImageData = warpImage(preparedImageData, page);
@@ -125,9 +132,10 @@
   }
 
   
-  exports.detectCoordinatesRectangle = function(original, imagePath, callback) {
+  exports.detectCoordinatesRectangle = function(original, imagePath, chamberName, callback) {
     var originalImageData = scaleImage(loadImage(original), 0.8);
     var imageData = loadImage(imagePath);
+
     //printOutputImage(imageData, 'original.png');
 
 /*
@@ -213,13 +221,40 @@
 
     var minimumBoundingWrapSquareRectangleScaled = scaleMinimumBoundingRectangle(minimumBoundingWrapSquareRectangle, imageData);
 
+    var minimumBoundingWrapSquareRectangleScaledAndAspected = setAspectRatioOfRectangle(minimumBoundingWrapSquareRectangleScaled, chamberName, imageData);
+
+    var before = minimumBoundingWrapSquareRectangleScaled.map(a => coord(a.x * imageData.width, a.y * imageData.height))
+    var after = minimumBoundingWrapSquareRectangleScaledAndAspected.map(a => coord(a.x * imageData.width, a.y * imageData.height))
+    console.log(`before`, before, before[0].distTo(before[1]), before[0].distTo(before[3]), before[0].distTo(before[1]) / before[0].distTo(before[3]));
+    console.log(`after`, after, after[0].distTo(after[1]), after[0].distTo(after[3]), after[0].distTo(after[1]) / after[0].distTo(after[3]));
+
     //var minimumBoundingWrapSquareRectangleImage = drawMinimumBoundingRectangle(wrapSquareImage, minimumBoundingWrapSquareRectangleScaled, 'rgba(255,0,255,0.5)');
     //printOutputImage(minimumBoundingWrapSquareRectangleImage, 'min-rectangle-wrapped-squareed-image.png');
     //var minimumBoundingRectangleOnOriginalImage = drawMinimumBoundingRectangle(originalImageData, minimumBoundingRectangle);
     //printOutputImage(minimumBoundingRectangleOnOriginalImage, 'min-image-on-original.png');
 
     //var smallest = minimumArea(minimumBoundingWrapSquareRectangleScaled, minimumBoundingRectangleScaled)
-    callback(null, minimumBoundingWrapSquareRectangleScaled);
+    callback(null, minimumBoundingWrapSquareRectangleScaledAndAspected);
+  }
+
+  function setAspectRatioOfRectangle(rectangle, chamberName, imageData) {
+
+    var rect = rectangle.map(a => coord(a.x * imageData.width, a.y * imageData.height));
+
+    var optimalAspectRatio = 1
+    switch (chamberName) {
+      case 'first': optimalAspectRatio = 2.655; break;
+      case 'second': optimalAspectRatio = 1.3172480738291412; break;
+      default: return callback(`no optimal ratio set for chamber ${chamberName}`, null);
+    }
+    var width = rect[0].distTo(rect[1]);
+    var height = rect[0].distTo(rect[3]);
+    console.log(`found width/height: ${width}, ${height} aspect: ${width/height}, optimal ${optimalAspectRatio}`);
+
+    rect[1] = rect[1].minus(rect[0]).divide(width).scale(height * optimalAspectRatio).plus(rect[0]);
+    rect[2] = rect[2].minus(rect[3]).divide(width).scale(height * optimalAspectRatio).plus(rect[3]);
+
+    return rect.map(a => coord(a.x / imageData.width, a.y / imageData.height));
   }
 
   function minimumArea(a, b) {
@@ -234,9 +269,7 @@
 
   }
 
-  function distance(a,b) {
-    return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
-  }
+ 
 
   exports.someExperiments = function() {
       var imageData = loadImage(__dirname + '/proto5.png');
@@ -1189,12 +1222,6 @@
     var rights = polygon.sort((a,b) => b.x - a.x).filter(filterTooClose).slice(0,2);
     var tops = polygon.sort((a,b) => a.y - b.y).filter(filterTooClose).slice(0,2);
     var bottoms = polygon.sort((a,b) => b.y - a.y).filter(filterTooClose).slice(0,2);
-
-    console.log('lefts', lefts);
-    console.log('rights', rights);
-    console.log('tops', tops);
-    console.log('bottoms', bottoms);
-
 
     var topLeft = checkLineIntersection(lefts[0], lefts[1], tops[0], tops[1]);
     var topRight = checkLineIntersection(rights[0], rights[1], tops[0], tops[1]);
@@ -2319,6 +2346,10 @@
     return outputImageData;
   }
 
+  function distance(a,b) {
+    return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+  }
+
   class Coordinate {
     constructor(x, y) {
       this.x = x;
@@ -2347,6 +2378,10 @@
 
     floor() {
      return new Coordinate(Math.floor(this.x), Math.floor(this.y));
+    }
+
+    clone() {
+      return new Coordinate(this.x, this.y);
     }
   }
 

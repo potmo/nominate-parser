@@ -72,9 +72,11 @@
   {
     "name": "Bengt Sjönell",
     "party": [
+      "f",
       "c"
     ],
     "constituency": [
+      "fk_stockholms_stad",
       "stockholms_stad"
     ],
     "id": 7
@@ -446,7 +448,8 @@
       "h"
     ],
     "constituency": [
-      "uppsala_län"
+      "uppsala_län",
+      "fk_stockholms_stad"
     ],
     "id": 44
   },
@@ -2298,7 +2301,8 @@
       "s"
     ],
     "constituency": [
-      "jämtlands_län"
+      "jämtlands_län",
+      "fk_västernorrlands_och_jämtlands_län"
     ],
     "id": 228
   },
@@ -2378,7 +2382,8 @@
       "h"
     ],
     "constituency": [
-      "norrbottens_län"
+      "norrbottens_län",
+      "fk_västerbottens_och_norrbottens_län"
     ],
     "id": 236
   },
@@ -2910,7 +2915,8 @@
       "f"
     ],
     "constituency": [
-      "skaraborgs_län"
+      "skaraborgs_län",
+      "fk_skaraborgs_län"
     ],
     "id": 289
   },
@@ -3340,7 +3346,8 @@
       "s"
     ],
     "constituency": [
-      "kronobergs_län"
+      "kronobergs_län",
+      "fk_kronobergs_och_hallands_län"
     ],
     "id": 332
   },
@@ -3460,7 +3467,8 @@
       "s"
     ],
     "constituency": [
-      "älvsborgs_län_södra"
+      "älvsborgs_län_södra",
+      "fk_skaraborgs_län"
     ],
     "id": 344
   },
@@ -3540,7 +3548,8 @@
       "h"
     ],
     "constituency": [
-      "kopparbergs_län"
+      "kopparbergs_län",
+      "fk_kopparbergs_län"
     ],
     "id": 352
   },
@@ -5700,5 +5709,385 @@
       "fk_blekinge_och_kristianstads_län"
     ],
     "id": 567
+  },
+  {
+    "name": "Staffan Hedblom",
+    "party": [
+      "f"
+    ],
+    "constituency": [
+      "fk_stockholms_stad"
+    ],
+    "id": 568
+  },
+  {
+    "name": "Margareta Nordström",
+    "party": [
+      "f"
+    ],
+    "constituency": [
+      "fk_stockholms_stad"
+    ],
+    "id": 569
+  },
+  {
+    "name": "Lars Schött",
+    "party": [
+      "h"
+    ],
+    "constituency": [
+      "fk_kalmar_och_gotlands_län"
+    ],
+    "id": 570
+  },
+  {
+    "name": "Ivan Svanström",
+    "party": [
+      "c"
+    ],
+    "constituency": [
+      "fk_kalmar_och_gotlands_län"
+    ],
+    "id": 571
+  },
+  {
+    "name": "Lars Fagerström",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_älvsborgs_län"
+    ],
+    "id": 572
+  },
+  {
+    "name": "Harald Pettersson",
+    "party": [
+      "c"
+    ],
+    "constituency": [
+      "fk_skaraborgs_län"
+    ],
+    "id": 573
+  },
+  {
+    "name": "Ivar Virgin",
+    "party": [
+      "h"
+    ],
+    "constituency": [
+      "fk_skaraborgs_län"
+    ],
+    "id": 574
+  },
+  {
+    "name": "Stig Stefanson",
+    "party": [
+      "f"
+    ],
+    "constituency": [
+      "fk_kopparbergs_län"
+    ],
+    "id": 575
+  },
+  {
+    "name": "Sven Nyman",
+    "party": [
+      "f"
+    ],
+    "constituency": [
+      "fk_södermanlands_och_västmanlands_län"
+    ],
+    "id": 576
+  },
+  {
+    "name": "Gillis Augustsson",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_östergötlands_med_norrköpings_stad"
+    ],
+    "id": 577
+  },
+  {
+    "name": "Eric Peterson",
+    "party": [
+      "f"
+    ],
+    "constituency": [
+      "fk_östergötlands_med_norrköpings_stad"
+    ],
+    "id": 578
+  },
+  {
+    "name": "Gösta Jacobsson",
+    "party": [
+      "h"
+    ],
+    "constituency": [
+      "fk_malmöhus_län"
+    ],
+    "id": 579
+  },
+  {
+    "name": "Stig Gorthon",
+    "party": [
+      "h"
+    ],
+    "constituency": [
+      "fk_malmöhus_län"
+    ],
+    "id": 580
+  },
+  {
+    "name": "Anton Larsson",
+    "party": [
+      "c"
+    ],
+    "constituency": [
+      "fk_älvsborgs_län"
+    ],
+    "id": 581
+  },
+  {
+    "name": "Per Hilding",
+    "party": [
+      "f"
+    ],
+    "constituency": [
+      "fk_gävleborgs_län_och_gävle_stad"
+    ],
+    "id": 582
+  },
+  {
+    "name": "Martin Widén",
+    "party": [
+      "f"
+    ],
+    "constituency": [
+      "fk_västernorrlands_och_jämtlands_län"
+    ],
+    "id": 583
+  },
+  {
+    "name": "Allan Hernelius",
+    "party": [
+      "h"
+    ],
+    "constituency": [
+      "fk_stockholms_stad"
+    ],
+    "id": 584
+  },
+  {
+    "name": "Yngve Holmberg",
+    "party": [
+      "h"
+    ],
+    "constituency": [
+      "fk_stockholms_stad"
+    ],
+    "id": 585
+  },
+  {
+    "name": "Herman Kling",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_stockholms_stad"
+    ],
+    "id": 586
+  },
+  {
+    "name": "Alva Myrdal",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_stockholms_stad"
+    ],
+    "id": 587
+  },
+  {
+    "name": "Lennart Geijer",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_stockholms_stad"
+    ],
+    "id": 588
+  },
+  {
+    "name": "Jonas Nordenson",
+    "party": [
+      "h"
+    ],
+    "constituency": [
+      "fk_stockholms_stad"
+    ],
+    "id": 589
+  },
+  {
+    "name": "Fritjof Lager",
+    "party": [
+      "k"
+    ],
+    "constituency": [
+      "fk_stockholms_stad"
+    ],
+    "id": 590
+  },
+  {
+    "name": "Manne Olsson",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_stockholms_och_uppsala_län"
+    ],
+    "id": 591
+  },
+  {
+    "name": "Tore Billman",
+    "party": [
+      "f"
+    ],
+    "constituency": [
+      "fk_göteborgs_och_bohus_län"
+    ],
+    "id": 592
+  },
+  {
+    "name": "Arvid Enarsson",
+    "party": [
+      "h"
+    ],
+    "constituency": [
+      "fk_älvsborgs_län"
+    ],
+    "id": 593
+  },
+  {
+    "name": "Paul Jansson",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_skaraborgs_län"
+    ],
+    "id": 594
+  },
+  {
+    "name": "Birger Isacson",
+    "party": [
+      "h"
+    ],
+    "constituency": [
+      "fk_kopparbergs_län"
+    ],
+    "id": 595
+  },
+  {
+    "name": "Thure Dahlberg",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_västerbottens_och_norrbottens_län"
+    ],
+    "id": 596
+  },
+  {
+    "name": "Henrik Åkerlund",
+    "party": [
+      "h"
+    ],
+    "constituency": [
+      "fk_stockholms_och_uppsala_län"
+    ],
+    "id": 597
+  },
+  {
+    "name": "Gunnar Wallmark",
+    "party": [
+      "h"
+    ],
+    "constituency": [
+      "fk_stockholms_och_uppsala_län"
+    ],
+    "id": 598
+  },
+  {
+    "name": "Nils Hjorth",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_stockholms_och_uppsala_län"
+    ],
+    "id": 599
+  },
+  {
+    "name": "Gunnar Hübinette",
+    "party": [
+      "h"
+    ],
+    "constituency": [
+      "fk_stockholms_och_uppsala_län"
+    ],
+    "id": 600
+  },
+  {
+    "name": "Erik Petersson",
+    "party": [
+      "f"
+    ],
+    "constituency": [
+      "fk_kronobergs_och_hallands_län"
+    ],
+    "id": 601
+  },
+  {
+    "name": "Gunnar Adolfsson",
+    "party": [
+      "k"
+    ],
+    "constituency": [
+      "fk_göteborgs_stad"
+    ],
+    "id": 602
+  },
+  {
+    "name": "Sigurd Lundin",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_gävleborgs_län_och_gävle_stad"
+    ],
+    "id": 603
+  },
+  {
+    "name": "Gunvor Stenberg",
+    "party": [
+      "h"
+    ],
+    "constituency": [
+      "fk_västerbottens_och_norrbottens_län"
+    ],
+    "id": 604
+  },
+  {
+    "name": "Gunnar Rönnberg",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_västerbottens_och_norrbottens_län"
+    ],
+    "id": 605
   }
 ]
