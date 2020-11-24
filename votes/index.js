@@ -30,6 +30,14 @@
   }
 
   exports.getVotesFromPreparedImage = function(preparedImagePath, rawImagePath, outputImagePath, page, chamberName, labels, callback) {
+    try {
+      getVotesFromPreparedImage(preparedImagePath, rawImagePath, outputImagePath, page, chamberName, labels, callback)
+    } catch (error) {
+      callback(error, null);
+    }
+  }
+
+  function getVotesFromPreparedImage(preparedImagePath, rawImagePath, outputImagePath, page, chamberName, labels, callback) {
   
     var imageData = loadImage(rawImagePath);
     imageData = scaleImage(imageData, 0.8);
@@ -37,7 +45,6 @@
     var cords = page.coordinates.map(a => coord(a.x * imageData.width, a.y * imageData.height))
     var width = distance(cords[0], cords[1]);
     var height = distance(cords[0], cords[3])
-    console.log(`saving width/height: ${width}, ${height} aspect: ${width/height} ${height/width}`);
 
     imageData = warpImage(imageData, page);
 
@@ -133,6 +140,15 @@
 
   
   exports.detectCoordinatesRectangle = function(original, imagePath, chamberName, callback) {
+    try {
+      detectCoordinatesRectangle(original, imagePath, chamberName, callback);
+    } catch (err) {
+      console.error('failed detecting coordinates', err);
+      callback(err, null);
+    }
+  }
+
+  function detectCoordinatesRectangle(original, imagePath, chamberName, callback) {
     var originalImageData = scaleImage(loadImage(original), 0.8);
     var imageData = loadImage(imagePath);
 
@@ -225,8 +241,7 @@
 
     var before = minimumBoundingWrapSquareRectangleScaled.map(a => coord(a.x * imageData.width, a.y * imageData.height))
     var after = minimumBoundingWrapSquareRectangleScaledAndAspected.map(a => coord(a.x * imageData.width, a.y * imageData.height))
-    console.log(`before`, before, before[0].distTo(before[1]), before[0].distTo(before[3]), before[0].distTo(before[1]) / before[0].distTo(before[3]));
-    console.log(`after`, after, after[0].distTo(after[1]), after[0].distTo(after[3]), after[0].distTo(after[1]) / after[0].distTo(after[3]));
+    
 
     //var minimumBoundingWrapSquareRectangleImage = drawMinimumBoundingRectangle(wrapSquareImage, minimumBoundingWrapSquareRectangleScaled, 'rgba(255,0,255,0.5)');
     //printOutputImage(minimumBoundingWrapSquareRectangleImage, 'min-rectangle-wrapped-squareed-image.png');
@@ -1218,18 +1233,22 @@
       return dist >= 40;
     }
 
-    var lefts = polygon.sort((a,b) => a.x - b.x).filter(filterTooClose).slice(0,2);
-    var rights = polygon.sort((a,b) => b.x - a.x).filter(filterTooClose).slice(0,2);
-    var tops = polygon.sort((a,b) => a.y - b.y).filter(filterTooClose).slice(0,2);
-    var bottoms = polygon.sort((a,b) => b.y - a.y).filter(filterTooClose).slice(0,2);
+
+    var leftsUnfiltered = polygon.sorted((a,b) => a.x - b.x);
+    var rightsUnfiltered = polygon.sorted((a,b) => b.x - a.x);
+    var topsUnfiltered = polygon.sorted((a,b) => a.y - b.y);
+    var bottomsUnfiltered = polygon.sorted((a,b) => b.y - a.y);
+
+    var lefts = leftsUnfiltered.filter(filterTooClose).slice(0,2);
+    var rights = rightsUnfiltered.filter(filterTooClose).slice(0,2);
+    var tops = topsUnfiltered.filter(filterTooClose).slice(0,2);
+    var bottoms = bottomsUnfiltered.filter(filterTooClose).slice(0,2);
 
     var topLeft = checkLineIntersection(lefts[0], lefts[1], tops[0], tops[1]);
     var topRight = checkLineIntersection(rights[0], rights[1], tops[0], tops[1]);
     var bottomRight = checkLineIntersection(rights[0], rights[1], bottoms[0], bottoms[1]);
     var bottomLeft = checkLineIntersection(lefts[0], lefts[1], bottoms[0], bottoms[1]);
-
-    console.log(topLeft, topRight, bottomLeft, bottomRight)
-
+  
 
     return {topLeft, topRight, bottomLeft, bottomRight};
   }
@@ -1246,7 +1265,7 @@
           onLine2: false
       };
 
-      console.log('intersect', line1Start, line1End, line2Start, line2End)
+      
       
       denominator = ((line2End.y - line2Start.y) * (line1End.x - line1Start.x)) - ((line2End.x - line2Start.x) * (line1End.y - line1Start.y));
       if (denominator == 0) {
@@ -2458,5 +2477,9 @@
       }
     }
     return this;
+  }
+
+  Array.prototype.sorted = function(comparator) {
+    return Array.from(this).sort(comparator);
   }
 

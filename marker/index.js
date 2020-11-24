@@ -243,9 +243,6 @@ app.get('/diff/:from/:to', (req, res) => {
   var from = parseInt(req.params.from);
   var to = parseInt(req.params.to);
 
-  
-
-
   getAllDataFromId(from, (err, objFrom) => {
     if (err) return res.status(500).send(err);
     getAllDataFromId(to, (err, objTo) => {
@@ -272,6 +269,34 @@ app.get('/diff/:from/:to', (req, res) => {
   });
 
 });
+
+app.get('/predetect/:from/:to', (req, res) => {
+  var from = parseInt(req.params.from);
+  var to = parseInt(req.params.to);
+
+  console.log(`predetecting from ${from} to ${to}`);
+
+  var numPages = to - from + 1
+  var pages = Array.from({length: numPages}, (_, i) => from + i)
+
+  console.log(pages);
+
+
+  async.forEachOfSeries(pages, (id, index, callback) => {
+    console.log(`predetect ${id}`);
+    getPage(id, callback);
+  }, (err)=> {
+    if (err) {
+      if (err) return res.status(500).send(err);
+    } else {
+      console.log('all done');
+      res.status(200).send('OK');
+    }
+  });
+
+});
+
+
 
 function prep(from, to, callback){
   var id = from;
@@ -850,6 +875,7 @@ function getPage(id, callback) {
         imageParser.detectCoordinatesRectangle(originalImagePath, preparedImagePath, chamber.name, (err, rectangle) => {
           if (err) {
             // fallback
+            console.log('coordinates failed to be detected. Use fallback');
             page.coordinates = [
               {x:0.016,y:0.2126514131897712},
               {x:0.981,y:0.22611036339165544},
@@ -874,6 +900,8 @@ function getPage(id, callback) {
 function getDocument(id, callback) {
   getFile(id, (err, file) => {
     if (err) return callback(err, null);
+
+    console.log(`get document with id ${id}: ${file}`);
 
     fs.readFile(file, (err, data) => {
       if (err) return callback(err, null);

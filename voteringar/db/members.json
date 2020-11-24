@@ -1085,7 +1085,8 @@
       "h"
     ],
     "constituency": [
-      "fyrstadskretsen"
+      "fyrstadskretsen",
+      "fk_malmöhus_län"
     ],
     "id": 107
   },
@@ -3186,7 +3187,8 @@
       "c"
     ],
     "constituency": [
-      "värmlands_län"
+      "värmlands_län",
+      "fk_värmlands_län"
     ],
     "id": 316
   },
@@ -3468,7 +3470,8 @@
     ],
     "constituency": [
       "älvsborgs_län_södra",
-      "fk_skaraborgs_län"
+      "fk_skaraborgs_län",
+      "fk_älvsborgs_län"
     ],
     "id": 344
   },
@@ -3649,7 +3652,8 @@
       "f"
     ],
     "constituency": [
-      "stockholms_stad"
+      "stockholms_stad",
+      "fk_stockholms_stad"
     ],
     "id": 362
   },
@@ -3699,7 +3703,8 @@
       "f"
     ],
     "constituency": [
-      "södermanlands_län"
+      "södermanlands_län",
+      "fk_södermanlands_och_västmanlands_län"
     ],
     "id": 367
   },
@@ -3719,7 +3724,8 @@
       "f"
     ],
     "constituency": [
-      "gotlands_län"
+      "gotlands_län",
+      "fk_örebro_län"
     ],
     "id": 369
   },
@@ -5896,7 +5902,8 @@
       "s"
     ],
     "constituency": [
-      "fk_stockholms_stad"
+      "fk_stockholms_stad",
+      "fk_gävleborgs_län_och_gävle_stad"
     ],
     "id": 586
   },
@@ -6089,5 +6096,375 @@
       "fk_västerbottens_och_norrbottens_län"
     ],
     "id": 605
+  },
+  {
+    "name": "Mary Hultell",
+    "party": [
+      "h"
+    ],
+    "constituency": [
+      "fk_stockholms_stad"
+    ],
+    "id": 606
+  },
+  {
+    "name": "Rune Hedlund",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_södermanlands_och_västmanlands_län"
+    ],
+    "id": 607
+  },
+  {
+    "name": "Elvy Olsson",
+    "party": [
+      "c"
+    ],
+    "constituency": [
+      "fk_södermanlands_och_västmanlands_län"
+    ],
+    "id": 608
+  },
+  {
+    "name": "Tage Larfors",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_södermanlands_och_västmanlands_län"
+    ],
+    "id": 609
+  },
+  {
+    "name": "Holge Ottosson",
+    "party": [
+      "h"
+    ],
+    "constituency": [
+      "fk_jönköpings_län"
+    ],
+    "id": 610
+  },
+  {
+    "name": "Axel Kristiansson",
+    "party": [
+      "c"
+    ],
+    "constituency": [
+      "fk_kronobergs_och_hallands_län"
+    ],
+    "id": 611
+  },
+  {
+    "name": "Nils Erik Wååg",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_blekinge_och_kristianstads_län"
+    ],
+    "id": 612
+  },
+  {
+    "name": "Helge Karlsson",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_blekinge_och_kristianstads_län"
+    ],
+    "id": 613
+  },
+  {
+    "name": "Gunnar Weibull",
+    "party": [
+      "h"
+    ],
+    "constituency": [
+      "fk_malmöhus_län"
+    ],
+    "id": 614
+  },
+  {
+    "name": "Bo Risberg",
+    "party": [
+      "h"
+    ],
+    "constituency": [
+      "fk_göteborgs_och_bohus_län"
+    ],
+    "id": 615
+  },
+  {
+    "name": "Bo Skårman",
+    "party": [
+      "f"
+    ],
+    "constituency": [
+      "fk_älvsborgs_län"
+    ],
+    "id": 616
+  },
+  {
+    "name": "Lennart Wanhainen",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_västerbottens_och_norrbottens_län"
+    ],
+    "id": 617
+  },
+  {
+    "name": "Joel Sörenson",
+    "party": [
+      "f"
+    ],
+    "constituency": [
+      "fk_stockholms_stad"
+    ],
+    "id": 618
+  },
+  {
+    "name": "Anna Rosvall",
+    "party": [
+      "h"
+    ],
+    "constituency": [
+      "fk_malmöhus_län"
+    ],
+    "id": 619
+  },
+  {
+    "name": "Yngve Persson",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_stockholms_stad"
+    ],
+    "id": 620
+  },
+  {
+    "name": "Bertil Lidgard",
+    "party": [
+      "h"
+    ],
+    "constituency": [
+      "fk_stockholms_stad"
+    ],
+    "id": 621
+  },
+  {
+    "name": "Per Blomquist",
+    "party": [
+      "h"
+    ],
+    "constituency": [
+      "fk_malmöhus_län"
+    ],
+    "id": 622
+  },
+  {
+    "name": "Arne Pettersson",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_malmöhus_län"
+    ],
+    "id": 623
+  },
+  {
+    "name": "Torsten Hansson",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_göteborgs_stad"
+    ],
+    "id": 624
+  },
+  {
+    "name": "Gudmund Ernulf",
+    "party": [
+      "f"
+    ],
+    "constituency": [
+      "fk_göteborgs_stad"
+    ],
+    "id": 625
+  },
+  {
+    "name": "Karl Pettersson",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_örebro_län"
+    ],
+    "id": 626
+  },
+  {
+    "name": "Gustaf Kolare",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_örebro_län"
+    ],
+    "id": 627
+  },
+  {
+    "name": "Johan A. Olsson",
+    "party": [
+      "c"
+    ],
+    "constituency": [
+      "fk_gävleborgs_län_och_gävle_stad"
+    ],
+    "id": 628
+  },
+  {
+    "name": "Axel Wikberg",
+    "party": [
+      "c"
+    ],
+    "constituency": [
+      "fk_västernorrlands_och_jämtlands_län"
+    ],
+    "id": 629
+  },
+  {
+    "name": "Otto Stadling",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_västernorrlands_och_jämtlands_län"
+    ],
+    "id": 630
+  },
+  {
+    "name": "Bertil Strandberg",
+    "party": [
+      "h"
+    ],
+    "constituency": [
+      "fk_västerbottens_och_norrbottens_län"
+    ],
+    "id": 631
+  },
+  {
+    "name": "Lars Werner",
+    "party": [
+      "k"
+    ],
+    "constituency": [
+      "fk_stockholms_stad"
+    ],
+    "id": 632
+  },
+  {
+    "name": "Rolf Wirtén",
+    "party": [
+      "f"
+    ],
+    "constituency": [
+      "fk_jönköpings_län"
+    ],
+    "id": 633
+  },
+  {
+    "name": "Margit Lundblad",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_malmöhus_län"
+    ],
+    "id": 634
+  },
+  {
+    "name": "Lilly Ohlsson",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_malmöhus_län"
+    ],
+    "id": 635
+  },
+  {
+    "name": "Eskil Tistad",
+    "party": [
+      "f"
+    ],
+    "constituency": [
+      "fk_göteborgs_och_bohus_län"
+    ],
+    "id": 636
+  },
+  {
+    "name": "Arne Svenungsson",
+    "party": [
+      "h"
+    ],
+    "constituency": [
+      "fk_göteborgs_och_bohus_län"
+    ],
+    "id": 637
+  },
+  {
+    "name": "Karl Erik Eriksson",
+    "party": [
+      "f"
+    ],
+    "constituency": [
+      "fk_värmlands_län"
+    ],
+    "id": 638
+  },
+  {
+    "name": "Kaj Lokander",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_värmlands_län"
+    ],
+    "id": 639
+  },
+  {
+    "name": "Sten Andersson",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_värmlands_län"
+    ],
+    "id": 640
+  },
+  {
+    "name": "Ivar Högström",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_västernorrlands_och_jämtlands_län"
+    ],
+    "id": 641
+  },
+  {
+    "name": "Maj-Lis Landberg",
+    "party": [
+      "s"
+    ],
+    "constituency": [
+      "fk_östergötlands_med_norrköpings_stad"
+    ],
+    "id": 642
   }
 ]

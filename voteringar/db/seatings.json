@@ -137,6 +137,14 @@
       {
         "member_id": 551,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 618,
+        "seated_at_page": 11024
+      },
+      {
+        "member_id": 410,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -159,6 +167,10 @@
       {
         "member_id": 410,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 585,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -181,6 +193,10 @@
       {
         "member_id": 585,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 587,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -203,6 +219,18 @@
       {
         "member_id": 586,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": null,
+        "seated_at_page": 11106
+      },
+      {
+        "member_id": 620,
+        "seated_at_page": 11110
+      },
+      {
+        "member_id": 588,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -225,6 +253,14 @@
       {
         "member_id": 44,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 590,
+        "seated_at_page": 11237
+      },
+      {
+        "member_id": 632,
+        "seated_at_page": 11740
       }
     ],
     [
@@ -251,6 +287,10 @@
       {
         "member_id": 587,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 362,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -277,6 +317,14 @@
       {
         "member_id": 569,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 588,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 606,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -303,6 +351,14 @@
       {
         "member_id": 588,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 590,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 618,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -329,6 +385,14 @@
       {
         "member_id": 589,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 362,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 620,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -355,6 +419,14 @@
       {
         "member_id": 590,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 606,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 621,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -521,6 +593,10 @@
       {
         "member_id": 425,
         "seated_at_page": 9837
+      },
+      {
+        "member_id": 591,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -531,6 +607,10 @@
       {
         "member_id": 426,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 428,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -541,6 +621,10 @@
       {
         "member_id": 423,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 427,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -551,6 +635,10 @@
       {
         "member_id": 427,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 430,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -569,6 +657,10 @@
       {
         "member_id": 428,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 576,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -587,6 +679,10 @@
       {
         "member_id": 422,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 555,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -605,6 +701,10 @@
       {
         "member_id": 430,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 607,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -623,6 +723,10 @@
       {
         "member_id": 555,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 608,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -637,6 +741,10 @@
       {
         "member_id": 576,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 609,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -655,6 +763,10 @@
       {
         "member_id": 434,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 367,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -673,6 +785,14 @@
       {
         "member_id": 436,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 434,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 642,
+        "seated_at_page": 11932
       }
     ],
     [
@@ -691,6 +811,10 @@
       {
         "member_id": 431,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 436,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -709,6 +833,14 @@
       {
         "member_id": 437,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 431,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 437,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -727,6 +859,14 @@
       {
         "member_id": null,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 437,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 431,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -745,6 +885,14 @@
       {
         "member_id": 577,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": null,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 577,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -759,6 +907,14 @@
       {
         "member_id": 578,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 577,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 578,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -773,6 +929,14 @@
       {
         "member_id": 442,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 578,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": null,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -787,6 +951,10 @@
       {
         "member_id": 440,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 442,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -801,6 +969,14 @@
       {
         "member_id": 565,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 440,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 565,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -815,6 +991,14 @@
       {
         "member_id": 258,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 565,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 633,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -829,6 +1013,10 @@
       {
         "member_id": 474,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 258,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -843,6 +1031,10 @@
       {
         "member_id": 542,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 542,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -857,6 +1049,10 @@
       {
         "member_id": 70,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 610,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -871,6 +1067,10 @@
       {
         "member_id": 446,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 446,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -889,6 +1089,10 @@
       {
         "member_id": 443,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 443,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -981,6 +1185,10 @@
       {
         "member_id": 451,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 611,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -999,6 +1207,10 @@
       {
         "member_id": 449,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 451,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -1017,6 +1229,10 @@
       {
         "member_id": 570,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 449,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -1035,6 +1251,10 @@
       {
         "member_id": 547,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 570,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -1053,6 +1273,10 @@
       {
         "member_id": 571,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 547,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -1071,6 +1295,10 @@
       {
         "member_id": 541,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 571,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -1085,6 +1313,10 @@
       {
         "member_id": 458,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 541,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -1099,6 +1331,10 @@
       {
         "member_id": 456,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 460,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -1113,6 +1349,10 @@
       {
         "member_id": 454,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 459,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -1127,6 +1367,10 @@
       {
         "member_id": 459,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 612,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -1141,6 +1385,10 @@
       {
         "member_id": 453,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 456,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -1155,6 +1403,10 @@
       {
         "member_id": 457,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 613,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -1177,6 +1429,10 @@
       {
         "member_id": 460,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 454,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -1195,6 +1451,10 @@
       {
         "member_id": 461,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 453,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -1213,6 +1473,10 @@
       {
         "member_id": 567,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 457,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -1231,6 +1495,10 @@
       {
         "member_id": 469,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 468,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -1253,6 +1521,14 @@
       {
         "member_id": 462,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 468,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 548,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -1275,6 +1551,14 @@
       {
         "member_id": 468,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 548,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 471,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -1297,6 +1581,14 @@
       {
         "member_id": 548,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 471,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 558,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -1319,6 +1611,14 @@
       {
         "member_id": 471,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 558,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 473,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -1341,6 +1641,14 @@
       {
         "member_id": 558,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 473,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 538,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -1363,6 +1671,14 @@
       {
         "member_id": 473,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 538,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 579,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -1385,6 +1701,14 @@
       {
         "member_id": 538,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 470,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 472,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -1407,6 +1731,14 @@
       {
         "member_id": 470,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 579,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 107,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -1429,6 +1761,14 @@
       {
         "member_id": 579,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 472,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 622,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -1451,6 +1791,18 @@
       {
         "member_id": 472,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 580,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 107,
+        "seated_at_page": 11237
+      },
+      {
+        "member_id": 623,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -1469,6 +1821,22 @@
       {
         "member_id": 580,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 614,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 619,
+        "seated_at_page": 11109
+      },
+      {
+        "member_id": 622,
+        "seated_at_page": 11237
+      },
+      {
+        "member_id": 635,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -1487,6 +1855,14 @@
       {
         "member_id": 142,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 623,
+        "seated_at_page": 11237
+      },
+      {
+        "member_id": 634,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -1505,6 +1881,10 @@
       {
         "member_id": 385,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 512,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -1523,6 +1903,10 @@
       {
         "member_id": 512,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 375,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -1541,6 +1925,10 @@
       {
         "member_id": 375,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 559,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -1559,6 +1947,10 @@
       {
         "member_id": 559,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 549,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -1577,6 +1969,10 @@
       {
         "member_id": 549,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 560,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -1599,6 +1995,10 @@
       {
         "member_id": 560,
         "seated_at_page": 9837
+      },
+      {
+        "member_id": 602,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -1617,6 +2017,10 @@
       {
         "member_id": 602,
         "seated_at_page": 9837
+      },
+      {
+        "member_id": 624,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -1627,6 +2031,10 @@
       {
         "member_id": 386,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 625,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -1641,6 +2049,10 @@
       {
         "member_id": 543,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 386,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -1659,6 +2071,14 @@
       {
         "member_id": 481,
         "seated_at_page": 7448
+      },
+      {
+        "member_id": 543,
+        "seated_at_page": 11237
+      },
+      {
+        "member_id": 636,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -1673,6 +2093,18 @@
       {
         "member_id": 182,
         "seated_at_page": 7448
+      },
+      {
+        "member_id": 592,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 481,
+        "seated_at_page": 11237
+      },
+      {
+        "member_id": 543,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -1683,6 +2115,18 @@
       {
         "member_id": 592,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 615,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 592,
+        "seated_at_page": 11237
+      },
+      {
+        "member_id": 481,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -1693,6 +2137,14 @@
       {
         "member_id": 490,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 615,
+        "seated_at_page": 11237
+      },
+      {
+        "member_id": 637,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -1711,6 +2163,10 @@
       {
         "member_id": 485,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 490,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -1729,6 +2185,10 @@
       {
         "member_id": 564,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 485,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -1751,6 +2211,10 @@
       {
         "member_id": 487,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 564,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -1777,6 +2241,14 @@
       {
         "member_id": 489,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 344,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 487,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -1803,6 +2275,14 @@
       {
         "member_id": 344,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 593,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 344,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -1829,6 +2309,14 @@
       {
         "member_id": 593,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 616,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 593,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -1839,6 +2327,10 @@
       {
         "member_id": 495,
         "seated_at_page": 7448
+      },
+      {
+        "member_id": 616,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -1849,6 +2341,10 @@
       {
         "member_id": 573,
         "seated_at_page": 8011
+      },
+      {
+        "member_id": 495,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -1863,6 +2359,10 @@
       {
         "member_id": 574,
         "seated_at_page": 8011
+      },
+      {
+        "member_id": 573,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -1881,6 +2381,10 @@
       {
         "member_id": 594,
         "seated_at_page": 9837
+      },
+      {
+        "member_id": 574,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -1903,12 +2407,20 @@
       {
         "member_id": 289,
         "seated_at_page": 9837
+      },
+      {
+        "member_id": 594,
+        "seated_at_page": 11237
       }
     ],
     [
       {
         "member_id": 499,
         "seated_at_page": 6717
+      },
+      {
+        "member_id": 289,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -1919,6 +2431,14 @@
       {
         "member_id": 500,
         "seated_at_page": 7034
+      },
+      {
+        "member_id": 499,
+        "seated_at_page": 11237
+      },
+      {
+        "member_id": 500,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -1929,6 +2449,14 @@
       {
         "member_id": 502,
         "seated_at_page": 7034
+      },
+      {
+        "member_id": 500,
+        "seated_at_page": 11237
+      },
+      {
+        "member_id": 502,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -1939,6 +2467,14 @@
       {
         "member_id": 544,
         "seated_at_page": 7034
+      },
+      {
+        "member_id": 502,
+        "seated_at_page": 11237
+      },
+      {
+        "member_id": 638,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -1949,6 +2485,14 @@
       {
         "member_id": 545,
         "seated_at_page": 7034
+      },
+      {
+        "member_id": 544,
+        "seated_at_page": 11237
+      },
+      {
+        "member_id": 639,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -1959,6 +2503,14 @@
       {
         "member_id": 174,
         "seated_at_page": 7034
+      },
+      {
+        "member_id": 545,
+        "seated_at_page": 11237
+      },
+      {
+        "member_id": 640,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -1969,6 +2521,18 @@
       {
         "member_id": 506,
         "seated_at_page": 7448
+      },
+      {
+        "member_id": 316,
+        "seated_at_page": 11237
+      },
+      {
+        "member_id": 627,
+        "seated_at_page": 10751
+      },
+      {
+        "member_id": 545,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -1983,6 +2547,10 @@
       {
         "member_id": 504,
         "seated_at_page": 8744
+      },
+      {
+        "member_id": 561,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -1993,6 +2561,10 @@
       {
         "member_id": 561,
         "seated_at_page": 7448
+      },
+      {
+        "member_id": 562,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -2003,6 +2575,10 @@
       {
         "member_id": 562,
         "seated_at_page": 7448
+      },
+      {
+        "member_id": 563,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -2017,6 +2593,10 @@
       {
         "member_id": 563,
         "seated_at_page": 7448
+      },
+      {
+        "member_id": 626,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -2027,6 +2607,10 @@
       {
         "member_id": 510,
         "seated_at_page": 8011
+      },
+      {
+        "member_id": 369,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -2041,6 +2625,10 @@
       {
         "member_id": 509,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 510,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -2055,6 +2643,10 @@
       {
         "member_id": 575,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 509,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -2073,6 +2665,10 @@
       {
         "member_id": 553,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 575,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -2095,6 +2691,10 @@
       {
         "member_id": 554,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 553,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -2117,12 +2717,24 @@
       {
         "member_id": 595,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 554,
+        "seated_at_page": 11237
       }
     ],
     [
       {
         "member_id": 515,
         "seated_at_page": 6717
+      },
+      {
+        "member_id": 586,
+        "seated_at_page": 11106
+      },
+      {
+        "member_id": 595,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -2161,6 +2773,10 @@
       {
         "member_id": 550,
         "seated_at_page": 9837
+      },
+      {
+        "member_id": 517,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -2179,6 +2795,10 @@
       {
         "member_id": 517,
         "seated_at_page": 9837
+      },
+      {
+        "member_id": 603,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -2197,42 +2817,70 @@
       {
         "member_id": 603,
         "seated_at_page": 9837
+      },
+      {
+        "member_id": 586,
+        "seated_at_page": 11237
       }
     ],
     [
       {
         "member_id": 522,
         "seated_at_page": 6717
+      },
+      {
+        "member_id": 628,
+        "seated_at_page": 11237
       }
     ],
     [
       {
         "member_id": 521,
         "seated_at_page": 6717
+      },
+      {
+        "member_id": 522,
+        "seated_at_page": 11237
       }
     ],
     [
       {
         "member_id": 523,
         "seated_at_page": 6717
+      },
+      {
+        "member_id": 520,
+        "seated_at_page": 11237
       }
     ],
     [
       {
         "member_id": 524,
         "seated_at_page": 6717
+      },
+      {
+        "member_id": 523,
+        "seated_at_page": 11237
       }
     ],
     [
       {
         "member_id": 520,
         "seated_at_page": 6717
+      },
+      {
+        "member_id": 524,
+        "seated_at_page": 11237
       }
     ],
     [
       {
         "member_id": 525,
         "seated_at_page": 6717
+      },
+      {
+        "member_id": 629,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -2243,6 +2891,14 @@
       {
         "member_id": 527,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 525,
+        "seated_at_page": 11237
+      },
+      {
+        "member_id": 521,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -2257,6 +2913,14 @@
       {
         "member_id": 583,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 521,
+        "seated_at_page": 11237
+      },
+      {
+        "member_id": 630,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -2271,6 +2935,14 @@
       {
         "member_id": 228,
         "seated_at_page": 9173
+      },
+      {
+        "member_id": 630,
+        "seated_at_page": 11237
+      },
+      {
+        "member_id": 641,
+        "seated_at_page": 11921
       }
     ],
     [
@@ -2285,6 +2957,10 @@
       {
         "member_id": 534,
         "seated_at_page": 9837
+      },
+      {
+        "member_id": 604,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -2299,6 +2975,10 @@
       {
         "member_id": 604,
         "seated_at_page": 9837
+      },
+      {
+        "member_id": 533,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -2313,6 +2993,10 @@
       {
         "member_id": 533,
         "seated_at_page": 9837
+      },
+      {
+        "member_id": 531,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -2327,6 +3011,10 @@
       {
         "member_id": 531,
         "seated_at_page": 9837
+      },
+      {
+        "member_id": 536,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -2341,6 +3029,10 @@
       {
         "member_id": 536,
         "seated_at_page": 9837
+      },
+      {
+        "member_id": 535,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -2355,6 +3047,10 @@
       {
         "member_id": 535,
         "seated_at_page": 9837
+      },
+      {
+        "member_id": 529,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -2369,6 +3065,10 @@
       {
         "member_id": 529,
         "seated_at_page": 9837
+      },
+      {
+        "member_id": 596,
+        "seated_at_page": 10452
       }
     ],
     [
@@ -2383,6 +3083,14 @@
       {
         "member_id": 596,
         "seated_at_page": 9837
+      },
+      {
+        "member_id": 236,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 605,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -2397,6 +3105,14 @@
       {
         "member_id": 236,
         "seated_at_page": 9837
+      },
+      {
+        "member_id": 605,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 617,
+        "seated_at_page": 11237
       }
     ],
     [
@@ -2411,6 +3127,14 @@
       {
         "member_id": 605,
         "seated_at_page": 9837
+      },
+      {
+        "member_id": 617,
+        "seated_at_page": 10452
+      },
+      {
+        "member_id": 631,
+        "seated_at_page": 11237
       }
     ],
     [

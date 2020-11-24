@@ -1,6 +1,677 @@
 {
+  "status": "created",
+  "id": 12448,
   "name": "1966_5_fk_4_Voteringsprotokoll_054",
   "image": "1966_5_fk_4_Voteringsprotokoll_054.png",
-  "status": "created",
-  "book": "1966-1966_first_5_a_default_4"
+  "book": "1966-1966_first_5_a_default_4",
+  "page": 54,
+  "votes": {
+    "total": {
+      "yes": 0,
+      "no": 0,
+      "refrain": 0,
+      "absent": 0,
+      "missing": 160
+    },
+    "squares": [
+      {
+        "id": 0,
+        "vote": "missing"
+      },
+      {
+        "id": 1,
+        "vote": "missing"
+      },
+      {
+        "id": 2,
+        "vote": "missing"
+      },
+      {
+        "id": 3,
+        "vote": "missing"
+      },
+      {
+        "id": 4,
+        "vote": "missing"
+      },
+      {
+        "id": 5,
+        "vote": "missing"
+      },
+      {
+        "id": 6,
+        "vote": "missing"
+      },
+      {
+        "id": 7,
+        "vote": "missing"
+      },
+      {
+        "id": 8,
+        "vote": "missing"
+      },
+      {
+        "id": 9,
+        "vote": "missing"
+      },
+      {
+        "id": 10,
+        "vote": "missing"
+      },
+      {
+        "id": 11,
+        "vote": "missing"
+      },
+      {
+        "id": 12,
+        "vote": "missing"
+      },
+      {
+        "id": 13,
+        "vote": "missing"
+      },
+      {
+        "id": 14,
+        "vote": "missing"
+      },
+      {
+        "id": 15,
+        "vote": "missing"
+      },
+      {
+        "id": 16,
+        "vote": "missing"
+      },
+      {
+        "id": 17,
+        "vote": "missing"
+      },
+      {
+        "id": 18,
+        "vote": "missing"
+      },
+      {
+        "id": 19,
+        "vote": "missing"
+      },
+      {
+        "id": 20,
+        "vote": "missing"
+      },
+      {
+        "id": 21,
+        "vote": "missing"
+      },
+      {
+        "id": 22,
+        "vote": "missing"
+      },
+      {
+        "id": 23,
+        "vote": "missing"
+      },
+      {
+        "id": 24,
+        "vote": "missing"
+      },
+      {
+        "id": 25,
+        "vote": "missing"
+      },
+      {
+        "id": 26,
+        "vote": "missing"
+      },
+      {
+        "id": 27,
+        "vote": "missing"
+      },
+      {
+        "id": 28,
+        "vote": "missing"
+      },
+      {
+        "id": 29,
+        "vote": "missing"
+      },
+      {
+        "id": 30,
+        "vote": "missing"
+      },
+      {
+        "id": 31,
+        "vote": "missing"
+      },
+      {
+        "id": 32,
+        "vote": "missing"
+      },
+      {
+        "id": 33,
+        "vote": "missing"
+      },
+      {
+        "id": 34,
+        "vote": "missing"
+      },
+      {
+        "id": 35,
+        "vote": "missing"
+      },
+      {
+        "id": 36,
+        "vote": "missing"
+      },
+      {
+        "id": 37,
+        "vote": "missing"
+      },
+      {
+        "id": 38,
+        "vote": "missing"
+      },
+      {
+        "id": 39,
+        "vote": "missing"
+      },
+      {
+        "id": 40,
+        "vote": "missing"
+      },
+      {
+        "id": 41,
+        "vote": "missing"
+      },
+      {
+        "id": 42,
+        "vote": "missing"
+      },
+      {
+        "id": 43,
+        "vote": "missing"
+      },
+      {
+        "id": 44,
+        "vote": "missing"
+      },
+      {
+        "id": 45,
+        "vote": "missing"
+      },
+      {
+        "id": 46,
+        "vote": "missing"
+      },
+      {
+        "id": 47,
+        "vote": "missing"
+      },
+      {
+        "id": 48,
+        "vote": "missing"
+      },
+      {
+        "id": 49,
+        "vote": "missing"
+      },
+      {
+        "id": 50,
+        "vote": "missing"
+      },
+      {
+        "id": 51,
+        "vote": "missing"
+      },
+      {
+        "id": 52,
+        "vote": "missing"
+      },
+      {
+        "id": 53,
+        "vote": "missing"
+      },
+      {
+        "id": 54,
+        "vote": "missing"
+      },
+      {
+        "id": 55,
+        "vote": "missing"
+      },
+      {
+        "id": 56,
+        "vote": "missing"
+      },
+      {
+        "id": 57,
+        "vote": "missing"
+      },
+      {
+        "id": 58,
+        "vote": "missing"
+      },
+      {
+        "id": 59,
+        "vote": "missing"
+      },
+      {
+        "id": 60,
+        "vote": "missing"
+      },
+      {
+        "id": 61,
+        "vote": "missing"
+      },
+      {
+        "id": 62,
+        "vote": "missing"
+      },
+      {
+        "id": 63,
+        "vote": "missing"
+      },
+      {
+        "id": 64,
+        "vote": "missing"
+      },
+      {
+        "id": 65,
+        "vote": "missing"
+      },
+      {
+        "id": 66,
+        "vote": "missing"
+      },
+      {
+        "id": 67,
+        "vote": "missing"
+      },
+      {
+        "id": 68,
+        "vote": "missing"
+      },
+      {
+        "id": 69,
+        "vote": "missing"
+      },
+      {
+        "id": 70,
+        "vote": "missing"
+      },
+      {
+        "id": 71,
+        "vote": "missing"
+      },
+      {
+        "id": 72,
+        "vote": "missing"
+      },
+      {
+        "id": 73,
+        "vote": "missing"
+      },
+      {
+        "id": 74,
+        "vote": "missing"
+      },
+      {
+        "id": 75,
+        "vote": "missing"
+      },
+      {
+        "id": 76,
+        "vote": "missing"
+      },
+      {
+        "id": 77,
+        "vote": "missing"
+      },
+      {
+        "id": 78,
+        "vote": "missing"
+      },
+      {
+        "id": 79,
+        "vote": "missing"
+      },
+      {
+        "id": 80,
+        "vote": "missing"
+      },
+      {
+        "id": 81,
+        "vote": "missing"
+      },
+      {
+        "id": 82,
+        "vote": "missing"
+      },
+      {
+        "id": 83,
+        "vote": "missing"
+      },
+      {
+        "id": 84,
+        "vote": "missing"
+      },
+      {
+        "id": 85,
+        "vote": "missing"
+      },
+      {
+        "id": 86,
+        "vote": "missing"
+      },
+      {
+        "id": 87,
+        "vote": "missing"
+      },
+      {
+        "id": 88,
+        "vote": "missing"
+      },
+      {
+        "id": 89,
+        "vote": "missing"
+      },
+      {
+        "id": 90,
+        "vote": "missing"
+      },
+      {
+        "id": 91,
+        "vote": "missing"
+      },
+      {
+        "id": 92,
+        "vote": "missing"
+      },
+      {
+        "id": 93,
+        "vote": "missing"
+      },
+      {
+        "id": 94,
+        "vote": "missing"
+      },
+      {
+        "id": 95,
+        "vote": "missing"
+      },
+      {
+        "id": 96,
+        "vote": "missing"
+      },
+      {
+        "id": 97,
+        "vote": "missing"
+      },
+      {
+        "id": 98,
+        "vote": "missing"
+      },
+      {
+        "id": 99,
+        "vote": "missing"
+      },
+      {
+        "id": 100,
+        "vote": "missing"
+      },
+      {
+        "id": 101,
+        "vote": "missing"
+      },
+      {
+        "id": 102,
+        "vote": "missing"
+      },
+      {
+        "id": 103,
+        "vote": "missing"
+      },
+      {
+        "id": 104,
+        "vote": "missing"
+      },
+      {
+        "id": 105,
+        "vote": "missing"
+      },
+      {
+        "id": 106,
+        "vote": "missing"
+      },
+      {
+        "id": 107,
+        "vote": "missing"
+      },
+      {
+        "id": 108,
+        "vote": "missing"
+      },
+      {
+        "id": 109,
+        "vote": "missing"
+      },
+      {
+        "id": 110,
+        "vote": "missing"
+      },
+      {
+        "id": 111,
+        "vote": "missing"
+      },
+      {
+        "id": 112,
+        "vote": "missing"
+      },
+      {
+        "id": 113,
+        "vote": "missing"
+      },
+      {
+        "id": 114,
+        "vote": "missing"
+      },
+      {
+        "id": 115,
+        "vote": "missing"
+      },
+      {
+        "id": 116,
+        "vote": "missing"
+      },
+      {
+        "id": 117,
+        "vote": "missing"
+      },
+      {
+        "id": 118,
+        "vote": "missing"
+      },
+      {
+        "id": 119,
+        "vote": "missing"
+      },
+      {
+        "id": 120,
+        "vote": "missing"
+      },
+      {
+        "id": 121,
+        "vote": "missing"
+      },
+      {
+        "id": 122,
+        "vote": "missing"
+      },
+      {
+        "id": 123,
+        "vote": "missing"
+      },
+      {
+        "id": 124,
+        "vote": "missing"
+      },
+      {
+        "id": 125,
+        "vote": "missing"
+      },
+      {
+        "id": 126,
+        "vote": "missing"
+      },
+      {
+        "id": 127,
+        "vote": "missing"
+      },
+      {
+        "id": 128,
+        "vote": "missing"
+      },
+      {
+        "id": 129,
+        "vote": "missing"
+      },
+      {
+        "id": 130,
+        "vote": "missing"
+      },
+      {
+        "id": 131,
+        "vote": "missing"
+      },
+      {
+        "id": 132,
+        "vote": "missing"
+      },
+      {
+        "id": 133,
+        "vote": "missing"
+      },
+      {
+        "id": 134,
+        "vote": "missing"
+      },
+      {
+        "id": 135,
+        "vote": "missing"
+      },
+      {
+        "id": 136,
+        "vote": "missing"
+      },
+      {
+        "id": 137,
+        "vote": "missing"
+      },
+      {
+        "id": 138,
+        "vote": "missing"
+      },
+      {
+        "id": 139,
+        "vote": "missing"
+      },
+      {
+        "id": 140,
+        "vote": "missing"
+      },
+      {
+        "id": 141,
+        "vote": "missing"
+      },
+      {
+        "id": 142,
+        "vote": "missing"
+      },
+      {
+        "id": 143,
+        "vote": "missing"
+      },
+      {
+        "id": 144,
+        "vote": "missing"
+      },
+      {
+        "id": 145,
+        "vote": "missing"
+      },
+      {
+        "id": 146,
+        "vote": "missing"
+      },
+      {
+        "id": 147,
+        "vote": "missing"
+      },
+      {
+        "id": 148,
+        "vote": "missing"
+      },
+      {
+        "id": 149,
+        "vote": "missing"
+      },
+      {
+        "id": 150,
+        "vote": "missing"
+      },
+      {
+        "id": 151,
+        "vote": "missing"
+      },
+      {
+        "id": 152,
+        "vote": "missing"
+      },
+      {
+        "id": 153,
+        "vote": "missing"
+      },
+      {
+        "id": 154,
+        "vote": "missing"
+      },
+      {
+        "id": 155,
+        "vote": "missing"
+      },
+      {
+        "id": 156,
+        "vote": "missing"
+      },
+      {
+        "id": 157,
+        "vote": "missing"
+      },
+      {
+        "id": 158,
+        "vote": "missing"
+      },
+      {
+        "id": 159,
+        "vote": "missing"
+      }
+    ]
+  },
+  "coordinates": [
+    {
+      "x": 0.027,
+      "y": 0.22282608695652173
+    },
+    {
+      "x": 0.972,
+      "y": 0.23369565217391305
+    },
+    {
+      "x": 0.972,
+      "y": 0.717391304347826
+    },
+    {
+      "x": 0.025,
+      "y": 0.717391304347826
+    }
+  ]
 }

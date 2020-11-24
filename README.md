@@ -28,6 +28,8 @@ Sometimes a note on the record states that a member has declared they voted wron
 This is useful to change the name of a member but it doesn't seem to be properly implemented.
 Open the browser and go to e.g. `http://localhost:3000/membereditor`
 
+https://riksdagstryck.kb.se/tvakammarriksdagen.html
+
 ### Editing seating
 Seatings can be edited by navigating to
 
@@ -285,8 +287,80 @@ The records now contains both unique names but also party designations.
 
 
 #### Errors
+No errors found
+
+
+### 1964
+
+#### Parties
+_Socialdemokraterna (s)_ got 78 seats
+_Högerpartiet (h)_ got 26 seats 
+_Folkpartiet (f)_ got 27 seats 
+_Centerpartiet (c)_ got 18 seats
+_Sveriges kommunistiska parti (k)_ got 2 seats
+
+#### Voting records
+Seats 2, 43 are empty.
+The records now contains both unique names but also party designations.
+
+#### Members
+On page 11106 Herman Kling (s), changes from seat 10 to seat 126 and also from Stockholm stad to Gävleborg.
+
+#### Errors
 |Page       | Seat      | Note                  |
 |---        |---        |---                    |
+|10357      | all       | skipped page          |
+|10468      | all       | technical error       |
+|10992      | 18        | missing vote but can extrapolated to refrain using total          |
+|11142      | 55        | vote is missing but can be extrapolated to yes using the summation|
+
+
+### 1965
+
+#### Parties
+_Socialdemokraterna (s)_ got 78 seats
+_Högerpartiet (h)_ got 26 seats 
+_Folkpartiet (f)_ got 26 seats 
+_Centerpartiet (c)_ got 19 seats
+_Sveriges kommunistiska parti (k)_ got 2 seats
+
+#### Voting records
+Seats 2, 45 are empty.
+The records now contains both unique names but also party designations.
+
+Interestingly for page 11605 there are no yes votes.
+
+#### Members
+Erik Boheman (f) becomes speaker.
+John Ericsson (s) comes back for Älvsborg, previously Skaraborg.
+
+
+#### Errors
+|Page       | Seat      | Note                  |
+|---        |---        |---                    |
+|11848      | all       | My count does not add up to the count on the voting record. I get it to 107 yes, the votingrecord 109. I count 7 refrain, the voting record 5. I'm not sure whos right but I think some dots in at the left has been painted in after photographing and that has been done wrong.|
+
+### 1966
+
+#### Parties
+_Socialdemokraterna (s)_ got 79 seats
+_Högerpartiet (h)_ got 26 seats 
+_Folkpartiet (f)_ got 26 seats 
+_Centerpartiet (c)_ got 18 seats
+_Sveriges kommunistiska parti (k)_ got 2 seats
+
+#### Voting records
+Seats 2, 45 are empty.
+The records now contains both unique names but also party designations.
+
+
+#### Members
+
+#### Errors
+|Page       | Seat      | Note                  |
+|---        |---        |---                    |
+|12448      | all       | all votes missing due to scanning error |
+
 
 ## Second Chamber
 ### 1957-1958 (spring)
